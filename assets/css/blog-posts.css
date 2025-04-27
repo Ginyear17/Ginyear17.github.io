@@ -1,0 +1,217 @@
+/* Blog posts */
+.blog-section-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    font-family: "幼圆", sans-serif;
+    position: relative; /* 确保伪元素定位有效 */
+    margin-bottom: 1rem; /* 给分割线留出空间 */
+    padding-left: 1rem; /* 左边空出一些空位 */
+}
+
+.blog-section-title i {
+    margin-right: 0.5rem;
+    color: var(--primary-color);
+}
+
+body.dark .blog-section-title i {
+    color: var(--primary-dark);
+}
+
+.blog-section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -0.6rem; /* 分割线的位置 */
+    left: 0.6vw; /* 分割线的左边距 */
+    width: 99%; /* 分割线宽度 */
+    height: 3px; /* 分割线高度 */
+    background-color: var(--border-color); /* 使用边框颜色 */
+    opacity: 0.5; /* 透明度，柔和效果 */
+}
+
+.post {
+    display: flex;
+    flex-direction: row;
+    gap: 16px; /* Add some space between the image and content */
+    background-color: #fffffb;
+    height: 160px;
+    width: 100%;
+    margin: 1.5rem 1.5rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+body.dark .post {
+    background-color: #252424;
+    box-shadow: var(--shadow-dark);
+}
+
+.post:hover {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+body.dark.post:hover {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+}
+
+.post-img-container {
+    width: 26%;
+    height: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the image and date */
+}
+
+.post-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px; /* Optional: Add rounded corners to the image */
+}
+
+.post-content {
+    width: 70%;
+}
+
+.post-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    transition: var(--transition);
+}
+
+.post-title:hover {
+    color: var(--primary-color);
+}
+
+body.dark .post-title:hover {
+    color: var(--primary-dark);
+}
+
+.post-excerpt {
+    color: var(--text-light);
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.post-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: var(--text-light);
+}
+
+.post-stats {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.post-stat {
+    display: flex;
+    align-items: center;
+}
+
+.post-stat i {
+    margin-right: 0.25rem;
+}
+
+.post-category {
+    padding: 0.25rem 0.5rem;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+}
+
+body.dark .post-category {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.load-more {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    text-align: center;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    color: var(--text-color);
+    font-weight: 500;
+    margin-top: 1.5rem;
+    transition: var(--transition);
+}
+
+.load-more:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+body.dark .load-more:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Categories */
+.blog-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+/* .section-link {
+    font-size: 0.875rem;
+    color: var(--primary-color);
+    transition: var(--transition);
+}
+
+.section-link:hover {
+    text-decoration: underline;
+}
+
+body.dark .section-link {
+    color: var(--primary-dark);
+}
+
+.categories {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.category {
+    position: relative;
+    height: 96px;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.category-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.category:hover .category-img {
+    transform: scale(1.05);
+}
+
+.category-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 500;
+} */

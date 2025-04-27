@@ -1,0 +1,24 @@
+.main-card {
+    flex: 1; /* 占据剩余空间 */
+    background-color: var(--card-bg); /* 白色背景 */
+    border-radius: 0.5rem; /* 圆角 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+    padding: 1vw 1vw; /* 内边距 */
+    margin-left:6vw; /* 根据视口宽度动态调整空隙 */
+    max-height: fit-content; /* 根据内容动态调整高度 */
+}
+
+body.dark.main-card {
+    background-color: var(--card-bg-dark); /* 使用深色模式下的卡片背景色 */
+    box-shadow: var(--shadow-dark); /* 使用深色模式下的阴影 */
+    
+}
+
+@media (max-width: 900px) {
+    .main-card {
+        margin-left: 1vw;
+        margin-right: 1vw; 
+        max-width: 100%; /* 让卡片占据整个宽度 */
+        padding: 2vw; /* 调整内边距 */
+    }
+}

@@ -6,7 +6,12 @@
     <title>小杰的杂物间</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./assets/css/base.css">
-    <link rel="stylesheet" href="./assets/css/about_main_card.css">
+    <link rel="stylesheet" href="./assets/css/header.css">
+    <link rel="stylesheet" href="./assets/css/main-card.css">
+    <link rel="stylesheet" href="./assets/css/sidebar.css">
+    <link rel="stylesheet" href="./assets/css/footer.css">
+    <link rel="stylesheet" href="./assets/css/slider.css">
+    <link rel="stylesheet" href="./assets/css/blog-posts.css">
 
 </head>
 <body>
@@ -15,7 +20,7 @@
         <div class="container header-container">
             <!--Logo-->
             <a href="/" class="logo">
-                <img src="https://img99.pixhost.to/images/656/513586427_img.png" alt="Logo">
+                <img src="./assets/images/logo.webp" alt="Logo">
                 <span class="logo-text">小杰的杂物间</span>
               </a>
 
@@ -65,171 +70,104 @@
 
     <main class="main">
         <div class="main-card">
-            <!-- 导航区域 -->
-            <nav style="text-align: center;">
-                <div>
-                    <ul style="display: inline-block; list-style: none; padding: 0; margin: 0;"></ul>
-                        <li style="display: inline; margin: 0 10px;"><a href="#education">求学经历</a></li>
-                        <li style="display: inline; margin: 0 10px;"><a href="#honors">荣誉成就</a></li>
-                        <li style="display: inline; margin: 0 10px;"><a href="#hobbies">兴趣爱好</a></li>
-                        <li style="display: inline; margin: 0 10px;"><a href="#plans">未来规划</a></li>
-                        <li style="display: inline; margin: 0 10px;"><a href="#contact">联系我</a></li>
-                    </ul>
-                </div>
-            </nav>
-            
-            <!-- 主要内容区域 -->
-            <main>
-                <!-- 关于我区域 -->
-                <section id="about">
-                    <h2>个人信息</h2>
-                    <table>
-                        <tr>
-                            <th>姓名</th>
-                            <td>许杰</td>
-                        </tr>
-                        <tr>
-                            <th>年龄</th>
-                            <td>20岁</td>
-                        </tr>
-                        <tr>
-                            <th>籍贯</th>
-                            <td>福建省福州市</td>
-                        </tr>
-                        <tr>
-                            <th>专业</th>
-                            <td>数据科学与大数据技术</td>
-                        </tr>
-                        <tr>
-                            <th>邮箱</th>
-                            <td>2579478356@qq.com</td>
-                        </tr>
-                    </table>
-                </section>
-                
-                <!-- 求学经历区域 -->
-                <section id="education">
-                    <h2>求学经历</h2>
-                    <ol>
-                        <li>
-                            <h3>闽侯县第三中学（2019-2022）</h3>
-                            <p>高中阶段，我主要学习理科知识，并参加了学校的兴趣社团。</p>
-                        </li>
-                        <li>
-                            <h3>集美大学数据科学与大数据技术专业（2022-至今）</h3>
-                            <p>大学期间，我系统学习了计算机基础理论和编程技能，包括：</p>
-                            <ul>
-                                <li>C/C++程序设计</li>
-                                <li>数据结构与算法</li>
-                                <li>操作系统原理</li>
-                                <li>计算机网络</li>
-                                <li>数据库系统</li>
-                                <li>Web前端开发</li>
-                            </ul>
-                        </li>
-                    </ol>
-                </section>
-                
-                <!-- 荣誉成就区域 -->
-                <section id="honors">
-                    <h2>荣誉与成就</h2>
-                    <ul>
-                        <li>2022-2023学年第一学期获得专业三等奖学金</li>
-                        <li>2024-2025学年第一学期获得专业三等奖学金</li>
-                        <li>2023-2024学年第二学期在暑期社会实践中获得"先进个人"荣誉称号</li>
-                        <li>2024-2025学年第二学期获得校"优秀共青团员"荣誉称号</li>
-                        <li>2023-2024学年在校易班担任技术部部长</li>
-                        <li>2024-2025学年在校易班担任网络技术中心主席</li>
-                    </ul>
-                </section>
-                
-                <!-- 兴趣爱好区域 -->
-                <section id="hobbies">
-                    <h2>兴趣爱好</h2>
-                    <p>除了专业学习，我还有丰富的课余生活：</p>
-                    <div>
-                        <h3>技术爱好</h3>
-                        <ul>
-                            <li>Web开发：熟悉HTML、CSS和JavaScript</li>
-                            <li>人工智能：正在学习机器学习相关知识</li>
-                        </ul>
-                        
-                        <h3>其他爱好</h3>
-                        <ul>
-                            <li>乒乓球：曾经加入院乒协，每周参加训练，偶尔参加比赛</li>
-                            <li>摄影：喜欢记录校园和旅行中的美景</li>
-                        </ul>
+            <!-- Slider -->
+            <div class="slider">
+                <div class="slide active">
+                    <img src="./assets/images/album/时光小憩.JPG" alt="时光小憩" class="slide-img">
+                    <div class="slide-content">
+                        <h2 class="slide-title"></h2>
+                        <p class="slide-subtitle"></p>
+                        <a href="/" class="slide-link"><i class="fas fa-arrow-right"></i></a>
                     </div>
-                </section>
+                </div>
                 
-                <!-- 学习习惯及未来规划区域 -->
-                <section id="plans">
-                    <h2>学习习惯与未来规划</h2>
-                    
-                    <h3>学习习惯</h3>
-                    <p>我的学习方式主要有以下几点：</p>
-                    <ul>
-                        <li>制定明确的学习计划，合理安排时间</li>
-                        <li>采用番茄工作法提高学习效率</li>
-                        <li>通过项目实践巩固理论知识</li>
-                        <li>积极参与团队合作，互相学习</li>
-                    </ul>
-                    
-                    <h3>进步方向</h3>
-                    <p>我认为自己需要在以下几个方面继续努力：</p>
-                    <ul>
-                        <li>深入学习算法和数据结构</li>
-                        <li>提升英语阅读和交流能力</li>
-                        <li>增强项目实战经验</li>
-                        <li>培养创新思维和问题解决能力</li>
-                    </ul>
-                    
-                    <h3>未来规划</h3>
-                    <p>我对未来的规划包括：</p>
-                    <ol>
-                        <li>大学期间：系统掌握专业知识，参与各类竞赛和项目，为就业打下坚实基础</li>
-                        <li>毕业后：希望加入一家技术领先的互联网公司，从事Web开发或AI相关工作</li>
-                        <li>长期目标：成为一名全栈工程师，并在特定领域有所专长</li>
-                    </ol>
-                </section>
+                <div class="slide">
+                <img src="./assets/images/album/IMG_20240210_174111.jpg" alt="螺洲古镇日落" class="slide-img">
+                <div class="slide-content">
+                    <h2 class="slide-title"></h2>
+                    <p class="slide-subtitle"></p>
+                    <a href="/" class="slide-link"><i class="fas fa-arrow-right"></i></a>
+                </div>
+                </div>
+                
+                <div class="slide">
+                <img src="./assets/images/album/IMG_20230815_121415.jpg" alt="白云" class="slide-img">
+                <div class="slide-content">
+                    <h2 class="slide-title"></h2>
+                    <p class="slide-subtitle"></p>
+                    <a href="/" class="slide-link"><i class="fas fa-arrow-right"></i></a>
+                </div>
+                </div>
+                
+                <div class="slide">
+                <img src="./assets/images/album/IMG_20230820_183148.jpg" alt="烟台山小店" class="slide-img">
+                <div class="slide-content">
+                    <h2 class="slide-title"></h2>
+                    <p class="slide-subtitle"></p>
+                    <a href="/" class="slide-link"><i class="fas fa-arrow-right"></i></a>
+                </div>
+                </div>
+                
+                <!-- Slider Controls -->
+                <button class="slider-control slider-prev">
+                <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="slider-control slider-next">
+                <i class="fas fa-chevron-right"></i>
+                </button>
+                
+                <!-- Slider Dots -->
+                <div class="slider-dots">
+                <span class="slider-dot active" data-index="0"></span>
+                <span class="slider-dot" data-index="1"></span>
+                <span class="slider-dot" data-index="2"></span>
+                <span class="slider-dot" data-index="3"></span>
+                </div>
+            </div>
+            
+            <!-- Blog Posts -->
+            <div class="blog-section">
+                <h2 class="blog-section-title"><i class="fas fa-newspaper"></i>最新动态</h2>
+                <article class="post">
+                    <div class="post-img-container">
+                        <img src="./assets/images/album/光影.jpg" alt="阿里云域名绑定动态ip" class="post-img">
+                    </div>
+                    <div class="post-content">
+                        <h3 class="post-title"><a href="/pages/blog/aliyun_ddns.html">阿里云域名绑定动态ip</a></h3>
+                        <p class="post-excerpt">怎么通过公网访问家中的设备呢？首先需要一个公网ip，可以向客服申请。那之后你就可以查询到你现在的ip了。然后你在外面就可以使用ip就可以访问家里的设备。但是宽带的ip基本是动态的，也就是一段时间之后ip地址会变化。所以需要使用一个域名绑定你的ip，并且使用一个脚本去周期性的检查现在的ip有没有变化，并更新ip。</p>
+                        <div class="post-meta">
+                            <div class="post-stats">
+                                <span class="post-stat">2025-2-14</span>
+                                <span class="post-stat"><i class="fas fa-eye"></i> 88</span>
+                                <span class="post-stat"><i class="fas fa-comment"></i> 0</span>
+                                <span class="post-stat"><i class="fas fa-heart"></i> 1</span>
+                            </div>
+                            <a href="/categories/develop" class="post-category">开发</a>
+                        </div>
+                    </div>
+                </article>
 
-                <!-- 联系表单区域 -->
-                <section id="contact">
-                    <h2>联系我</h2>
-                    <p>如果您有任何问题，欢迎通过以下方式联系我：</p>
-                    
-                    <form action="#" method="post">
-                        <div>
-                            <label for="name">您的姓名：</label>
-                            <input type="text" id="name" name="name" required>
+                <article class="post">
+                    <div class="post-img-container">
+                        <img src="./assets/images/album/绿意课堂.jpg" alt="阿里云域名绑定动态ip" class="post-img">
+                    </div>
+                    <div class="post-content">
+                        <h3 class="post-title"><a href="/pages/blog/aliyun_ddns.html">阿里云域名绑定动态ip</a></h3>
+                        <p class="post-excerpt">怎么通过公网访问家中的设备呢？首先需要一个公网ip，可以向客服申请。那之后你就可以查询到你现在的ip了。然后你在外面就可以使用ip就可以访问家里的设备。但是宽带的ip基本是动态的，也就是一段时间之后ip地址会变化。所以需要使用一个域名绑定你的ip，并且使用一个脚本去周期性的检查现在的ip有没有变化，并更新ip。</p>
+                        <div class="post-meta">
+                            <div class="post-stats">
+                                <span class="post-stat">2025-2-14</span>
+                                <span class="post-stat"><i class="fas fa-eye"></i> 88</span>
+                                <span class="post-stat"><i class="fas fa-comment"></i> 0</span>
+                                <span class="post-stat"><i class="fas fa-heart"></i> 1</span>
+                            </div>
+                            <a href="/categories/develop" class="post-category">开发</a>
                         </div>
-                        
-                        <div>
-                            <label for="email">您的邮箱：</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        
-                        <div>
-                            <label for="subject">主题：</label>
-                            <select id="subject" name="subject">
-                                <option value="cooperation">合作意向</option>
-                                <option value="question">问题咨询</option>
-                                <option value="suggestion">建议反馈</option>
-                                <option value="other">其他</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label for="message">留言内容：</label>
-                            <textarea id="message" name="message" rows="5" required></textarea>
-                        </div>
-                        
-                        <div>
-                            <button type="submit">提交</button>
-                        </div>
-                    </form>
-                </section>
-            </main>
+                    </div>
+                </article>
+                
+                <button class="load-more">查看更多</button>
+            </div>
         </div>
 
         <!-- Sidebar-->
@@ -246,18 +184,18 @@
                     <p class="author-bio">我们共有过一整个溽夏的波长<br>却在立秋的节点失焦成噪点</p>
                     
                     <div class="author-stats">
-                    <div class="author-stat">
-                        <div class="author-stat-value">1</div>
-                        <div class="author-stat-label">说说数</div>
-                    </div>
-                    <div class="author-stat">
-                        <div class="author-stat-value">1</div>
-                        <div class="author-stat-label">文章数</div>
-                    </div>
-                    <div class="author-stat">
-                        <div class="author-stat-value">0</div>
-                        <div class="author-stat-label">评论数</div>
-                    </div>
+                        <div class="author-stat">
+                            <div class="author-stat-value">1</div>
+                            <div class="author-stat-label">说说数</div>
+                        </div>
+                        <div class="author-stat">
+                            <div class="author-stat-value">1</div>
+                            <div class="author-stat-label">文章数</div>
+                        </div>
+                        <div class="author-stat">
+                            <div class="author-stat-value">0</div>
+                            <div class="author-stat-label">评论数</div>
+                        </div>
                     </div>
                     
                     <div class="social-links">
@@ -367,10 +305,25 @@
                 </div>
             </div>
 
+            <div class="card" style="border-radius: 2rem;">
+                <div class="music-card">
+                    <div class="rotating-img">
+                        <img src="" alt="Album Cover" class="music-avatar" id="music-cover">
+                    </div>
+                    <h6 id="music-info"></h6>
+                    <audio id="music-player"></audio>
+                    <div class="custom-controls">
+                        <button id="volume-btn"><i class="fas fa-volume-up"></i></button>
+                        <button style="font-size: 1.6rem;" id="play-pause-btn"><i class="fas fa-pause"></i></button>
+                        <button id="next-btn"><i class="fas fa-forward-step"></i></button>
+                    </div>
+                </div>
+            </div>
+
         </aside>
     </main>
 
-     <div style="height: 100px;"></div>
+    <div style="height: 100px;"></div>
     <!--Footer-->
     <footer class="footer">
         <div class="container footer-container">
@@ -401,5 +354,9 @@
             </div>
         </div>
     </footer>
+    <script>
+        window.baseUrl = '';  // 根目录不需要前缀
+    </script>
     <script src="./assets/js/scripts.js"></script>
+    <script src="./assets/js/music-card.js"></script>
 </body>

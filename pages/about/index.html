@@ -6,6 +6,10 @@
     <title>小杰的杂物间</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../assets/css/base.css">
+    <link rel="stylesheet" href="../../assets/css/header.css">
+    <link rel="stylesheet" href="../../assets/css/main-card.css">
+    <link rel="stylesheet" href="../../assets/css/sidebar.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
     <link rel="stylesheet" href="../../assets/css/about_main_card.css">
 
 </head>
@@ -367,6 +371,21 @@
                 </div>
             </div>
 
+            <div class="card" style="border-radius: 2rem;">
+                <div class="music-card">
+                    <div class="rotating-img">
+                        <img src="" alt="Album Cover" class="music-avatar" id="music-cover">
+                    </div>
+                    <h6 id="music-info"></h6>
+                    <audio id="music-player"></audio>
+                    <div class="custom-controls">
+                        <button id="volume-btn"><i class="fas fa-volume-up"></i></button>
+                        <button style="font-size: 1.6rem;" id="play-pause-btn"><i class="fas fa-pause"></i></button>
+                        <button id="next-btn"><i class="fas fa-forward-step"></i></button>
+                    </div>
+                </div>
+            </div>
+
         </aside>
     </main>
 
@@ -401,5 +420,9 @@
             </div>
         </div>
     </footer>
-    <script src="../../assets/js/scripts.js"></script>
+    <script>
+        window.baseUrl = '../../';  // 需要返回两级目录
+    </script>
+    <script src="/assets/js/scripts.js"></script>
+    <script src="/assets/js/music-card.js"></script>
 </body>
