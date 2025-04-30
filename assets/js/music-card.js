@@ -19,37 +19,123 @@ document.addEventListener('DOMContentLoaded', function() {
             artist: "会弹琴的羊",
             cover: baseUrl + "assets/music/cover/会弹琴的羊 - 夏至未至（钢琴版）.jpg",
             audio: baseUrl + "assets/music/会弹琴的羊 - 夏至未至（钢琴版）.mp3"
-        }
+        },
+        {
+            title: "Mystery of love -长笛演奏版",
+            artist: "Chelsea范佳颖", 
+            cover: baseUrl + "assets/music/cover/Chelsea范佳颖 - Mystery of love -长笛演奏版.jpg",
+            audio: baseUrl + "assets/music/Chelsea范佳颖 - Mystery of love -长笛演奏版.mp3"  
+        },
+        {
+            title: "it's 6pm but I miss u already",
+            artist: "",
+            cover: baseUrl + "assets/music/cover/bbbluelee,Furyl,Siren - it is 6pm but I miss u already.jpg",
+            audio: baseUrl + "assets/music/bbbluelee,Furyl,Siren - it's 6pm but I miss u already.mp3"
+        },
+        {
+            title: "You(=I)",
+            artist: "_小漪Yiiii",
+            cover: baseUrl + "assets/music/cover/_小漪Yiiii - You(=I).jpg",
+            audio: baseUrl + "assets/music/_小漪Yiiii - You(=I).mp3"
+        },
+        {
+            title: "匿名的好友",
+            artist: "Sasablue",
+            cover: baseUrl + "assets/music/cover/Sasablue - 匿名的好友.png",
+            audio: baseUrl + "assets/music/Sasablue - 匿名的好友.mp3"
+        },
+        {
+            title: "去见你",
+            artist: "徐秉龙",
+            cover: baseUrl + "assets/music/cover/徐秉龙 - 去见你.jpg",
+            audio: baseUrl + "assets/music/徐秉龙 - 去见你.mp3"
+        },
+        {
+            title: "デート",
+            artist: "RADWIMPS",
+            cover: baseUrl + "assets/music/cover/RADWIMPS - デート.jpg",
+            audio: baseUrl + "assets/music/RADWIMPS - デート.mp3"
+        },
+        {
+            title: "我们俩",
+            artist: "郭顶",
+            cover: baseUrl + "assets/music/cover/郭顶 - 我们俩.png",
+            audio: baseUrl + "assets/music/郭顶 - 我们俩.mp3"
+        },
     ];
+
+    function getCurrentMusicIndex(src) {
+        if (!src) return -1;
+        
+        for (let i = 0; i < musicList.length; i++) {
+            const musicFileName = musicList[i].audio.split('/').pop();
+            if (src.includes(encodeURIComponent(musicFileName)) || 
+                src.includes(musicFileName)) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     function getRandomMusic() {
         // 当前播放的音乐索引
         const currentSrc = document.getElementById('music-player').src;
-        let currentIndex = -1;
+        const currentIndex = getCurrentMusicIndex(currentSrc);
         
-        // 查找当前播放的音乐在列表中的索引
-        for (let i = 0; i < musicList.length; i++) {
-            // 使用音乐文件名的最后部分进行比较
-            const musicFileName = musicList[i].audio.split('/').pop();
-            if (currentSrc.includes(encodeURIComponent(musicFileName)) || 
-                currentSrc.includes(musicFileName)) {
-                currentIndex = i;
-                break;
-            }
-        }
-        
-
         // 从剩余音乐中随机选择一首
         let newIndex;
         do {
             newIndex = Math.floor(Math.random() * musicList.length);
         } while (newIndex === currentIndex && musicList.length > 1);
         
-        return musicList[newIndex];
+        return { music: musicList[newIndex], index: newIndex };
+    }
+
+    function loadMusic(index, position = 0, autoplay = true) {
+        const music = musicList[index];
+
+        const blurredBackground0 = document.getElementById('blurred-background0');
+        blurredBackground0.style.backgroundImage = `url('${music.cover}')`;
+        const blurredBackground1 = document.getElementById('blurred-background1');
+        blurredBackground1.style.backgroundImage = `url('${music.cover}')`;
+
+        const coverImage = document.getElementById('music-cover');
+        coverImage.src = music.cover;
+
+        const musicInfo = document.getElementById('music-info');
+        musicInfo.textContent = `${music.title} - ${music.artist}`;
+
+        const musicPlayer = document.getElementById('music-player');
+        
+        // 检查是否需要更换音乐源
+        if (getCurrentMusicIndex(musicPlayer.src) !== index) {
+            musicPlayer.src = music.audio;
+        }
+        
+        // 设置播放位置
+        musicPlayer.currentTime = position;
+        
+        // 根据需要自动播放
+        if (autoplay) {
+            musicPlayer.play().catch(error => {
+                console.log('Auto-play prevented:', error);
+                // 设置UI状态为暂停
+                rotatingDiv.style.animationPlayState = 'paused';
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            });
+        }
+        
+        // 保存当前播放的音乐索引
+        sessionStorage.setItem('currentMusicIndex', index);
     }
 
     function loadRandomMusic() {
-        const music = getRandomMusic();
+        const { music, index } = getRandomMusic();
+
+        const blurredBackground0 = document.getElementById('blurred-background0');
+        blurredBackground0.style.backgroundImage = `url('${music.cover}')`;
+        const blurredBackground1 = document.getElementById('blurred-background1');
+        blurredBackground1.style.backgroundImage = `url('${music.cover}')`;
 
         const coverImage = document.getElementById('music-cover');
         coverImage.src = music.cover;
@@ -59,10 +145,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const musicPlayer = document.getElementById('music-player');
         musicPlayer.src = music.audio;
-        musicPlayer.play();  // 自动播放新音乐
+        musicPlayer.play().catch(error => {
+            console.log('Auto-play prevented:', error);
+        });
+        
+        // 保存当前播放的音乐索引
+        sessionStorage.setItem('currentMusicIndex', index);
+        sessionStorage.setItem('musicPosition', 0);
     }
-
-    loadRandomMusic();
 
     const rotatingDiv = document.querySelector('.rotating-img');
     const musicPlayer = document.getElementById('music-player');
@@ -70,19 +160,68 @@ document.addEventListener('DOMContentLoaded', function() {
     const volumeBtn = document.getElementById('volume-btn');
     const nextBtn = document.getElementById('next-btn');
 
-    // 确保初始状态显示为暂停
-    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-    // 确保唱片初始状态为静止
-    rotatingDiv.style.animationPlayState = 'paused';
+    // 初始化播放器
+    function initializePlayer() {
+        // 从sessionStorage获取播放信息
+        const savedIndex = sessionStorage.getItem('currentMusicIndex');
+        const savedPosition = parseFloat(sessionStorage.getItem('musicPosition') || 0);
+        const wasPlaying = sessionStorage.getItem('musicIsPlaying') === 'true';
+        
+        if (savedIndex !== null && !isNaN(savedIndex)) {
+            // 加载保存的音乐和位置
+            loadMusic(parseInt(savedIndex), savedPosition, wasPlaying);
+        } else {
+            // 如果没有保存的音乐信息，加载随机音乐
+            loadRandomMusic();
+        }
+        
+        // 根据保存的状态设置UI
+        if (wasPlaying) {
+            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            rotatingDiv.style.animationPlayState = 'running';
+        } else {
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            rotatingDiv.style.animationPlayState = 'paused';
+        }
+        
+        // 加载音量状态
+        const isMuted = sessionStorage.getItem('musicIsMuted') === 'true';
+        musicPlayer.muted = isMuted;
+        volumeBtn.innerHTML = isMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+    }
+
+    // 定期保存播放位置
+    function savePlaybackState() {
+        if (!musicPlayer.paused) {
+            sessionStorage.setItem('musicPosition', musicPlayer.currentTime);
+            sessionStorage.setItem('musicIsPlaying', 'true');
+        } else {
+            sessionStorage.setItem('musicIsPlaying', 'false');
+        }
+    }
+
+    // 设置定期保存播放状态
+    const saveInterval = setInterval(savePlaybackState, 1000);
+
+    // 在页面卸载时保存播放状态
+    window.addEventListener('beforeunload', function() {
+        savePlaybackState();
+        clearInterval(saveInterval);
+    });
+
+    // 初始化播放器
+    initializePlayer();
 
     musicPlayer.addEventListener('play', function() {
         rotatingDiv.style.animationPlayState = 'running';
         playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        sessionStorage.setItem('musicIsPlaying', 'true');
     });
 
     musicPlayer.addEventListener('pause', function() {
         rotatingDiv.style.animationPlayState = 'paused';
         playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        sessionStorage.setItem('musicIsPlaying', 'false');
     });
 
     playPauseBtn.addEventListener('click', function() {
@@ -93,11 +232,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    let isMuted = false;
+    let isMuted = musicPlayer.muted;
     volumeBtn.addEventListener('click', function() {
         musicPlayer.muted = !musicPlayer.muted;
         isMuted = !isMuted;
         volumeBtn.innerHTML = isMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+        sessionStorage.setItem('musicIsMuted', isMuted);
     });
     
     nextBtn.addEventListener('click', function() {
