@@ -7,16 +7,6 @@
     margin-right: 6vw;
 }
 
-.card {
-    background-color: var(--card-bg);
-    border-radius: 1rem;
-    overflow: auto; /* 启用滚动条 */
-    width: 280px; /* 设置宽度 */
-    max-width: 100%; /* 确保在小屏幕上不会超出容器 */
-    max-height: 410px; /* 设置最大高度 */
-    box-shadow: var(--shadow);
-}
-
 .author-card-header {
     height: 100px;
     position: relative;
@@ -330,7 +320,7 @@ body.dark .music-card-special {
     }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 760px) {
     .sidebar {
         display: none;
     }

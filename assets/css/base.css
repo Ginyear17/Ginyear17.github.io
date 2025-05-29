@@ -1,21 +1,42 @@
 /* Base styles */
 :root {
-    --primary-color: #aed0ee;
-    --primary-dark: #06436f;
-    --text-color: #333;
-    --text-light: #666;
-    --text-dark: #111;
-    --bg-color: #fff;
-    --bg-dark: #1a1a1a;
-    --border-color: #eaeaea;
-    --border-dark: #333;
-    --card-bg: #fff;
-    --card-bg-dark: #222;
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --shadow-dark: 0 4px 6px rgba(0, 0, 0, 0.3);
-    --scroll-bar: #bcd4e7;
-    --loading-bar: #106898;
-    --transition: all 0.3s ease;
+    --primary-color: #aed0ee;      /* 主色（浅蓝） */
+    --primary-dark: #06436f;       /* 主色-深色（深蓝） */
+
+    --text-color: #333;            /* 正文文字颜色 */
+    --text-light: #666;            /* 文字（浅色） */
+    --text-dark: #111;             /* 文字（深色） */
+
+    --bg-color: #fff;              /* 背景色（白色） */
+    --bg-dark: #1a1a1a;            /* 背景色（深色） */
+
+    --border-color: #e7e5e5;       /* 边框颜色（浅灰） */
+    --border-dark: #333;           /* 深色边框 */
+
+    --card-bg: #fff;               /* 卡片背景色（白色） */
+    --card-bg-dark: #222;          /* 卡片背景色（深色） */
+
+    --button-text-one: #555;     /* 按钮文字颜色（浅色） */
+    --button-text-dark: #ecf0f1;          /* 按钮文字颜色（深色） */
+    --button-text-two: #3498db;    /* 按钮被选中后的颜色 */
+    --button-text-three: #fff;    /* 按钮获得焦点后的颜色 */
+
+    --button-bg-one: #f8f9fa;    /* 按钮背景色（浅色） */
+    --button-bg-dark: #2c3e50;  /* 按钮背景色（深色） */
+    --button-bg-two: #e9ecef;   /* 按钮悬停时的背景色（浅色） */
+    --button-bg-two-dark: #34495e;  /* 按钮获得焦点时的背景色（深色） */
+
+    --button-bg-three: #3498db;   /* 按钮获得焦点时的背景色（浅色） */
+    --button-bg-three-dark: #06436f; /* 按钮获得焦点时的背景色（深色） */
+    --button-bg-four: #06436f;   /* 按钮被选中后的背景色（浅色） */
+    --button-bg-four-dark: #3498db; /* 按钮被选中后的背景色（深色） */
+
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);      /* 阴影（浅色） */
+    --shadow-dark: 0 4px 6px rgba(0, 0, 0, 0.3); /* 阴影（深色） */
+
+    --scroll-bar: #bcd4e7;         /* 滚动条颜色 */
+    --loading-bar: #106898;        /* 加载条颜色 */
+    --transition: all 0.3s ease;    /* 过渡动画 */
 }
 
 * {
@@ -97,9 +118,22 @@ ul {
     gap: 1rem; /* 主内容和侧边栏之间的间距 */
 }
 
-@media (max-width: 900px) {
+.card {
+    background-color: var(--card-bg);
+    border-radius: 1rem;
+    overflow: auto; /* 启用滚动条 */
+    width: 280px; /* 设置宽度 */
+    max-width: 100%; /* 确保在小屏幕上不会超出容器 */
+    max-height: 410px; /* 设置最大高度 */
+    box-shadow: var(--shadow);
+}
+
+@media (max-width: 760px) {
     .main {
         flex-direction: column; /* 改为纵向布局 */
+        transform: scale(0.7);
+        transform-origin: top left;
+        width: 142.86%; /* 100% / 0.7 = 142.86% */
     }
 }
 

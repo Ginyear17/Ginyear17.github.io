@@ -1,4 +1,4 @@
-.main-card{
+.main-card {
     padding: 3vw 3vw;
 }
 
@@ -81,7 +81,7 @@ body.dark .main-card table th, body.dark .main-card table td {
     margin-bottom: 15px;
 }
 
-.main-card label {
+.main-card label:not(.tab-label) {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
@@ -94,6 +94,7 @@ body.dark .main-card table th, body.dark .main-card table td {
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 16px;
+    box-sizing: border-box;
 }
 
 body.dark .main-card input, body.dark .main-card select, body.dark .main-card textarea {
@@ -107,8 +108,8 @@ body.dark .main-card input, body.dark .main-card select, body.dark .main-card te
 }
 
 .main-card button {
-    background-color: #3498db;
-    color: white;
+    background-color: var(--button-bg-three);
+    color: var(--button-text-three);
     border: none;
     padding: 12px 20px;
     border-radius: 4px;
@@ -117,8 +118,106 @@ body.dark .main-card input, body.dark .main-card select, body.dark .main-card te
     transition: background-color 0.3s;
 }
 
-body.dark .main-card button {
-    background-color: var(--primary-dark);
+.main-card button:hover {
+    color: var(--button-text-three);
+    background-color: var(--button-bg-four);
 }
 
+body.dark .main-card button {
+    background-color: var(--button-bg-three-dark);
+}
 
+body.dark .main-card button:hover {
+    background-color: var(--button-bg-four-dark);
+}
+
+/* Tab 选项卡样式 */
+.tab-container {
+    position: relative;
+}
+
+.tab-nav label{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tab-nav input[type="radio"] {
+    display: none;
+}
+
+.tab-nav .tab-label {
+    display: inline-block;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--button-text-one);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+    background-color: var(--button-bg-one);
+    width: 17.8%;
+    text-align: center;
+    align-items: center;
+}
+
+body.dark .tab-nav .tab-label {
+    color: var(--button-text-dark);
+    background-color: var(--button-bg-dark);
+}
+
+.tab-nav .tab-label:hover {
+    color: var(--button-text-two);
+    background-color: var(--button-bg-two);
+}
+
+body.dark .tab-nav .tab-label:hover {
+    background-color: var(--button-bg-two-dark);
+}
+
+.tab-nav input[type="radio"]:checked + .tab-label {
+    color: var(--button-text-three);
+    background-color: var(--button-bg-three);
+}
+
+body.dark .tab-nav input[type="radio"]:checked + .tab-label {
+    background-color: var(--button-bg-three-dark);
+}
+
+/* 内容区域样式 */
+.tab-content {
+    position: relative;
+}
+
+.tab-content > div {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+/* 显示对应的内容 */
+#tab1:checked ~ .tab-content .content1,
+#tab2:checked ~ .tab-content .content2,
+#tab3:checked ~ .tab-content .content3,
+#tab4:checked ~ .tab-content .content4,
+#tab5:checked ~ .tab-content .content5 {
+    display: block;
+}
+
+/* @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+} */
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .main-card {
+        padding: 20px;
+    }
+    
+    .tab-nav {
+        flex-direction: column;
+        align-items: center;
+    }
+}
