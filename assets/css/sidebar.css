@@ -265,25 +265,30 @@ body.dark .music-card-special {
 }
 
 .music-avatar {
-    width: 108px;
-    height: 108px;
+    width: 115px;
+    height: 115px;
     border-radius: 50%;
-    border: 18px solid #222;
+    border: 19px solid #222;
     position: relative;
     z-index: 1;
     margin: 0 0; /* 水平居中 */
 }
 
 .rotating-img {
+    position: relative;
     display: inline-block;
     animation: rotate 20s linear infinite;
-    width: 138px; /* 需要设置与图片+边框总宽度一致 (106px + 16px*2) */
-    height: 138px; /* 需要设置与图片+边框总高度一致 (106px + 16px*2) */
+    width: 123px; /* 需要设置与图片+边框总宽度一致 (106px + 16px*2) */
+    height: 123px; /* 需要设置与图片+边框总高度一致 (106px + 16px*2) */
     display: flex; /* 使用flex布局使子元素居中 */
     justify-content: center;
     align-items: center;
     transform-origin: center; /* 明确指定旋转中心为元素中心 */
     animation-play-state: paused; /* 默认暂停旋转 */
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1); /* 半透明的白色边框 */
+    box-shadow: 0 0 6px -3px rgba(255, 255, 255, 0.8); /* 模糊的白色阴影 */
 }
 
 .custom-controls{

@@ -52,10 +52,11 @@ body.dark .header {
     max-height: 60px;
     height:auto;
     border-radius: 4px;
+    margin-right: -10px;
 }
 
 .logo-text {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: bold;
 }
 
