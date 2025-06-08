@@ -1,0 +1,18 @@
+.heart {
+    position: fixed;
+    font-size: 20px;
+    color: #e93c4b;
+    pointer-events: none;
+    animation: float-and-fade 1.5s forwards;
+}
+
+@keyframes float-and-fade {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) scale(1.5);
+        opacity: 0;
+    }
+}
