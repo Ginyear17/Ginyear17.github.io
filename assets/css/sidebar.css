@@ -316,6 +316,38 @@ body.dark .music-card-special {
     color: #666;
 }
 
+/* 日历卡片样式 */
+.calendar-card {
+    padding: 0.5rem 1rem;
+}
+
+.calendar-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.calendar-date {
+    font-size: 12px;
+}
+
+.calendar-time {
+    font-size: 12px;
+}
+
+.lunar-date {
+    font-size: 30px;
+}
+
+.welcome-message {
+    font-size: 12px;
+}
+
+.calendar-song{
+    font-size: 10px;
+    margin-right: -10px;
+}
+
 @keyframes rotate {
     from {
         transform: rotate(0deg);
