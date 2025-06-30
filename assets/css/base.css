@@ -114,8 +114,9 @@ ul {
 .main {
     display: flex; /* 使用 flexbox 布局 */
     flex-direction: row; /* 横向排列 */
-    padding: 1rem; /* 给主内容区域添加内边距 */
+    /* padding: 1rem; */
     gap: 1rem; /* 主内容和侧边栏之间的间距 */
+    margin: 2vh 6vw;
 }
 
 .card {
@@ -130,10 +131,11 @@ ul {
 
 @media (max-width: 760px) {
     .main {
+        margin: 0 1.5vw;
         flex-direction: column; /* 改为纵向布局 */
         transform: scale(0.7);
         transform-origin: top left;
-        width: 142.86%; /* 100% / 0.7 = 142.86% */
+        width: 138.5%; /* 100% / 0.7 = 142.86% */
     }
 }
 

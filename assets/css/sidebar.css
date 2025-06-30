@@ -4,7 +4,6 @@
     flex-direction: column;
     gap: 1rem;
     width: 270px; /* 设置侧边栏的宽度 */
-    margin-right: 6vw;
 }
 
 .author-card-header {

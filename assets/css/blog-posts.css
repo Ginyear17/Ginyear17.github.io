@@ -32,12 +32,12 @@ body.dark .blog-section-title i {
 
 .post {
     display: flex;
-    flex-direction: row;
-    gap: 16px; /* Add some space between the image and content */
+    /* flex-direction: row; */
+    justify-content: space-around;
     background-color: #fffffb;
     height: 160px;
     width: 100%;
-    margin: 1.5rem 1.5rem;
+    margin: 1.5em 0rem;
     border-radius: 0.5rem;
     overflow: hidden;
     box-shadow: var(--shadow);
