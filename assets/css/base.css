@@ -116,7 +116,7 @@ ul {
     flex-direction: row; /* 横向排列 */
     /* padding: 1rem; */
     gap: 1rem; /* 主内容和侧边栏之间的间距 */
-    margin: 2vh 6vw;
+    margin: 2.5vh 7vw;
 }
 
 .card {

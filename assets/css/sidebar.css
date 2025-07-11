@@ -3,7 +3,7 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    width: 270px; /* 设置侧边栏的宽度 */
+    width: 277px; /* 设置侧边栏的宽度 */
 }
 
 .author-card-header {
@@ -257,7 +257,7 @@ body.dark .music-card-special {
 #music-info {
     font-size: 9px; /* 调整字体更小 */
     margin-bottom: 0.3rem;
-    margin-top: 0.5rem;
+    margin-top: 0.9rem;
     font-weight: normal; /* 确保字体不加粗 */
     z-index: 1; /* 确保在背景之上 */
     color: #fff;
@@ -314,6 +314,42 @@ body.dark .music-card-special {
 .custom-controls button:hover {
     color: #666;
 }
+
+.progress-container {
+    width: 100%;
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    margin: 10px 0;
+    position: relative;
+    cursor: pointer;
+}
+
+.progress-bar {
+    height: 50%;
+    background-color: #fff;
+    border-radius: 3px;
+    width: 0%;
+    transition: width 0.1s linear;
+}
+
+.progress-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.time-display {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #fff;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
 
 /* 日历卡片样式 */
 .calendar-card {

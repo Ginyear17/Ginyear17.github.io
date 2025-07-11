@@ -160,6 +160,47 @@ document.addEventListener('DOMContentLoaded', function() {
     const volumeBtn = document.getElementById('volume-btn');
     const nextBtn = document.getElementById('next-btn');
 
+    // const progressBar = document.getElementById('progress-bar');
+    // const progressSlider = document.getElementById('progress-slider');
+    // const currentTimeDisplay = document.getElementById('current-time');
+    // const durationDisplay = document.getElementById('duration');
+    
+    // // 格式化时间显示（将秒数转为 mm:ss 格式）
+    // function formatTime(seconds) {
+    //     const mins = Math.floor(seconds / 60);
+    //     const secs = Math.floor(seconds % 60);
+    //     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    // }
+    
+    // // 更新进度条和时间显示
+    // musicPlayer.addEventListener('timeupdate', function() {
+    //     const duration = musicPlayer.duration;
+    //     const currentTime = musicPlayer.currentTime;
+        
+    //     if (!isNaN(duration)) {
+    //         // 更新进度条
+    //         const progressPercent = (currentTime / duration) * 100;
+    //         progressBar.style.width = progressPercent + '%';
+    //         progressSlider.value = progressPercent;
+            
+    //         // 更新时间显示
+    //         currentTimeDisplay.textContent = formatTime(currentTime);
+    //         durationDisplay.textContent = formatTime(duration);
+    //     }
+    // });
+    
+    // // 当元数据加载完成后设置持续时间
+    // musicPlayer.addEventListener('loadedmetadata', function() {
+    //     durationDisplay.textContent = formatTime(musicPlayer.duration);
+    // });
+    
+    // // 允许用户通过点击/拖动进度条来更改播放位置
+    // progressSlider.addEventListener('input', function() {
+    //     const seekTime = (musicPlayer.duration * progressSlider.value) / 100;
+    //     progressBar.style.width = progressSlider.value + '%';
+    //     musicPlayer.currentTime = seekTime;
+    // });
+
     // 初始化播放器
     function initializePlayer() {
         // 从sessionStorage获取播放信息
