@@ -1,5 +1,7 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const baseUrl = window.baseUrl || '';
+// 侧栏音乐播放器：本地 10 首 mp3，随机切歌，sessionStorage 跨页面续播
+// mp3/封面位于 /assets/music 下，由 vite.config.js 的 copy-static-assets 插件原样复制到 dist
+export function initMusicCard() {
+    const baseUrl = '/';
 
     const musicList = [
         {
@@ -22,9 +24,9 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         {
             title: "Mystery of love -长笛演奏版",
-            artist: "Chelsea范佳颖", 
+            artist: "Chelsea范佳颖",
             cover: baseUrl + "assets/music/cover/Chelsea范佳颖 - Mystery of love -长笛演奏版.jpg",
-            audio: baseUrl + "assets/music/Chelsea范佳颖 - Mystery of love -长笛演奏版.mp3"  
+            audio: baseUrl + "assets/music/Chelsea范佳颖 - Mystery of love -长笛演奏版.mp3"
         },
         {
             title: "it's 6pm but I miss u already",
@@ -66,10 +68,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function getCurrentMusicIndex(src) {
         if (!src) return -1;
-        
+
         for (let i = 0; i < musicList.length; i++) {
             const musicFileName = musicList[i].audio.split('/').pop();
-            if (src.includes(encodeURIComponent(musicFileName)) || 
+            if (src.includes(encodeURIComponent(musicFileName)) ||
                 src.includes(musicFileName)) {
                 return i;
             }
@@ -81,13 +83,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // 当前播放的音乐索引
         const currentSrc = document.getElementById('music-player').src;
         const currentIndex = getCurrentMusicIndex(currentSrc);
-        
+
         // 从剩余音乐中随机选择一首
         let newIndex;
         do {
             newIndex = Math.floor(Math.random() * musicList.length);
         } while (newIndex === currentIndex && musicList.length > 1);
-        
+
         return { music: musicList[newIndex], index: newIndex };
     }
 
@@ -106,15 +108,15 @@ document.addEventListener('DOMContentLoaded', function() {
         musicInfo.textContent = `${music.title} - ${music.artist}`;
 
         const musicPlayer = document.getElementById('music-player');
-        
+
         // 检查是否需要更换音乐源
         if (getCurrentMusicIndex(musicPlayer.src) !== index) {
             musicPlayer.src = music.audio;
         }
-        
+
         // 设置播放位置
         musicPlayer.currentTime = position;
-        
+
         // 根据需要自动播放
         if (autoplay) {
             musicPlayer.play().catch(error => {
@@ -124,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
             });
         }
-        
+
         // 保存当前播放的音乐索引
         sessionStorage.setItem('currentMusicIndex', index);
     }
@@ -148,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
         musicPlayer.play().catch(error => {
             console.log('Auto-play prevented:', error);
         });
-        
+
         // 保存当前播放的音乐索引
         sessionStorage.setItem('currentMusicIndex', index);
         sessionStorage.setItem('musicPosition', 0);
@@ -164,36 +166,36 @@ document.addEventListener('DOMContentLoaded', function() {
     // const progressSlider = document.getElementById('progress-slider');
     // const currentTimeDisplay = document.getElementById('current-time');
     // const durationDisplay = document.getElementById('duration');
-    
+
     // // 格式化时间显示（将秒数转为 mm:ss 格式）
     // function formatTime(seconds) {
     //     const mins = Math.floor(seconds / 60);
     //     const secs = Math.floor(seconds % 60);
     //     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     // }
-    
+
     // // 更新进度条和时间显示
     // musicPlayer.addEventListener('timeupdate', function() {
     //     const duration = musicPlayer.duration;
     //     const currentTime = musicPlayer.currentTime;
-        
+
     //     if (!isNaN(duration)) {
     //         // 更新进度条
     //         const progressPercent = (currentTime / duration) * 100;
     //         progressBar.style.width = progressPercent + '%';
     //         progressSlider.value = progressPercent;
-            
+
     //         // 更新时间显示
     //         currentTimeDisplay.textContent = formatTime(currentTime);
     //         durationDisplay.textContent = formatTime(duration);
     //     }
     // });
-    
+
     // // 当元数据加载完成后设置持续时间
     // musicPlayer.addEventListener('loadedmetadata', function() {
     //     durationDisplay.textContent = formatTime(musicPlayer.duration);
     // });
-    
+
     // // 允许用户通过点击/拖动进度条来更改播放位置
     // progressSlider.addEventListener('input', function() {
     //     const seekTime = (musicPlayer.duration * progressSlider.value) / 100;
@@ -207,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const savedIndex = sessionStorage.getItem('currentMusicIndex');
         const savedPosition = parseFloat(sessionStorage.getItem('musicPosition') || 0);
         const wasPlaying = sessionStorage.getItem('musicIsPlaying') === 'true';
-        
+
         if (savedIndex !== null && !isNaN(savedIndex)) {
             // 加载保存的音乐和位置
             loadMusic(parseInt(savedIndex), savedPosition, wasPlaying);
@@ -215,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // 如果没有保存的音乐信息，加载随机音乐
             loadRandomMusic();
         }
-        
+
         // 根据保存的状态设置UI
         if (wasPlaying) {
             playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
@@ -224,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
             playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
             rotatingDiv.style.animationPlayState = 'paused';
         }
-        
+
         // 加载音量状态
         const isMuted = sessionStorage.getItem('musicIsMuted') === 'true';
         musicPlayer.muted = isMuted;
@@ -245,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const saveInterval = setInterval(savePlaybackState, 1000);
 
     // 在页面卸载时保存播放状态
-    window.addEventListener('beforeunload', function() {
+    window.addEventListener('beforeunload', function () {
         savePlaybackState();
         clearInterval(saveInterval);
     });
@@ -253,37 +255,37 @@ document.addEventListener('DOMContentLoaded', function() {
     // 初始化播放器
     initializePlayer();
 
-    musicPlayer.addEventListener('play', function() {
+    musicPlayer.addEventListener('play', function () {
         rotatingDiv.style.animationPlayState = 'running';
         playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
         sessionStorage.setItem('musicIsPlaying', 'true');
     });
 
-    musicPlayer.addEventListener('pause', function() {
+    musicPlayer.addEventListener('pause', function () {
         rotatingDiv.style.animationPlayState = 'paused';
         playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
         sessionStorage.setItem('musicIsPlaying', 'false');
     });
 
-    playPauseBtn.addEventListener('click', function() {
+    playPauseBtn.addEventListener('click', function () {
         if (musicPlayer.paused) {
             musicPlayer.play();
         } else {
             musicPlayer.pause();
         }
     });
-    
+
     let isMuted = musicPlayer.muted;
-    volumeBtn.addEventListener('click', function() {
+    volumeBtn.addEventListener('click', function () {
         musicPlayer.muted = !musicPlayer.muted;
         isMuted = !isMuted;
         volumeBtn.innerHTML = isMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
         sessionStorage.setItem('musicIsMuted', isMuted);
     });
-    
-    nextBtn.addEventListener('click', function() {
+
+    nextBtn.addEventListener('click', function () {
         loadRandomMusic();
     });
 
     musicPlayer.addEventListener('ended', loadRandomMusic);
-});
+}
