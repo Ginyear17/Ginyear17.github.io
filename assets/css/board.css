@@ -1,0 +1,106 @@
+/* 留言板页面样式（使用 base.css 主题变量，自动适配深色模式） */
+
+.message-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.message-form .form-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.message-form input,
+.message-form textarea {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    font-size: 0.95rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+.message-form input:focus,
+.message-form textarea:focus {
+    border-color: var(--button-bg-three);
+}
+
+.message-form textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+.message-form button {
+    align-self: flex-end;
+    padding: 9px 26px;
+    border: none;
+    border-radius: 8px;
+    background: var(--button-bg-four);
+    color: var(--button-text-three);
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.message-form button:hover {
+    background: var(--button-bg-three);
+}
+
+.message-form button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.message-total {
+    color: var(--text-light);
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+}
+
+.message-item {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.message-item:last-child {
+    border-bottom: none;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.message-name {
+    font-weight: 600;
+    color: var(--primary-dark);
+}
+
+body.dark .message-name {
+    color: var(--primary-color);
+}
+
+.message-time {
+    color: var(--text-light);
+    font-size: 0.8rem;
+}
+
+.message-content {
+    color: var(--text-color);
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.message-empty {
+    color: var(--text-light);
+    text-align: center;
+    padding: 30px 0;
+}

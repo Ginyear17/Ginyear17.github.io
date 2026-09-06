@@ -2,6 +2,11 @@
 node_modules/
 dist/
 
+# Python 后端（venv 不入库；SQLite 数据文件不入库）
+backend/.venv/
+backend/data/
+__pycache__/
+
 # 编辑器
 .vscode/
 .idea/

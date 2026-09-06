@@ -14,6 +14,12 @@ const staticDirs = ['assets/music', 'vendors']
 // 多页应用（MPA）入口：每个 HTML 页面都是一个入口
 export default defineConfig({
   base: '/', // 部署在 ginyear17.github.io 根域名下
+  server: {
+    // 开发时把 /api 转发到本地 FastAPI（npm run dev 时后端需在 8000 端口运行）
+    proxy: {
+      '/api': 'http://localhost:8000',
+    },
+  },
   build: {
     rollupOptions: {
       input: {

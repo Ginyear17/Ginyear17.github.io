@@ -13,12 +13,13 @@ Header / Sidebar / Footer 布局，通过复制粘贴模板的方式实现"多�
 | 项 | 说明 |
 |---|---|
 | 构建工具 | Vite 6（多页应用 MPA 模式，`npm run dev` / `build` / `preview`） |
-| 技术栈 | 原生 HTML5 + CSS3 + JavaScript（ES Module），无框架 |
+| 前端 | 原生 HTML5 + CSS3 + JavaScript（ES Module），无框架 |
+| 后端 | FastAPI + SQLAlchemy（uv 管理依赖，代码在 `backend/`），开发库 SQLite、上线 PostgreSQL |
+| 已接入后端的页面 | 留言板（`GET/POST /api/messages`）；其余仍为前端占位 |
 | 外部依赖 | 仅 Font Awesome 6.4.0（cdnjs CDN，全站图标） |
 | 本地 vendor 库 | [lunar-javascript 1.7.3](https://github.com/6tail/lunar-javascript)（农历计算） |
 | 存储 | `localStorage`（主题）、`sessionStorage`（音乐播放状态） |
-| 部署 | GitHub Pages，`.github/workflows/deploy.yml` 自动构建 `dist` 并发布 |
-| 后端 | ❌ 无。全站没有任何 fetch / XHR / axios 调用，登录、留言等表单均为前端占位 |
+| 部署 | 自建 Linux 服务器 + Docker Compose（规划中），数据库用服务器上已有的 PostgreSQL |
 
 ---
 
@@ -67,6 +68,15 @@ Ginyear17.github.io/
 │   └── moments/
 │       ├── index.html          # 说说列表（占位，未开发）
 │       └── write_a_note.html   # "随笔一记"单个说说页（占位，未开发）
+├── backend/                    # FastAPI 后端（uv 管理依赖，Python 3.11）
+│   ├── pyproject.toml / uv.lock
+│   ├── data/app.db             # SQLite 开发数据库（已 gitignore，不入库）
+│   └── app/
+│       ├── main.py             #   应用入口（建表 / CORS / 路由注册）
+│       ├── database.py         #   SQLAlchemy 连接（DATABASE_URL 环境变量，默认 SQLite）
+│       ├── models.py           #   ORM 模型（messages 表）
+│       ├── schemas.py          #   Pydantic 请求/响应模型
+│       └── routers/messages.py #   留言板 API：GET / POST /api/messages
 └── vendors/
     └── lunar-javascript-1.7.3/ # 农历库（构建时原样复制进 dist；demo/tests 与站点无关）
 ```
@@ -124,18 +134,34 @@ Ginyear17.github.io/
 ## 本地运行与构建
 
 ```bash
+# 前端
 npm install        # 首次安装依赖
-npm run dev        # 开发服务器（默认 http://localhost:5173）
+npm run dev        # 开发服务器（http://localhost:5173，/api 自动代理到后端）
 npm run build      # 构建到 dist/
-npm run preview    # 本地预览构建产物（默认 http://localhost:4173）
+npm run preview    # 本地预览构建产物
+
+# 后端（另开终端）
+cd backend
+uv sync                         # 首次：按 uv.lock 创建虚拟环境并安装依赖
+uv run uvicorn app.main:app --reload --port 8000
+# 交互式 API 文档：http://localhost:8000/docs
 ```
 
-## 部署
+留言板留言存在 `backend/data/app.db`（SQLite）；上线时通过环境变量切 PostgreSQL：
 
-推送到 `main` 分支后，GitHub Actions（`.github/workflows/deploy.yml`）会自动
-`npm ci && npm run build`，并把 `dist/` 发布到 GitHub Pages。
-> 注意：需要在仓库 Settings → Pages 中把 Source 设置为 **GitHub Actions**。
-sitemap 中的站点域名为 `https://ginyear17.github.io/`。
+```bash
+DATABASE_URL=postgresql+psycopg://user:password@host:5432/ginyear
+```
+
+## 部署（自建 Linux 服务器）
+
+不再使用 GitHub Pages。目标架构（Docker Compose，待编写）：
+
+```text
+nginx   → 托管 vite build 产物 dist/ + 反向代理 /api
+fastapi → uvicorn 容器
+数据库  → 直连服务器上已有的 PostgreSQL
+```
 
 ---
 
