@@ -1,5 +1,8 @@
 # 一键部署：docker compose up -d --build
 # 前置：服务器需安装 Docker 和 Docker Compose 插件
+# 本机部署（飞牛 NAS）：复用 honcho-database-1 的 PostgreSQL（pgvector/pg15），
+# 在实例内新建了 ginyear 库；api 通过宿主机 bridge 网关 172.17.0.1 访问 15433 映射端口。
+# 如需独立数据库：把 db 服务加回来并把 DATABASE_URL 改回 db:5432。
 services:
   # 前端：Vite 构建 + nginx 托管静态文件 + 反代 /api
   web:
@@ -14,28 +17,6 @@ services:
   api:
     build: ./backend
     environment:
-      # 默认连 compose 内置的 postgres；如要直连宿主机上已有的 PostgreSQL，
-      # 改为：postgresql+psycopg://用户名:密码@宿主机IP:5432/库名
-      # 宿主机IP 不能写 127.0.0.1（容器内指向自己），可用服务器内网IP
-      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-ginyear}:${POSTGRES_PASSWORD:-ginyear}@db:5432/${POSTGRES_DB:-ginyear}
-    depends_on:
-      - db
+      # 复用 honcho 的 PostgreSQL 实例（172.17.0.1 = 容器内访问宿主机的 bridge 网关）
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@172.17.0.1:15433/ginyear
     restart: unless-stopped
-
-  # 数据库：PostgreSQL（数据存 named volume，容器重建不丢）
-  # 如果你想直接用服务器上已有的 PostgreSQL，删掉本服务即可
-  db:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-ginyear}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ginyear}
-      POSTGRES_DB: ${POSTGRES_DB:-ginyear}
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    restart: unless-stopped
-    # 如需从宿主机访问数据库做管理，放开端口映射：
-    # ports:
-    #   - "127.0.0.1:5432:5432"
-
-volumes:
-  pgdata:
