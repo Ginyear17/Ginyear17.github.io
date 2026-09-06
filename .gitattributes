@@ -1,0 +1,15 @@
+# 统一行尾策略：所有文本文件入库用 LF，checkout 时按平台自动转换
+# 解决 Windows(LF→CRLF) / Linux 来回切换导致的全文件假 diff
+* text=auto
+
+# 二进制资源强制不做行尾转换（避免 git 误判为文本）
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.gif binary
+*.webp binary
+*.mp3 binary
+*.ttf binary
+*.ico binary
+*.woff binary
+*.woff2 binary
