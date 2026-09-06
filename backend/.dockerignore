@@ -1,0 +1,5 @@
+# 构建后端镜像时排除的内容
+.venv
+data
+__pycache__
+*.pyc

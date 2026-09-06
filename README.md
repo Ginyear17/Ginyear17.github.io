@@ -155,12 +155,35 @@ DATABASE_URL=postgresql+psycopg://user:password@host:5432/ginyear
 
 ## 部署（自建 Linux 服务器）
 
-不再使用 GitHub Pages。目标架构（Docker Compose，待编写）：
+不再使用 GitHub Pages。使用 Docker Compose 一键部署（nginx + FastAPI + PostgreSQL）：
 
-```text
-nginx   → 托管 vite build 产物 dist/ + 反向代理 /api
-fastapi → uvicorn 容器
-数据库  → 直连服务器上已有的 PostgreSQL
+```bash
+# 1. 服务器上安装 Docker 和 Docker Compose 插件（略）
+
+# 2. 克隆代码，配置数据库密码
+git clone https://github.com/Ginyear17/Ginyear17.github.io.git
+cd Ginyear17.github.io
+cp .env.example .env && vim .env   # 修改 POSTGRES_PASSWORD
+
+# 3. 构建并启动（前端镜像内自动执行 vite build）
+docker compose up -d --build
+
+# 4. 验证
+curl http://localhost/api/health   # {"status":"ok"}
+curl http://localhost/api/messages
+```
+
+架构：`web`（nginx 托管构建产物 + 反代 `/api`）→ `api`（FastAPI/uvicorn）→ `db`（PostgreSQL 16，数据存 `pgdata` volume）。
+
+> 若想直连服务器上**已有的** PostgreSQL 而不用内置容器：删掉 compose 里的 `db` 服务，
+> 并把 `api` 的 `DATABASE_URL` 改为 `postgresql+psycopg://用户:密码@宿主机内网IP:5432/库名`。
+>
+> HTTPS：建议在服务器外层再放一层 Caddy / Nginx Proxy Manager 做证书，或改写 `deploy/nginx.conf`。
+
+日常更新：
+
+```bash
+git pull && docker compose up -d --build
 ```
 
 ---

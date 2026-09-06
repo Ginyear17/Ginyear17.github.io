@@ -1,0 +1,9 @@
+# 构建前端镜像时排除的内容（COPY . . 会忽略这些）
+node_modules
+dist
+.git
+.gitignore
+backend
+*.md
+.vscode
+.idea
