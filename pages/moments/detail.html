@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>说说 · 小杰的杂物间</title>
+    <title>说说详情 · 小杰的杂物间</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../assets/css/base.css">
     <link rel="stylesheet" href="../../assets/css/header.css">
@@ -13,7 +14,8 @@
     <link rel="stylesheet" href="../../assets/css/modal.css">
     <link rel="stylesheet" href="../../assets/css/moments.css">
 </head>
-<body data-page="moments">
+
+<body data-page="moments-detail">
     <!-- 公共布局（header/移动菜单/登录框）由 src/js/components/layout.js 注入 -->
     <div id="layout-header"></div>
 
@@ -21,22 +23,31 @@
         <div class="main-card">
             <h2><i class="fas fa-feather"></i> 说说</h2>
 
-            <p class="moment-count" id="moment-count"></p>
-            <div class="moment-timeline" id="moment-list"></div>
-            <button type="button" class="moment-more" id="moment-more" style="display: none;">加载更多</button>
+            <!-- 单条说说由 initMomentDetail 按 ?id= 渲染 -->
+            <div id="moment-detail"></div>
 
-            <p style="margin-top: 20px; text-align: right;">
-                <a href="./write_a_note.html"><i class="fas fa-pen-nib"></i> 随笔一记</a>
-            </p>
+            <!-- 评论区由 initMomentComments 渲染 -->
+            <div class="moment-comment-section" id="moment-comments">
+                <h3 class="comment-title"><i class="fas fa-comments"></i> 评论 <span id="comment-count"></span></h3>
+
+                <form id="comment-form" class="comment-form">
+                    <input type="text" id="comment-name" placeholder="昵称（留空则显示「匿名」）" maxlength="50">
+                    <textarea id="comment-content" placeholder="说点什么吧...（500 字以内）" maxlength="500" required></textarea>
+                    <button type="submit">发表评论</button>
+                </form>
+
+                <div id="comment-list"></div>
+            </div>
         </div>
         <!-- 公共侧栏由 src/js/components/layout.js 注入 -->
         <div id="layout-sidebar"></div>
     </main>
 
-     <div style="height: 100px;"></div>
+    <div style="height: 100px;"></div>
     <!-- 公共页脚由 src/js/components/layout.js 注入 -->
     <div id="layout-footer"></div>
     <script src="/vendors/lunar-javascript-1.7.3/lunar.js"></script>
     <script type="module" src="/src/js/pages/moments.js"></script>
 </body>
+
 </html>

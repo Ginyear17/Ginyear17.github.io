@@ -15,9 +15,12 @@ const staticDirs = ['assets/music', 'vendors']
 export default defineConfig({
   base: '/', // 部署在 ginyear17.github.io 根域名下
   server: {
-    // 开发时把 /api 转发到本地 FastAPI（npm run dev 时后端需在 8000 端口运行）
+    // 开发时把 /api 转发到本地 FastAPI（npm run dev 时后端需在 8001 端口运行，
+    // 8000 已被本机 Portainer 容器占用）
     proxy: {
-      '/api': 'http://localhost:8000',
+      '/api': 'http://localhost:8001',
+      // 说说配图由后端静态托管，开发时同样转发
+      '/uploads': 'http://localhost:8001',
     },
   },
   build: {
@@ -29,6 +32,7 @@ export default defineConfig({
         blogAliyunDdns: resolve(rootDir, 'pages/blog/aliyun_ddns.html'),
         board: resolve(rootDir, 'pages/board/index.html'),
         moments: resolve(rootDir, 'pages/moments/index.html'),
+        momentsDetail: resolve(rootDir, 'pages/moments/detail.html'),
         momentsNote: resolve(rootDir, 'pages/moments/write_a_note.html'),
       },
     },

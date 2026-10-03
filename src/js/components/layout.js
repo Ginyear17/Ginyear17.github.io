@@ -87,21 +87,73 @@ export function headerHTML() {
     <div id="login-modal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
-            <h2>登录</h2>
-            <form id="login-form">
+
+            <!-- 未登录：登录表单 -->
+            <div id="login-view">
+                <h2>登录</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <div class="label-group">
+                            <label for="username">账号</label>
+                            <input type="text" id="username" name="username" required>
+                        </div>
+                        <div class="label-group">
+                            <label for="password">密码</label>
+                            <input type="password" id="password" name="password" required>
+                        </div>
+                    </div>
+                    <div class="form-error" id="login-error-msg"></div>
+                    <div class="button-group">
+                        <button type="button" id="register-btn">注册</button>
+                        <button type="submit">登录</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 已登录：个人信息 + 退出 -->
+            <div id="profile-view" style="display: none;">
+                <h2>个人中心</h2>
+                <p class="profile-username"><i class="fas fa-user-circle"></i> <span id="profile-username-text"></span></p>
+                <div class="button-group">
+                    <button type="button" id="logout-btn">退出登录</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 注册模态框（邮箱验证码注册） -->
+    <div id="register-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>注册</h2>
+            <form id="register-form">
                 <div class="form-group">
                     <div class="label-group">
-                        <label for="username">账号</label>
-                        <input type="text" id="username" name="username" required>
+                        <label for="new-username">用户名</label>
+                        <input type="text" id="new-username" name="new-username" maxlength="20" required>
                     </div>
                     <div class="label-group">
-                        <label for="password">密码</label>
-                        <input type="password" id="password" name="password" required>
+                        <label for="new-email">邮箱</label>
+                        <input type="email" id="new-email" name="new-email" required>
+                    </div>
+                    <div class="label-group label-group-code">
+                        <label for="verification-code">验证码</label>
+                        <input type="text" id="verification-code" name="verification-code" maxlength="6" required>
+                        <button type="button" id="send-code-btn" class="btn-send-code">发送验证码</button>
+                    </div>
+                    <div class="label-group">
+                        <label for="new-password">密码</label>
+                        <input type="password" id="new-password" name="new-password" minlength="6" required>
+                    </div>
+                    <div class="label-group">
+                        <label for="confirm-password">确认密码</label>
+                        <input type="password" id="confirm-password" name="confirm-password" required>
                     </div>
                 </div>
+                <div class="form-error" id="register-error-msg"></div>
                 <div class="button-group">
-                    <button type="button" id="register-btn">注册</button>
-                    <button type="submit">登录</button>
+                    <button type="button" id="back-to-login-btn">返回登录</button>
+                    <button type="submit" id="register-submit-btn">注册</button>
                 </div>
             </form>
         </div>

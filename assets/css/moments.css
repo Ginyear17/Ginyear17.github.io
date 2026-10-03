@@ -1,0 +1,824 @@
+/* 说说（moments）：时间线 + 发布表单
+   颜色沿用 base.css 的 CSS 变量，自动适配深色模式 */
+
+/* main-card 是 flex 子项，默认 min-width:auto 会被 nowrap 评论预览的最小宽度撑开，
+   导致卡片无法随窗口宽度收缩；恢复自适应布局 */
+.main-card {
+    min-width: 0;
+}
+
+/* ===== 时间线列表 ===== */
+.moment-timeline {
+    position: relative;
+    margin-top: 16px;
+    padding-left: 28px;
+}
+
+/* 竖线 */
+.moment-timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    background: var(--border-color);
+    border-radius: 1px;
+}
+
+.moment-item {
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+/* 节点圆点 */
+.moment-item::before {
+    content: '';
+    position: absolute;
+    left: -27px;
+    top: 20px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--button-bg-three);
+    border: 2px solid var(--card-bg);
+    box-shadow: 0 0 0 2px var(--button-bg-three);
+}
+
+.moment-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+.moment-content {
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--text-color);
+    font-size: 15px;
+}
+
+/* 配图网格：1 图大图，多图三列 */
+.moment-images {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.moment-images.single {
+    grid-template-columns: minmax(0, 320px);
+}
+
+.moment-images img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: zoom-in;
+    transition: var(--transition);
+    border: 1px solid var(--border-color);
+}
+
+.moment-images img:hover {
+    opacity: 0.88;
+}
+
+/* 底部：农历日期 + 相对时间 */
+.moment-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border-color);
+    font-size: 12.5px;
+    color: var(--text-light);
+}
+
+.moment-meta .fas {
+    margin-right: 4px;
+}
+
+.moment-count {
+    margin: 14px 0 6px;
+    font-size: 13px;
+    color: var(--text-light);
+}
+
+.moment-empty {
+    text-align: center;
+    color: var(--text-light);
+    padding: 32px 0;
+}
+
+/* 加载更多 */
+.moment-more {
+    display: block;
+    margin: 18px auto 0;
+    padding: 8px 28px;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    background: var(--button-bg-one);
+    color: var(--button-text-one);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.moment-more:hover {
+    background: var(--button-bg-two);
+}
+
+.moment-more[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ===== 发布表单（write_a_note 页） ===== */
+.moment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.moment-form textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 12px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    font: inherit;
+    resize: vertical;
+    transition: var(--transition);
+}
+
+.moment-form textarea:focus {
+    outline: none;
+    border-color: var(--button-bg-three);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+}
+
+.moment-form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.moment-char-count {
+    font-size: 13px;
+    color: var(--text-light);
+}
+
+.moment-char-count.over {
+    color: #e74c3c;
+}
+
+/* 图片选择 + 预览 */
+.moment-attach {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.moment-attach-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border: 1px dashed var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--button-text-one);
+    background: var(--button-bg-one);
+    transition: var(--transition);
+}
+
+.moment-attach-label:hover {
+    background: var(--button-bg-two);
+}
+
+.moment-attach input[type='file'] {
+    display: none;
+}
+
+.moment-previews {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.moment-preview {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.moment-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 移除按钮 */
+.moment-preview .remove {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 18px;
+    height: 18px;
+    line-height: 16px;
+    text-align: center;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.moment-preview.uploading::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2'%3E%3Cpath d='M21 12a9 9 0 1 1-9-9'/%3E%3C/svg%3E") center/22px no-repeat;
+    animation: moment-spin 0.9s linear infinite;
+}
+
+@keyframes moment-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* 提交按钮 */
+.moment-submit {
+    padding: 10px 26px;
+    border: none;
+    border-radius: 22px;
+    background: var(--button-bg-three);
+    color: var(--button-text-three);
+    font: inherit;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.moment-submit:hover {
+    background: var(--button-bg-three-dark, #06436f);
+}
+
+.moment-submit[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* 「查看详情」链接 */
+.moment-link {
+    margin-left: auto;
+    font-size: 12.5px;
+    color: var(--button-text-two);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.moment-link:hover {
+    color: var(--button-bg-four);
+}
+
+/* 列表页点击正文跳详情（详情页的正文不带此样式） */
+.moment-timeline .moment-content {
+    cursor: pointer;
+}
+
+/* 返回说说 */
+.moment-back {
+    margin-top: 16px;
+    text-align: center;
+}
+
+/* ===== 详情页操作栏（编辑/删除/分享） ===== */
+.moment-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border-color);
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    background: var(--button-bg-one);
+    color: var(--button-text-one);
+    font-size: 13px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.action-btn:hover {
+    background: var(--button-bg-two);
+    color: var(--button-text-two);
+}
+
+.action-btn.danger:hover {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+    border-color: #e74c3c;
+}
+
+/* 编辑态 */
+.moment-edit-area {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 8px 0;
+}
+
+.moment-edit-area textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px 14px;
+    border: 1px solid var(--button-bg-three);
+    border-radius: 10px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    font: inherit;
+    resize: vertical;
+}
+
+.moment-edit-area textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+}
+
+.moment-edit-area .edit-btns {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.moment-edit-area .edit-btns button {
+    padding: 6px 18px;
+    border: none;
+    border-radius: 16px;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.moment-edit-area .edit-cancel {
+    background: var(--button-bg-two);
+    color: var(--button-text-one);
+}
+
+.moment-edit-area .edit-save {
+    background: var(--button-bg-three);
+    color: var(--button-text-three);
+}
+
+.moment-edit-area .edit-save[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* 全局轻提示 */
+.toast {
+    position: fixed;
+    left: 50%;
+    bottom: 48px;
+    transform: translate(-50%, 16px);
+    z-index: 10000;
+    padding: 10px 22px;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    max-width: 80vw;
+    word-break: break-all;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+.moment-back a {
+    color: var(--button-text-two);
+    font-size: 13.5px;
+    transition: var(--transition);
+}
+
+.moment-back a:hover {
+    color: var(--button-bg-four);
+}
+
+/* ===== 图片灯箱 ===== */
+.lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.85);
+    cursor: zoom-out;
+    opacity: 1;
+    transition: opacity 0.25s ease;
+}
+
+.lightbox-overlay.closing {
+    opacity: 0;
+}
+
+.lightbox-img {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    cursor: zoom-out;
+}
+
+/* 关闭按钮 */
+.lightbox-close {
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* 左右切换 */
+.lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 46px;
+    height: 46px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-size: 30px;
+    line-height: 1;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.lightbox-nav:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.lightbox-prev {
+    left: 22px;
+}
+
+.lightbox-next {
+    right: 22px;
+}
+
+/* 缩放工具条 */
+.lightbox-tools {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+}
+
+.lightbox-tool {
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.lightbox-tool:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* 计数器 */
+.lightbox-counter {
+    position: absolute;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 14px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-size: 13px;
+}
+
+/* 列表页评论数 */
+.moment-comments {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12.5px;
+    color: var(--text-light);
+    transition: var(--transition);
+}
+
+.moment-comments:hover {
+    color: var(--button-text-two);
+}
+
+/* ===== 评论（详情页） ===== */
+.moment-comment-section {
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border-color);
+}
+
+.comment-title {
+    font-size: 16px;
+    color: var(--text-dark);
+    margin-bottom: 14px;
+}
+
+.comment-title .fas {
+    margin-right: 6px;
+    color: var(--button-text-two);
+}
+
+.comment-title span {
+    font-size: 13px;
+    color: var(--text-light);
+    font-weight: normal;
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.comment-form input,
+.comment-form textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    font: inherit;
+    transition: var(--transition);
+}
+
+.comment-form textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.comment-form input:focus,
+.comment-form textarea:focus {
+    outline: none;
+    border-color: var(--button-bg-three);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+}
+
+.comment-form button {
+    align-self: flex-end;
+    padding: 8px 22px;
+    border: none;
+    border-radius: 18px;
+    background: var(--button-bg-three);
+    color: var(--button-text-three);
+    font: inherit;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.comment-form button:hover {
+    background: var(--button-bg-three-dark, #06436f);
+}
+
+.comment-form button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.comment-empty {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 13.5px;
+    padding: 16px 0;
+}
+
+/* 未登录时的评论引导 */
+.comment-login-tip {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 13.5px;
+    padding: 16px 0;
+}
+
+.comment-login-tip a {
+    color: var(--button-text-two);
+    transition: var(--transition);
+}
+
+.comment-login-tip a:hover {
+    color: var(--button-bg-four);
+}
+
+/* 单条评论 */
+.moment-comment {
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.moment-comment:last-child {
+    border-bottom: none;
+}
+
+.comment-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.comment-name {
+    font-size: 13.5px;
+    font-weight: bold;
+    color: var(--button-text-two);
+}
+
+.comment-time {
+    font-size: 12px;
+    color: var(--text-light);
+}
+
+.comment-content {
+    font-size: 14px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--text-color);
+}
+
+/* ===== 列表页评论预览 ===== */
+.moment-comment-preview {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: var(--button-bg-one);
+    border-radius: 8px;
+    /* 防止长评论把卡片撑宽，破坏宽度自适应 */
+    min-width: 0;
+    overflow: hidden;
+}
+
+.preview-line {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    font-size: 13px;
+    line-height: 1.8;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.preview-name {
+    color: var(--button-text-two);
+    flex-shrink: 0;
+    font-weight: bold;
+}
+
+.preview-text {
+    color: var(--text-light);
+    flex: 1 1 0; /* 允许收缩并截断，否则 nowrap 会把整行最小宽度撑大 */
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 预览行的点赞按钮（右对齐，与评论文字留出间距） */
+.preview-like {
+    margin-left: auto;
+    flex-shrink: 0;
+    padding: 0 4px;
+    gap: 3px;
+    font-size: 12px;
+}
+
+/* 查看全部评论 */
+.comment-more {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 12.5px;
+    color: var(--button-text-two);
+    transition: var(--transition);
+}
+
+.comment-more:hover {
+    color: var(--button-bg-four);
+}
+
+/* 点赞按钮（说说 meta 行 & 评论） */
+.like-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border: none;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--text-light);
+    font-size: 12.5px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.like-btn:hover:not([disabled]) {
+    color: #e74c3c;
+    background: rgba(231, 76, 60, 0.08);
+    transform: scale(1.05);
+}
+
+.like-btn.liked {
+    color: #e74c3c;
+}
+
+.like-btn.liked i {
+    animation: like-pop 0.3s ease;
+}
+
+@keyframes like-pop {
+    0% { transform: scale(0.6); }
+    60% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+/* 评论行内点赞：右对齐 */
+.comment-body {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.comment-body .comment-content {
+    flex: 1;
+}
+
+.comment-body .comment-like {
+    flex-shrink: 0;
+    padding: 2px 6px;
+}
+
+/* ===== 移动端适配 ===== */
+@media (max-width: 768px) {
+    .moment-timeline {
+        padding-left: 22px;
+    }
+
+    .moment-timeline::before {
+        left: 6px;
+    }
+
+    .moment-item::before {
+        left: -22px;
+        width: 8px;
+        height: 8px;
+    }
+}
