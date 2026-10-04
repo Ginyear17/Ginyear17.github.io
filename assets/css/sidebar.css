@@ -3,11 +3,11 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    width: 277px; /* 设置侧边栏的宽度 */
+    width: 17.3125rem; /* 设置侧边栏的宽度 */
 }
 
 .author-card-header {
-    height: 100px;
+    height: 6.25rem;
     position: relative;
     overflow: hidden;
 }
@@ -18,7 +18,7 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 30px; /* 渐变区域的高度 */
+    height: 1.875rem; /* 渐变区域的高度 */
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, var(--card-bg) 100%);
     pointer-events: none; /* 确保伪元素不影响交互 */
 }
@@ -38,11 +38,11 @@
 }
 
 .author-avatar {
-    width: 80px;
-    height: 80px;
+    width: 5rem;
+    height: 5rem;
     border-radius: 50%;
-    border: 4px solid var(--card-bg);
-    margin-top: -90px;
+    border: 0.25rem solid var(--card-bg);
+    margin-top: -5.625rem;
     position: relative;
     z-index: 1;
 }
@@ -79,9 +79,9 @@
 .author-stats > div:not(:last-child)::after {
     content: '';
     position: absolute;
-    top: 6px;
-    right: -10px; /* 向右移动竖线 */
-    width: 1.2px; /* 竖线宽度 */
+    top: 0.375rem;
+    right: -0.625rem; /* 向右移动竖线 */
+    width: 0.075rem; /* 竖线宽度 */
     height: 80%; /* 竖线高度 */
     background-color: var(--border-color); /* 使用边框颜色 */
     opacity: 0.5; /* 透明度，柔和效果 */
@@ -114,8 +114,8 @@
 }
 
 .social-link {
-    width: 32px;
-    height: 32px; 
+    width: 2rem;
+    height: 2rem; 
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -163,9 +163,9 @@ body.dark .section-title i {
     content: '';
     position: absolute;
     bottom: -0.5rem; /* 分割线的位置 */
-    left: -16px;
+    left: -1rem;
     width: 115%; /* 分割线宽度 */
-    height: 2px; /* 分割线高度 */
+    height: 0.125rem; /* 分割线高度 */
     background-color: var(--border-color); /* 使用边框颜色 */
     opacity: 0.5; /* 透明度，柔和效果 */
 }
@@ -186,7 +186,7 @@ body.dark .section-title i {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 
 .recent-posts-list {
@@ -228,13 +228,13 @@ body.dark .music-card-special {
 
 #blurred-background0 {
     position: absolute; /* 改为绝对定位 */
-    top: -40px;
-    left: -40px;
-    width: calc(100% + 80px);
-    height: calc(100% + 80px);
+    top: -2.5rem;
+    left: -2.5rem;
+    width: calc(100% + 5rem);
+    height: calc(100% + 5rem);
     background-size: cover;
     background-position: center;
-    filter: blur(50px); /* 模糊效果 */
+    filter: blur(3.125rem); /* 模糊效果 */
     opacity: 0.3; /* 透明度 */
     z-index: 0; /* 置于底层 */
     transition: background-image 0.5s ease; /* 平滑过渡 */
@@ -242,20 +242,20 @@ body.dark .music-card-special {
 
 #blurred-background1 {
     position: absolute; /* 改为绝对定位 */
-    top: -20px;
-    left: -20px;
-    width: calc(100% + 40px);
-    height: calc(100% + 40px);
+    top: -1.25rem;
+    left: -1.25rem;
+    width: calc(100% + 2.5rem);
+    height: calc(100% + 2.5rem);
     background-size: cover;
     background-position: center;
-    filter: blur(50px); /* 模糊效果 */
+    filter: blur(3.125rem); /* 模糊效果 */
     opacity: 0.9; /* 透明度 */
     z-index: 0; /* 置于底层 */
     transition: background-image 0.5s ease; /* 平滑过渡 */
 }
 
 #music-info {
-    font-size: 9px; /* 调整字体更小 */
+    font-size: 0.5625rem; /* 调整字体更小 */
     margin-bottom: 0.3rem;
     margin-top: 0.9rem;
     font-weight: normal; /* 确保字体不加粗 */
@@ -264,10 +264,10 @@ body.dark .music-card-special {
 }
 
 .music-avatar {
-    width: 115px;
-    height: 115px;
+    width: 7.1875rem;
+    height: 7.1875rem;
     border-radius: 50%;
-    border: 19px solid #222;
+    border: 1.1875rem solid #222;
     position: relative;
     z-index: 1;
     margin: 0 0; /* 水平居中 */
@@ -277,8 +277,8 @@ body.dark .music-card-special {
     position: relative;
     display: inline-block;
     animation: rotate 20s linear infinite;
-    width: 123px; /* 需要设置与图片+边框总宽度一致 (106px + 16px*2) */
-    height: 123px; /* 需要设置与图片+边框总高度一致 (106px + 16px*2) */
+    width: 7.6875rem; /* 需要设置与图片+边框总宽度一致 (6.625rem + 1rem*2) */
+    height: 7.6875rem; /* 需要设置与图片+边框总高度一致 (6.625rem + 1rem*2) */
     display: flex; /* 使用flex布局使子元素居中 */
     justify-content: center;
     align-items: center;
@@ -287,7 +287,7 @@ body.dark .music-card-special {
     border-radius: 50%;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.1); /* 半透明的白色边框 */
-    box-shadow: 0 0 6px -3px rgba(255, 255, 255, 0.8); /* 模糊的白色阴影 */
+    box-shadow: 0 0 0.375rem -0.1875rem rgba(255, 255, 255, 0.8); /* 模糊的白色阴影 */
 }
 
 .custom-controls{
@@ -299,8 +299,8 @@ body.dark .music-card-special {
 }
 
 .custom-controls button {
-    width: 32px;
-    height: 32px; 
+    width: 2rem;
+    height: 2rem; 
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -317,10 +317,10 @@ body.dark .music-card-special {
 
 .progress-container {
     width: 100%;
-    height: 6px;
+    height: 0.375rem;
     background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 3px;
-    margin: 10px 0;
+    border-radius: 0.1875rem;
+    margin: 0.625rem 0;
     position: relative;
     cursor: pointer;
 }
@@ -328,7 +328,7 @@ body.dark .music-card-special {
 .progress-bar {
     height: 50%;
     background-color: #fff;
-    border-radius: 3px;
+    border-radius: 0.1875rem;
     width: 0%;
     transition: width 0.1s linear;
 }
@@ -344,9 +344,9 @@ body.dark .music-card-special {
 .time-display {
     display: flex;
     justify-content: space-between;
-    font-size: 12px;
+    font-size: 0.75rem;
     color: #fff;
-    margin-bottom: 10px;
+    margin-bottom: 0.625rem;
     text-align: center;
 }
 
@@ -363,24 +363,24 @@ body.dark .music-card-special {
 }
 
 .calendar-date {
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
 .calendar-time {
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
 .lunar-date {
-    font-size: 30px;
+    font-size: 1.875rem;
 }
 
 .welcome-message {
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
 .calendar-song{
-    font-size: 10px;
-    margin-right: -10px;
+    font-size: 0.625rem;
+    margin-right: -0.625rem;
 }
 
 @keyframes rotate {

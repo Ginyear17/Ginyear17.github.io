@@ -1,6 +1,6 @@
 .heart {
     position: fixed;
-    font-size: 20px;
+    font-size: 1.25rem;
     color: #e93c4b;
     pointer-events: none;
     animation: float-and-fade 1.5s forwards;
@@ -12,7 +12,7 @@
         opacity: 1;
     }
     100% {
-        transform: translateY(-100px) scale(1.5);
+        transform: translateY(-6.25rem) scale(1.5);
         opacity: 0;
     }
 }

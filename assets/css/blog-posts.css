@@ -25,7 +25,7 @@ body.dark .blog-section-title i {
     bottom: -0.6rem; /* 分割线的位置 */
     left: 0.6vw; /* 分割线的左边距 */
     width: 99%; /* 分割线宽度 */
-    height: 3px; /* 分割线高度 */
+    height: 0.1875rem; /* 分割线高度 */
     background-color: var(--border-color); /* 使用边框颜色 */
     opacity: 0.5; /* 透明度，柔和效果 */
 }
@@ -34,7 +34,7 @@ body.dark .blog-section-title i {
     display: flex;
     justify-content: space-around;
     background-color: #fffffb;
-    height: 130px;
+    height: 8.125rem;
     width: 100%;
     margin: 1.5em 0rem;
     border-radius: 0.5rem;
@@ -48,16 +48,16 @@ body.dark .post {
 }
 
 .post:hover {
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.625rem 0.9375rem rgba(0, 0, 0, 0.1);
 }
 
 body.dark.post:hover {
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0.625rem 0.9375rem rgba(0, 0, 0, 0.3);
 }
 
 .post-img-container {
     width: 26%;
-    height: 160px;
+    height: 10rem;
     display: flex;
     flex-direction: column;
     align-items: center; /* Center the image and date */
@@ -67,7 +67,7 @@ body.dark.post:hover {
     width: 90%;
     height: 90%;
     object-fit: cover;
-    border-radius: 3px; /* Optional: Add rounded corners to the image */
+    border-radius: 0.1875rem; /* Optional: Add rounded corners to the image */
 }
 
 .post-content {
@@ -75,7 +75,7 @@ body.dark.post:hover {
 }
 
 .post-title {
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: bold;
     margin-bottom: 0.5rem;
     transition: var(--transition);
@@ -90,7 +90,7 @@ body.dark .post-title:hover {
 }
 
 .post-excerpt {
-    font-size: 14px;
+    font-size: 0.875rem;
     color: var(--text-light);
     margin-bottom: 1rem;
     display: -webkit-box;
@@ -103,7 +103,7 @@ body.dark .post-title:hover {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 13px;
+    font-size: 0.8125rem;
     color: var(--text-light);
 }
 
@@ -186,7 +186,7 @@ body.dark .section-link {
 
 .category {
     position: relative;
-    height: 96px;
+    height: 6rem;
     border-radius: 0.5rem;
     overflow: hidden;
 }

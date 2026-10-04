@@ -3,22 +3,22 @@
 .message-form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-bottom: 24px;
+    gap: 0.625rem;
+    margin-bottom: 1.5rem;
 }
 
 .message-form .form-row {
     display: flex;
-    gap: 10px;
+    gap: 0.625rem;
     align-items: center;
 }
 
 .message-form input,
 .message-form textarea {
     flex: 1;
-    padding: 10px 14px;
+    padding: 0.625rem 0.875rem;
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: 0.5rem;
     background: var(--card-bg);
     color: var(--text-color);
     font-size: 0.95rem;
@@ -32,15 +32,15 @@
 }
 
 .message-form textarea {
-    min-height: 90px;
+    min-height: 5.625rem;
     resize: vertical;
 }
 
 .message-form button {
     align-self: flex-end;
-    padding: 9px 26px;
+    padding: 0.5625rem 1.625rem;
     border: none;
-    border-radius: 8px;
+    border-radius: 0.5rem;
     background: var(--button-bg-four);
     color: var(--button-text-three);
     font-size: 0.95rem;
@@ -60,22 +60,122 @@
 .message-total {
     color: var(--text-light);
     font-size: 0.85rem;
-    margin-bottom: 12px;
+    margin-bottom: 0.75rem;
 }
 
+/* ===== 留言卡片：渐变边框 + 左侧彩色竖条 + 便签纸效果 ===== */
 .message-item {
-    padding: 14px 0;
-    border-bottom: 1px solid var(--border-color);
+    position: relative;
+    /* 渐变边框：内层卡片底色 + 外层渐变描边（双层背景技巧） */
+    border: 0.09375rem solid transparent;
+    border-radius: 0.625rem;
+    background:
+        linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
+        linear-gradient(135deg,
+            rgba(255, 107, 157, 0.55),
+            rgba(255, 212, 59, 0.45),
+            rgba(99, 230, 190, 0.55),
+            rgba(77, 171, 247, 0.55),
+            rgba(177, 151, 252, 0.55)) border-box;
+    padding: 1rem 1.125rem 0.875rem 1.5rem;
+    margin-bottom: 1.125rem;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
 }
 
-.message-item:last-child {
-    border-bottom: none;
+/* 便签纸的“手贴”感：奇偶轻微歪斜，悬停时摆正并上浮 */
+.message-item:nth-child(odd) {
+    transform: rotate(-0.4deg);
+}
+
+.message-item:nth-child(even) {
+    transform: rotate(0.4deg);
+}
+
+.message-item:hover {
+    transform: rotate(0) translateY(-0.125rem);
+    box-shadow: 0 0.5rem 1.125rem rgba(0, 0, 0, 0.14);
+}
+
+/* 左侧彩色竖条（果冻质感：顶部高光 + 底部阴影 + 微光晕） */
+.message-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.625rem;
+    bottom: 0.625rem;
+    width: 0.3125rem;
+    border-radius: 0 0.1875rem 0.1875rem 0;
+    background:
+        linear-gradient(180deg,
+            rgba(255, 255, 255, 0.85) 0%,
+            rgba(255, 255, 255, 0.35) 30%,
+            rgba(255, 255, 255, 0) 55%,
+            rgba(0, 0, 0, 0.10) 100%),
+        var(--accent, var(--button-bg-three));
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.25),
+        0 0 0.4375rem var(--accent, var(--button-bg-three));
+}
+
+/* 果冻色系：草莓 → 蜜桃 → 柠檬 → 薄荷 → 苏打蓝 → 葡萄 */
+.message-item:nth-child(6n + 1) { --accent: #ff6b9d; }
+.message-item:nth-child(6n + 2) { --accent: #ffa94d; }
+.message-item:nth-child(6n + 3) { --accent: #ffd43b; }
+.message-item:nth-child(6n + 4) { --accent: #3bceac; }
+.message-item:nth-child(6n + 5) { --accent: #4dabf7; }
+.message-item:nth-child(6n + 6) { --accent: #b197fc; }
+
+/* 果冻胶带 */
+.message-item::after {
+    content: '';
+    position: absolute;
+    top: -0.5625rem;
+    left: 50%;
+    width: 5.75rem;
+    height: 1.125rem;
+    transform: translateX(-50%) rotate(-2deg);
+    background: linear-gradient(180deg,
+        rgba(255, 107, 157, 0.3),
+        rgba(77, 171, 247, 0.3));
+    border-left: 1px dashed rgba(255, 255, 255, 0.7);
+    border-right: 1px dashed rgba(255, 255, 255, 0.7);
+    box-shadow: 0 1px 0.125rem rgba(0, 0, 0, 0.08);
+}
+
+body.dark .message-item::after {
+    background: linear-gradient(180deg,
+        rgba(255, 107, 157, 0.18),
+        rgba(77, 171, 247, 0.18));
+}
+
+/* 便签纸横线纹理（铺在正文下方，行高对齐横线） */
+.message-content {
+    color: var(--text-color);
+    line-height: 1.625rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: repeating-linear-gradient(
+        transparent,
+        transparent 1.5625rem,
+        rgba(51, 51, 51, 0.07) 1.5625rem,
+        rgba(51, 51, 51, 0.07) 1.625rem
+    );
+}
+
+body.dark .message-content {
+    background: repeating-linear-gradient(
+        transparent,
+        transparent 1.5625rem,
+        rgba(240, 240, 240, 0.07) 1.5625rem,
+        rgba(240, 240, 240, 0.07) 1.625rem
+    );
 }
 
 .message-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 6px;
+    margin-bottom: 0.375rem;
 }
 
 .message-name {
@@ -92,15 +192,36 @@ body.dark .message-name {
     font-size: 0.8rem;
 }
 
-.message-content {
-    color: var(--text-color);
-    line-height: 1.6;
-    white-space: pre-wrap;
-    word-break: break-word;
+/* （.message-content 的便签纸样式在上方卡片区域统一维护） */
+
+/* 署名：留言右下角的“——署名”（选填） */
+.message-signature {
+    margin-top: 0.5rem;
+    text-align: right;
+    color: var(--text-light);
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+/* 未登录时的留言引导 */
+.message-login-tip {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 0.84375rem;
+    padding: 1rem 0;
+}
+
+.message-login-tip a {
+    color: var(--button-text-two);
+    transition: var(--transition);
+}
+
+.message-login-tip a:hover {
+    color: var(--button-bg-four);
 }
 
 .message-empty {
     color: var(--text-light);
     text-align: center;
-    padding: 30px 0;
+    padding: 1.875rem 0;
 }

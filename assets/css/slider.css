@@ -1,7 +1,7 @@
 /* Slider */
 .slider {
     position: relative;
-    height: 400px;
+    height: 25rem;
     border-radius: 0.75rem;
     overflow: hidden;
     margin-bottom: 2rem;
@@ -69,8 +69,8 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
+    width: 2.5rem;
+    height: 2.5rem;
     border-radius: 50%;
     background-color: rgba(0, 0, 0, 0.3);
     color: white;
@@ -105,8 +105,8 @@
 }
 
 .slider-dot {
-    width: 8px;
-    height: 8px;
+    width: 0.5rem;
+    height: 0.5rem;
     border-radius: 50%;
     background-color: rgba(255, 255, 255, 0.5);
     cursor: pointer;
