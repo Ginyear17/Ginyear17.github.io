@@ -63,7 +63,11 @@ Ginyear17.github.io/
 ├── pages/
 │   ├── about/index.html        # 关于页（唯一有完整内容的子页面）
 │   ├── album/index.html        # 相册（占位，未开发）
-│   ├── blog/aliyun_ddns.html   # 博客文章页模板（占位，正文未写）
+│   ├── blog/
+│   │   ├── index.html          # 博客列表（简略信息卡片，点击进入详情）
+│   │   ├── detail.html         # 博客详情（?id=xx 加载正文，浏览量自增）
+│   │   ├── write.html          # 写博客（需登录，支持封面上传）
+│   │   └── aliyun_ddns.html    # 旧静态文章页（已被动态详情页取代，待清理）
 │   ├── board/index.html        # 留言板（占位，未开发）
 │   └── moments/
 │       ├── index.html          # 说说列表（占位，未开发）
@@ -74,9 +78,10 @@ Ginyear17.github.io/
 │   └── app/
 │       ├── main.py             #   应用入口（建表 / CORS / 路由注册）
 │       ├── database.py         #   SQLAlchemy 连接（DATABASE_URL 环境变量，默认 SQLite）
-│       ├── models.py           #   ORM 模型（messages 表）
+│       ├── models.py           #   ORM 模型（messages / visits / blogs / blog_comments / moments / users 表）
 │       ├── schemas.py          #   Pydantic 请求/响应模型
-│       └── routers/messages.py #   留言板 API：GET / POST /api/messages
+│       ├── seed.py             #   首次启动写入示例博客（表为空时）
+│       └── routers/            #   messages / blogs / moments / stats / auth 各模块 API
 └── vendors/
     └── lunar-javascript-1.7.3/ # 农历库（构建时原样复制进 dist；demo/tests 与站点无关）
 ```
@@ -88,7 +93,8 @@ Ginyear17.github.io/
 ### 首页 `index.html`（唯一完整页面）
 
 - **轮播图**：5 张相册照片，左右按钮 + 圆点指示器，5 秒自动播放，悬停暂停（`slider.js`）
-- **最新动态**：博客文章卡片列表（含摘要 / 日期 / 阅读量）+「加载更多」按钮
+- **最新动态**：从后端 `/api/blogs` 拉取最新博客卡片（摘要 / 日期 / 浏览量 / 分类），
+  「查看更多」跳转博客列表页
 - **侧栏**：
   - 作者卡片（头像 + `author-bio.js` 每次刷新随机换一条个性签名，共 9 条）
   - **日历卡片**：每秒更新的实时时间、日期、时段欢迎语，以及用 lunar 库计算的农历日期
@@ -104,9 +110,22 @@ Ginyear17.github.io/
 唯一有完整内容的子页面。用纯 CSS 单选按钮（`:checked` + 兄弟选择器）实现 5 个 Tab：
 个人信息、求学经历、荣誉成就、兴趣爱好 / 未来规划、联系表单（无提交逻辑）。
 
+### 博客 `pages/blog/`
+
+- **列表页 `index.html`**：从 `/api/blogs` 分页加载文章简略信息
+  （封面 + 标题 + 摘要 + 日期 / 浏览量 / 分类），点击卡片进入详情页
+- **详情页 `detail.html?id=xx`**：按 id 加载正文，每次访问浏览量 +1，
+  页面标题同步为文章标题；正文用 **Markdown** 渲染
+  （`marked` + `DOMPurify` 消毒 + `highlight.js` 代码高亮，见 `src/js/markdown.js`）；
+  下方评论区（复用说说评论组件：需登录 / 点赞 / 昵称自动取用户名）
+- **发布页 `write.html`**：标题 / 分类 / 封面（复用 `/api/upload` 上传）/ 摘要 / 正文，
+  正文为 Markdown 编辑器（左侧书写右侧实时预览，窄屏堆叠），
+  摘要留空自动截取正文开头；`POST /api/blogs` **仅站长可发**，成功后跳转详情页；
+  列表页「写博客」入口仅站长登录后显示，发布页非站长访问会显示提示
+
 ### 其余子页面
 
-留言板、说说、相册、博客文章页、随笔一记 —— 主内容区均为「还未开发」占位标题，
+留言板、说说、相册、随笔一记 —— 部分仍有占位内容，
 但共享完整的公共布局（header / 侧栏日历 / 音乐播放器 / 登录框 / 页脚）。
 
 ---
@@ -192,17 +211,18 @@ git pull && docker compose up -d --build
 
 > 写给未来忘记了这个项目的自己：以下是当时没做完 / 有 bug 的地方。
 
-1. **5 个页面未开发**：留言板、说说、相册、博客文章正文、随笔一记，均只有占位标题。
+1. **部分页面未开发**：相册、随笔一记仍是占位标题。
+   （博客功能已完成：列表 / 详情 / Markdown / 评论 / 站长发布）
 2. **登录模态框仅演示**：`modal.js` 提交只打印到控制台并把头像设为默认图
    （原版调用未定义的 `updateUserInterface()` 会报错，已在 Vite 改造中修复）；注册按钮无任何逻辑。
 3. **搜索与加载更多是占位**：`scripts.js` 中均为 `alert('...将在这里实现')`。
 4. **音乐播放器**：进度条 / 播放时间显示的代码整段被注释掉未启用；
    `loadMusic` 自动播放失败的分支引用了未定义变量（被 catch 吞掉，无实际影响）。
-5. **首页博客卡片**：两篇文章内容完全重复（复制粘贴）；文章页与首页摘要内容脱节。
+5. **站长机制较简单**：首个注册的用户自动成为站长（`users.is_admin`），
+   仅站长可发布博客、显示「写博客」入口；如需换站长需手动改库。
 6. **关于页**：联系表单 `action="#"` 无提交逻辑；文件头部有 `<hrml>` 拼写错误。
 7. **ICP 备案号为占位**：`闽ICP备2025xxxxxx号-1`。（页脚访问量 / 访客量已接入后端实时统计：
    `visits` 表 + `/api/stats/*`，每个浏览器会话上报一次）
-8. **首页博客卡片重复**：两篇文章内容完全重复（复制粘贴）。（已在原 README 误记字体/背景图为闲置资源，
-   实际它们被 `base.css` 的 `@font-face` 和 `url()` 引用）
+8. **旧静态文章页待清理**：`pages/blog/aliyun_ddns.html` 已被动态详情页取代，保留待删。
 9. **SEO 弱**：所有页面 `<title>` 相同，无独立 meta description。
 10. **无 `.nojekyll`**：纯静态无 `_` 开头目录，暂无影响，但若日后加入 Jekyll 会识别的目录需补上。

@@ -27,7 +27,7 @@ from email.utils import formataddr
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel, Field
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from ..database import get_db
@@ -107,6 +107,14 @@ def require_user(user: User | None) -> User:
     return user
 
 
+def require_admin(user: User | None) -> User:
+    """依赖：必须是站长（首个注册的用户），否则 403"""
+    user = require_user(user)
+    if not user.is_admin:
+        raise HTTPException(status_code=403, detail="仅站长可执行此操作")
+    return user
+
+
 # ===== 邮箱验证码 =====
 EMAIL_RE = re.compile(r"^[\w.+-]+@[\w-]+(\.[\w-]+)+$")
 CODE_TTL = 600                    # 验证码有效期 10 分钟
@@ -168,6 +176,8 @@ class LoginIn(BaseModel):
 class UserOut(BaseModel):
     id: int
     username: str
+    # 前端据此显示「写博客」入口等站长功能
+    is_admin: bool = False
 
     model_config = {"from_attributes": True}
 
@@ -244,6 +254,10 @@ def register(payload: RegisterIn, response: Response, db: Session = Depends(get_
         raise HTTPException(status_code=409, detail="该邮箱已注册")
 
     user = User(username=username, email=email, password_hash=hash_password(payload.password))
+    # 首个注册的用户自动成为站长（之后由 seed.ensure_admin_exists 兜底）
+    user.is_admin = db.scalar(
+        select(func.count()).select_from(User).where(User.is_admin.is_(True))
+    ) == 0
     db.add(user)
     db.commit()
     db.refresh(user)

@@ -2,12 +2,12 @@
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import func, select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from ..database import get_db
 from ..models import Message, User
 from .auth import get_current_user
-from ..schemas import MessageCreate, MessageOut
+from ..schemas import MessageCreate, MessageOut, MessageReplyCreate, MessageReplyOut
 
 router = APIRouter()
 
@@ -18,10 +18,16 @@ def list_messages(
     limit: int = Query(20, ge=1, le=50),
     db: Session = Depends(get_db),
 ):
-    """留言列表（新 → 旧，分页）"""
-    total = db.scalar(select(func.count()).select_from(Message))
+    """留言列表（新 → 旧，分页，带回复；只取顶层留言，回复嵌在 replies 里）"""
+    top_level = Message.parent_id.is_(None)
+    total = db.scalar(select(func.count()).select_from(Message).where(top_level))
     items = db.scalars(
-        select(Message).order_by(Message.id.desc()).offset(offset).limit(limit)
+        select(Message)
+        .options(selectinload(Message.replies))  # 预加载回复，避免 N+1
+        .where(top_level)
+        .order_by(Message.id.desc())
+        .offset(offset)
+        .limit(limit)
     ).all()
     return {
         "total": total,
@@ -48,3 +54,24 @@ def create_message(
     db.commit()
     db.refresh(message)
     return message
+
+
+@router.post("/messages/{message_id}/replies", response_model=MessageReplyOut, status_code=201)
+def reply_message(
+    message_id: int,
+    payload: MessageReplyCreate,
+    db: Session = Depends(get_db),
+    user: User | None = Depends(get_current_user),
+):
+    """回复留言（需登录；回复顶层留言，若目标是回复则自动挂到其顶层留言下）"""
+    if user is None:
+        raise HTTPException(status_code=401, detail="请先登录后再回复")
+    target = db.get(Message, message_id)
+    if target is None:
+        raise HTTPException(status_code=404, detail="留言不存在或已被删除")
+    parent_id = target.parent_id or target.id  # 回复回复时，挂到顶层留言
+    reply = Message(parent_id=parent_id, name=user.username, user_id=user.id, content=payload.content)
+    db.add(reply)
+    db.commit()
+    db.refresh(reply)
+    return reply

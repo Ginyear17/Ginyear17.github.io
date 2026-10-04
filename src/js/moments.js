@@ -188,8 +188,9 @@ function showToast(text) {
 /**
  * 点赞按钮：点击 +1 / 再点 -1（可取消），localStorage 记录当前状态
  * 按钮需带 data-url（点赞接口）和 data-key（本地状态键）
+ * 导出供博客评论等模块复用
  */
-function bindLike(btn) {
+export function bindLike(btn) {
     const key = `liked:${btn.dataset.key}`;
     // 图标与颜色跟随状态
     const sync = (liked) => {

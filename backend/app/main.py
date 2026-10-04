@@ -15,7 +15,8 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy import inspect, text
 
 from .database import Base, engine
-from .routers import auth, messages, moments, stats
+from .routers import auth, blogs, messages, moments, stats
+from .seed import ensure_admin_exists, seed_blogs
 
 # SQLite 模式下确保数据目录存在（DATABASE_URL 为 postgresql 时无副作用）
 os.makedirs("data", exist_ok=True)
@@ -40,6 +41,16 @@ _ensure_column("moments", "author_id", "INTEGER")
 _ensure_column("moment_comments", "user_id", "INTEGER")
 _ensure_column("messages", "user_id", "INTEGER")
 _ensure_column("messages", "signature", "VARCHAR(50)")
+# 博客发布者（v1.3 新增）
+_ensure_column("blogs", "author_id", "INTEGER")
+# 留言回复（v1.3 新增；旧库补列不带 FK 约束，仅作关联查询用）
+_ensure_column("messages", "parent_id", "INTEGER")
+# 站长标记（v1.3 新增）
+_ensure_column("users", "is_admin", "INTEGER NOT NULL DEFAULT 0")
+
+# 补列完成后再执行：首次启动写入示例博客（表为空时才生效）；并确保存在站长账号
+seed_blogs()
+ensure_admin_exists()
 
 app = FastAPI(title="小杰的杂物间 API", version="0.1.0")
 
@@ -52,6 +63,7 @@ app.add_middleware(
 )
 
 app.include_router(messages.router, prefix="/api")
+app.include_router(blogs.router, prefix="/api")
 app.include_router(stats.router, prefix="/api")
 app.include_router(moments.router, prefix="/api")
 app.include_router(auth.router, prefix="/api/auth")

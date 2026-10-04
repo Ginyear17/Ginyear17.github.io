@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文章详情 · 小杰的杂物间</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/base.css">
+    <link rel="stylesheet" href="../../assets/css/header.css">
+    <link rel="stylesheet" href="../../assets/css/main-card.css">
+    <link rel="stylesheet" href="../../assets/css/sidebar.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <link rel="stylesheet" href="../../assets/css/modal.css">
+    <link rel="stylesheet" href="../../assets/css/blog-posts.css">
+    <link rel="stylesheet" href="../../assets/css/moments.css">
+</head>
+<body data-page="blog">
+    <!-- 公共布局（header/移动菜单/登录框）由 src/js/components/layout.js 注入 -->
+    <div id="layout-header"></div>
+
+    <main class="main">
+        <div class="main-card">
+            <!-- 文章详情：由 src/js/blog.js 按 ?id= 参数从后端渲染 -->
+            <div id="blog-detail"></div>
+
+            <!-- 评论区：复用说说评论的样式与交互（由 initBlogComments 渲染） -->
+            <div class="moment-comment-section" id="blog-comments">
+                <h3 class="comment-title"><i class="fas fa-comments"></i> 评论 <span id="blog-comment-count"></span></h3>
+
+                <form id="blog-comment-form" class="comment-form">
+                    <textarea id="blog-comment-content" placeholder="说点什么吧...（500 字以内）" maxlength="500" required></textarea>
+                    <button type="submit">发表评论</button>
+                </form>
+
+                <div id="blog-comment-list"></div>
+            </div>
+            <p class="blog-back">
+                <a href="./index.html"><i class="fas fa-arrow-left"></i> 返回博客列表</a>
+            </p>
+        </div>
+        <!-- 公共侧栏由 src/js/components/layout.js 注入 -->
+        <div id="layout-sidebar"></div>
+    </main>
+
+     <div style="height: 6.25rem;"></div>
+    <!-- 公共页脚由 src/js/components/layout.js 注入 -->
+    <div id="layout-footer"></div>
+    <script src="/vendors/lunar-javascript-1.7.3/lunar.js"></script>
+    <script type="module" src="/src/js/pages/blog-detail.js"></script>
+</body>
+</html>

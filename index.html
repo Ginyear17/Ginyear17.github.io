@@ -87,48 +87,12 @@
                 </div>
             </div>
             
-            <!-- Blog Posts -->
+            <!-- Blog Posts：最新博客卡片，由 src/js/blog.js 的 initHomeBlogs 从后端渲染，点击进入详情页 -->
             <div class="blog-section">
                 <h2 class="blog-section-title"><i class="fas fa-newspaper"></i>最新动态</h2>
-                <article class="post">
-                    <div class="post-img-container">
-                        <img src="./assets/images/album/光影.jpg" alt="阿里云域名绑定动态ip" class="post-img">
-                    </div>
-                    <div class="post-content">
-                        <h3 class="post-title"><a href="/pages/blog/aliyun_ddns.html">阿里云域名绑定动态ip</a></h3>
-                        <p class="post-excerpt">怎么通过公网访问家中的设备呢？首先需要一个公网ip，可以向客服申请。那之后你就可以查询到你现在的ip了。然后你在外面就可以使用ip就可以访问家里的设备。但是宽带的ip基本是动态的，也就是一段时间之后ip地址会变化。所以需要使用一个域名绑定你的ip，并且使用一个脚本去周期性的检查现在的ip有没有变化，并更新ip。</p>
-                        <div class="post-meta">
-                            <div class="post-stats">
-                                <span class="post-stat">2025-2-14</span>
-                                <span class="post-stat"><i class="fas fa-eye"></i> 88</span>
-                                <span class="post-stat"><i class="fas fa-comment"></i> 0</span>
-                                <span class="post-stat"><i class="fas fa-heart"></i> 1</span>
-                            </div>
-                            <a href="/categories/develop" class="post-category">开发</a>
-                        </div>
-                    </div>
-                </article>
+                <div id="home-blog-list"></div>
 
-                <article class="post">
-                    <div class="post-img-container">
-                        <img src="./assets/images/album/绿意课堂.jpg" alt="阿里云域名绑定动态ip" class="post-img">
-                    </div>
-                    <div class="post-content">
-                        <h3 class="post-title"><a href="/pages/blog/aliyun_ddns.html">阿里云域名绑定动态ip</a></h3>
-                        <p class="post-excerpt">怎么通过公网访问家中的设备呢？首先需要一个公网ip，可以向客服申请。那之后你就可以查询到你现在的ip了。然后你在外面就可以使用ip就可以访问家里的设备。但是宽带的ip基本是动态的，也就是一段时间之后ip地址会变化。所以需要使用一个域名绑定你的ip，并且使用一个脚本去周期性的检查现在的ip有没有变化，并更新ip。</p>
-                        <div class="post-meta">
-                            <div class="post-stats">
-                                <span class="post-stat">2025-2-14</span>
-                                <span class="post-stat"><i class="fas fa-eye"></i> 88</span>
-                                <span class="post-stat"><i class="fas fa-comment"></i> 0</span>
-                                <span class="post-stat"><i class="fas fa-heart"></i> 1</span>
-                            </div>
-                            <a href="/categories/develop" class="post-category">开发</a>
-                        </div>
-                    </div>
-                </article>
-                
-                <button class="load-more">查看更多</button>
+                <a href="/pages/blog/index.html" class="load-more" style="text-decoration: none;">查看更多</a>
             </div>
         </div>
         <!-- 公共侧栏由 src/js/components/layout.js 注入 -->

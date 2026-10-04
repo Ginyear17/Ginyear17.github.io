@@ -8,6 +8,7 @@ export { avatarUrl }
 
 const NAV_ITEMS = [
     { key: 'home', label: '首页', href: '/index.html' },
+    { key: 'blog', label: '博客', href: '/pages/blog/index.html' },
     { key: 'board', label: '留言板', href: '/pages/board/index.html' },
     { key: 'moments', label: '说说', href: '/pages/moments/index.html' },
     { key: 'album', label: '相册', href: '/pages/album/index.html' },
@@ -17,12 +18,13 @@ const NAV_ITEMS = [
 // 各页面 <body data-page="..."> 对应的导航高亮项
 const ACTIVE_MAP = {
     home: 'home',
+    blog: 'blog',
     board: 'board',
     moments: 'moments',
     'moments-note': 'moments',
+    'moments-detail': 'moments',
     album: 'album',
     about: 'about',
-    blog: '',
 }
 
 function renderNavLinks(linkClass) {
@@ -50,12 +52,8 @@ export function headerHTML() {
                 </ul>
             </nav>
 
-            <!-- Header Actions -->
+            <!-- Header Actions：个人中心放最右侧 -->
             <div class="header-actions">
-                <button class="icon-btn user-btn" aria-label="个人中心">
-                    <img id="user-avatar" src="" alt="用户头像" style="display: none;">
-                    <i id="user-icon" class="fas fa-user-circle"></i>
-                </button>
                 <button class="icon-btn search-btn" aria-label="搜索">
                     <i class="fas fa-search"></i>
                 </button>
@@ -64,6 +62,10 @@ export function headerHTML() {
                 </button>
                 <button class="icon-btn menu-btn" aria-label="菜单">
                     <i class="fas fa-bars"></i>
+                </button>
+                <button class="icon-btn user-btn" aria-label="个人中心">
+                    <img id="user-avatar" src="" alt="用户头像" style="display: none;">
+                    <i id="user-icon" class="fas fa-user-circle"></i>
                 </button>
             </div>
         </div>

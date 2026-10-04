@@ -22,8 +22,43 @@ class Message(Base):
     signature: Mapped[str | None] = mapped_column(String(50), default=None)
     content: Mapped[str] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+    # 回复目标（自关联：NULL = 顶层留言；非 NULL = 对某条留言的回复）
+    parent_id: Mapped[int | None] = mapped_column(
+        ForeignKey("messages.id", ondelete="CASCADE"), default=None
+    )
+    # 顶层留言带回复列表（旧 → 新，级联删除：删留言同时删回复）
+    parent: Mapped["Message | None"] = relationship(
+        back_populates="replies", remote_side="Message.id"
+    )
+    replies: Mapped[list["Message"]] = relationship(
+        back_populates="parent", cascade="all, delete-orphan", order_by="Message.id"
+    )
 
-    # TODO: 回复功能（parent_id 自关联）
+    # TODO: 回复功能（parent_id 自关联）——已完成
+
+
+class Blog(Base):
+    """博客文章（列表页显示简略信息，详情页显示正文）"""
+
+    __tablename__ = "blogs"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(String(100))
+    # 简介摘要：列表页与首页卡片展示，详情页不显示
+    summary: Mapped[str] = mapped_column(String(300), default="")
+    # 正文：纯文本段落（\n\n 分段），后续可换 Markdown 渲染
+    content: Mapped[str] = mapped_column(Text)
+    # 封面图 URL（选填，列表卡片左侧展示；为空用默认图）
+    cover: Mapped[str | None] = mapped_column(String(255), default=None)
+    category: Mapped[str] = mapped_column(String(30), default="未分类")
+    # 浏览量（详情页每访问一次 +1）与点赞数
+    views: Mapped[int] = mapped_column(default=0)
+    likes: Mapped[int] = mapped_column(default=0)
+    # 发布者（接入用户系统后记录；种子文章为 NULL）
+    author_id: Mapped[int | None] = mapped_column(default=None)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+
+    # TODO: 编辑 / 删除接口（仅限作者），评论功能
 
 
 class Visit(Base):
@@ -35,6 +70,21 @@ class Visit(Base):
     # 浏览器端生成的持久唯一 ID（存 localStorage），UV 按它去重
     visitor_id: Mapped[str] = mapped_column(String(64), index=True)
     path: Mapped[str] = mapped_column(String(255), default="/")
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+
+
+class BlogComment(Base):
+    """博客文章评论（对齐说说评论：昵称 / 点赞 / 时间）"""
+
+    __tablename__ = "blog_comments"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    blog_id: Mapped[int] = mapped_column(ForeignKey("blogs.id", ondelete="CASCADE"), index=True)
+    name: Mapped[str] = mapped_column(String(50), default="匿名")
+    # 评论者（需登录评论，自动取用户名）
+    user_id: Mapped[int | None] = mapped_column(default=None)
+    likes: Mapped[int] = mapped_column(default=0)
+    content: Mapped[str] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
 
 
@@ -99,4 +149,6 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(120), unique=True, index=True)
     # PBKDF2 哈希，格式：salt_hex$hash_hex
     password_hash: Mapped[str] = mapped_column(String(200))
+    # 站长标记：首个注册的用户自动成为站长，可发布博客
+    is_admin: Mapped[bool] = mapped_column(default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)

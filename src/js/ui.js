@@ -65,10 +65,4 @@ export function initUI() {
   searchBtn?.addEventListener('click', () => {
     alert('搜索功能将在这里实现');
   });
-
-  // Load more posts（未实现，占位）
-  const loadMoreBtn = document.querySelector('.load-more');
-  loadMoreBtn?.addEventListener('click', () => {
-    alert('加载更多文章功能将在这里实现');
-  });
 }

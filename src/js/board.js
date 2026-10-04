@@ -43,7 +43,18 @@ export function initBoard() {
         <span class="message-time"></span>
       </div>
       <p class="message-content"></p>
-      <p class="message-signature" style="display: none;"></p>`;
+      <p class="message-signature" style="display: none;"></p>
+      <div class="message-replies"></div>
+      <button type="button" class="reply-toggle">
+        <i class="fas fa-reply"></i> 回复<span class="reply-count"></span>
+      </button>
+      <form class="reply-form" style="display: none;">
+        <textarea placeholder="写下你的回复...（500 字以内）" maxlength="500" required></textarea>
+        <div class="reply-form-footer">
+          <button type="button" class="reply-cancel">取消</button>
+          <button type="submit">回复</button>
+        </div>
+      </form>`;
         div.querySelector('.message-name').textContent = msg.name;
         div.querySelector('.message-time').textContent = formatTime(msg.created_at);
         div.querySelector('.message-content').textContent = msg.content;
@@ -53,6 +64,67 @@ export function initBoard() {
             sig.style.display = '';
             sig.textContent = `—— ${msg.signature}`;
         }
+
+        // ===== 回复列表（旧 → 新） =====
+        const repliesEl = div.querySelector('.message-replies');
+        const replies = msg.replies || [];
+        replies.forEach((r) => {
+            const line = document.createElement('div');
+            line.className = 'reply-item';
+            line.innerHTML = `
+        <span class="reply-name"></span>
+        <span class="reply-text"></span>
+        <span class="reply-time"></span>`;
+            line.querySelector('.reply-name').textContent = r.name;
+            line.querySelector('.reply-text').textContent = r.content;
+            line.querySelector('.reply-time').textContent = formatTime(r.created_at);
+            repliesEl.appendChild(line);
+        });
+        // 回复数（超过 0 才显示）
+        const countEl = div.querySelector('.reply-count');
+        if (replies.length) countEl.textContent = `（${replies.length}）`;
+
+        // ===== 回复按钮：展开内联表单（需登录） =====
+        const replyForm = div.querySelector('.reply-form');
+        div.querySelector('.reply-toggle').addEventListener('click', () => {
+            if (!loggedIn) {
+                document.querySelector('.user-btn')?.click(); // 打开登录模态框
+                return;
+            }
+            replyForm.style.display = replyForm.style.display === 'none' ? '' : 'none';
+            if (replyForm.style.display !== 'none') replyForm.querySelector('textarea').focus();
+        });
+        replyForm.querySelector('.reply-cancel').addEventListener('click', () => {
+            replyForm.style.display = 'none';
+            replyForm.querySelector('textarea').value = '';
+        });
+        replyForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const content = replyForm.querySelector('textarea').value.trim();
+            if (!content) return;
+            const submitBtn = replyForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            try {
+                const res = await fetch(`/api/messages/${msg.id}/replies`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content }),
+                });
+                if (res.status === 401) {
+                    alert('请先登录后再回复');
+                    return;
+                }
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err.detail || `HTTP ${res.status}`);
+                }
+                await loadMessages();
+            } catch (err) {
+                alert(`回复发布失败：${err.message}`);
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
         return div;
     }
 

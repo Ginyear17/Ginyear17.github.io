@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>写博客 · 小杰的杂物间</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/base.css">
+    <link rel="stylesheet" href="../../assets/css/header.css">
+    <link rel="stylesheet" href="../../assets/css/main-card.css">
+    <link rel="stylesheet" href="../../assets/css/sidebar.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <link rel="stylesheet" href="../../assets/css/modal.css">
+    <link rel="stylesheet" href="../../assets/css/blog-posts.css">
+</head>
+<body data-page="blog">
+    <!-- 公共布局（header/移动菜单/登录框）由 src/js/components/layout.js 注入 -->
+    <div id="layout-header"></div>
+
+    <main class="main">
+        <div class="main-card">
+            <h2><i class="fas fa-pen-nib"></i> 写博客</h2>
+
+            <!-- 发布表单：需登录，POST /api/blogs，成功后跳转详情页 -->
+            <form id="blog-form" class="blog-form">
+                <input type="text" id="blog-title" class="blog-form-input" placeholder="文章标题（100 字以内）"
+                    maxlength="100" required>
+
+                <div class="blog-form-row">
+                    <input type="text" id="blog-category" class="blog-form-input" placeholder="分类（默认：未分类）"
+                        maxlength="30" list="category-list">
+                    <datalist id="category-list">
+                        <option value="开发"></option>
+                        <option value="生活"></option>
+                        <option value="随笔"></option>
+                        <option value="教程"></option>
+                    </datalist>
+                </div>
+
+                <!-- 封面：选图后立即上传，可移除；不传则列表卡片用默认图 -->
+                <div class="blog-cover-field">
+                    <label class="blog-cover-label">
+                        <i class="fas fa-image"></i> <span id="blog-cover-text">上传封面（可选）</span>
+                        <input type="file" id="blog-cover-input" accept="image/jpeg,image/png,image/gif,image/webp">
+                    </label>
+                    <div class="blog-cover-preview" id="blog-cover-preview" style="display: none;"></div>
+                </div>
+
+                <textarea id="blog-summary" class="blog-form-textarea summary" placeholder="摘要简介（选填，留空则自动截取正文开头）"
+                    maxlength="300"></textarea>
+
+                <!-- 正文：Markdown 编辑，左侧书写 / 右侧实时预览（窄屏上下堆叠） -->
+                <div class="blog-editor">
+                    <textarea id="blog-content" class="blog-form-textarea content"
+                        placeholder="正文（Markdown 语法）：&#10;&#10;## 小标题&#10;&#10;普通段落，**加粗**、*斜体*、`行内代码`&#10;&#10;```python&#10;print('代码块，自动高亮')&#10;```"
+                        maxlength="50000" required></textarea>
+                    <div class="blog-preview blog-md" id="blog-preview" hidden></div>
+                </div>
+                <p class="blog-md-hint"><i class="fab fa-markdown"></i> 支持 Markdown：标题、列表、表格、引用、代码块（自动语法高亮）</p>
+
+                <div class="blog-form-error" id="blog-form-error" style="display: none;"></div>
+
+                <div class="blog-form-footer">
+                    <span class="blog-char-count" id="blog-char-count">0 / 50000</span>
+                    <button type="submit" class="blog-submit">发布</button>
+                </div>
+            </form>
+        </div>
+        <!-- 公共侧栏由 src/js/components/layout.js 注入 -->
+        <div id="layout-sidebar"></div>
+    </main>
+
+     <div style="height: 6.25rem;"></div>
+    <!-- 公共页脚由 src/js/components/layout.js 注入 -->
+    <div id="layout-footer"></div>
+    <script src="/vendors/lunar-javascript-1.7.3/lunar.js"></script>
+    <script type="module" src="/src/js/pages/blog-write.js"></script>
+</body>
+</html>

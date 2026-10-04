@@ -17,16 +17,21 @@ export default defineConfig({
   server: {
     // 开发时把 /api 转发到本地 FastAPI（npm run dev 时后端需在 8001 端口运行，
     // 8000 已被本机 Portainer 容器占用）
+    // 用 127.0.0.1 而非 localhost：Node 可能把 localhost 解析成 IPv6 的 ::1，
+    // 而 uvicorn 默认只监听 IPv4 的 127.0.0.1，会导致代理 502/500
     proxy: {
-      '/api': 'http://localhost:8001',
+      '/api': 'http://127.0.0.1:8001',
       // 说说配图由后端静态托管，开发时同样转发
-      '/uploads': 'http://localhost:8001',
+      '/uploads': 'http://127.0.0.1:8001',
     },
   },
   build: {
     rollupOptions: {
       input: {
         index: resolve(rootDir, 'index.html'),
+        blog: resolve(rootDir, 'pages/blog/index.html'),
+        blogDetail: resolve(rootDir, 'pages/blog/detail.html'),
+        blogWrite: resolve(rootDir, 'pages/blog/write.html'),
         about: resolve(rootDir, 'pages/about/index.html'),
         album: resolve(rootDir, 'pages/album/index.html'),
         blogAliyunDdns: resolve(rootDir, 'pages/blog/aliyun_ddns.html'),
