@@ -11,7 +11,9 @@
     <link rel="stylesheet" href="../../assets/css/sidebar.css">
     <link rel="stylesheet" href="../../assets/css/footer.css">
     <link rel="stylesheet" href="../../assets/css/modal.css">
-    
+    <link rel="stylesheet" href="../../assets/css/moments.css">
+    <link rel="stylesheet" href="../../assets/css/album.css">
+
 </head>
 <body data-page="album">
     <!-- 公共布局（header/移动菜单/登录框）由 src/js/components/layout.js 注入 -->
@@ -19,7 +21,28 @@
 
     <main class="main">
         <div class="main-card">
-            <h2>这里是相册页，还未开发</h2>
+            <h2><i class="fas fa-images"></i> 相册</h2>
+
+            <!-- 工具栏：新建相册（登录后显示） -->
+            <div class="album-toolbar" id="album-toolbar"></div>
+
+            <!-- 相册卡片网格 -->
+            <div id="album-grid" class="album-grid"></div>
+
+            <!-- 相册详情（照片墙），点卡片后切换显示 -->
+            <div id="album-detail" style="display: none;">
+                <button type="button" class="album-back" id="album-back">
+                    <i class="fas fa-angle-left"></i> 返回相册列表
+                </button>
+                <div class="album-detail-head">
+                    <div>
+                        <h3 id="album-detail-title"></h3>
+                        <p id="album-detail-desc" class="album-desc"></p>
+                    </div>
+                    <div class="album-detail-actions" id="album-detail-actions"></div>
+                </div>
+                <div id="photo-grid" class="photo-grid"></div>
+            </div>
         </div>
         <!-- 公共侧栏由 src/js/components/layout.js 注入 -->
         <div id="layout-sidebar"></div>
@@ -29,5 +52,5 @@
     <!-- 公共页脚由 src/js/components/layout.js 注入 -->
     <div id="layout-footer"></div>
     <script src="/vendors/lunar-javascript-1.7.3/lunar.js"></script>
-    <script type="module" src="/src/js/pages/site.js"></script>
+    <script type="module" src="/src/js/pages/album.js"></script>
 </body>

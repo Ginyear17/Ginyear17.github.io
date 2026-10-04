@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session, selectinload
 
 from ..database import get_db
 from ..models import Moment, MomentComment, User
+from .albums import SYSTEM_ALBUM_TITLES, auto_archive
 from .auth import get_current_user
 from ..schemas import (
     MomentCommentCreate,
@@ -192,6 +193,8 @@ def create_moment(
     db.add(moment)
     db.commit()
     db.refresh(moment)
+    # 配图自动归档进该用户的「说说配图」系统相册
+    auto_archive(db, user.id, payload.images, "moment", moment.id, SYSTEM_ALBUM_TITLES["moment"])
     return moment
 
 

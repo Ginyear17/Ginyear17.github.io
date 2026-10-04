@@ -37,8 +37,9 @@ function fullTime(iso) {
  * 图片灯箱：点击配图弹出大图
  * 多图支持左右切换（含键盘 ←/→），Esc / 点遮罩 / 点关闭按钮关闭
  * 缩放手势：滚轮缩放、双击放大/还原、移动端双指捏合、放大后可拖拽平移
+ * （导出供相册页复用）
  */
-function openLightbox(images, startIndex = 0) {
+export function openLightbox(images, startIndex = 0) {
     if (document.querySelector('.lightbox-overlay')) return; // 避免重复弹出
 
     let index = startIndex;

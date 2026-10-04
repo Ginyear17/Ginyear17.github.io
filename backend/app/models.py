@@ -2,10 +2,61 @@
 
 from datetime import datetime
 
-from sqlalchemy import JSON, DateTime, ForeignKey, String, Text
+from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .database import Base
+
+
+class Album(Base):
+    """相册（用户自建 + 系统自动归档的"说说配图"/"博客配图"）"""
+
+    __tablename__ = "albums"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(String(50))
+    description: Mapped[str] = mapped_column(String(200), default="")
+    # 创建者
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    # 系统相册（自动归档产生，不允许删除）
+    is_system: Mapped[bool] = mapped_column(Boolean, default=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+
+    user: Mapped["User"] = relationship(lazy="joined")  # 列表要显示用户名
+    photos: Mapped[list["Photo"]] = relationship(
+        back_populates="album", cascade="all, delete-orphan", order_by="Photo.id"
+    )
+
+    @property
+    def username(self) -> str:
+        return self.user.username
+
+    @property
+    def cover(self) -> str | None:
+        """封面：相册内第一张照片，没有则为 None（前端显示占位图）"""
+        return self.photos[0].url if self.photos else None
+
+    @property
+    def photo_count(self) -> int:
+        return len(self.photos)
+
+
+class Photo(Base):
+    """相册照片"""
+
+    __tablename__ = "photos"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    album_id: Mapped[int] = mapped_column(ForeignKey("albums.id", ondelete="CASCADE"), index=True)
+    url: Mapped[str] = mapped_column(String(255))
+    # 来源：upload=相册页上传 / moment=说说配图 / blog=博客封面
+    source: Mapped[str] = mapped_column(String(20), default="upload")
+    # 关联的说说/博客 ID（upload 来源为 NULL）
+    source_id: Mapped[int | None] = mapped_column(default=None)
+    user_id: Mapped[int | None] = mapped_column(default=None)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+
+    album: Mapped["Album"] = relationship(back_populates="photos")
 
 
 class Message(Base):

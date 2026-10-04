@@ -50,6 +50,50 @@ class VisitCreate(BaseModel):
     path: str = Field(default="/", max_length=255)
 
 
+class AlbumCreate(BaseModel):
+    title: str = Field(min_length=1, max_length=50)
+    description: str = Field(default="", max_length=200)
+
+
+class AlbumOut(BaseModel):
+    id: int
+    title: str
+    description: str
+    username: str
+    user_id: int
+    cover: str | None = None
+    photo_count: int = 0
+    is_system: bool = False
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class AlbumList(BaseModel):
+    total: int
+    items: list[AlbumOut]
+
+
+class PhotoOut(BaseModel):
+    id: int
+    album_id: int
+    url: str
+    source: str
+    source_id: int | None = None
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class PhotoList(BaseModel):
+    total: int
+    items: list[PhotoOut]
+
+
+class PhotoAddIn(BaseModel):
+    urls: list[str] = Field(min_length=1, max_length=20)
+
+
 class MomentCreate(BaseModel):
     content: str = Field(min_length=1, max_length=1000)
     images: list[str] = Field(default_factory=list, max_length=9)

@@ -15,7 +15,7 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy import inspect, text
 
 from .database import Base, engine
-from .routers import auth, blogs, messages, moments, stats
+from .routers import albums, auth, blogs, messages, moments, stats
 from .seed import ensure_admin_exists, seed_blogs
 
 # SQLite 模式下确保数据目录存在（DATABASE_URL 为 postgresql 时无副作用）
@@ -66,6 +66,7 @@ app.include_router(messages.router, prefix="/api")
 app.include_router(blogs.router, prefix="/api")
 app.include_router(stats.router, prefix="/api")
 app.include_router(moments.router, prefix="/api")
+app.include_router(albums.router, prefix="/api")
 app.include_router(auth.router, prefix="/api/auth")
 
 # 上传的图片静态托管（nginx 部署时需同样反代 /uploads/）

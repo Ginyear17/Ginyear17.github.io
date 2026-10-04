@@ -1,0 +1,262 @@
+/* 相册页：相册卡片网格 + 照片墙（颜色沿用 base.css 变量，适配深色模式） */
+
+.album-toolbar {
+    margin: 12px 0 16px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.album-hint {
+    color: var(--text-light);
+    font-size: 13px;
+    width: 100%;
+    text-align: right;
+}
+
+.album-new-btn {
+    padding: 7px 18px;
+    border: 1px solid var(--border-color);
+    border-radius: 18px;
+    background: var(--button-bg-one);
+    color: var(--button-text-one);
+    font: inherit;
+    font-size: 13.5px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.album-new-btn:hover {
+    background: var(--button-bg-two);
+    color: var(--button-text-two);
+}
+
+/* 新建表单 */
+.album-new-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin-top: 12px;
+    padding: 14px;
+    border: 1px dashed var(--border-color);
+    border-radius: 10px;
+}
+
+.album-new-form input {
+    padding: 9px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    font: inherit;
+    outline: none;
+}
+
+.album-new-form input:focus {
+    border-color: var(--button-bg-three);
+}
+
+.album-new-form button {
+    align-self: flex-end;
+    padding: 7px 22px;
+    border: none;
+    border-radius: 16px;
+    background: var(--button-bg-three);
+    color: var(--button-text-three);
+    font: inherit;
+    cursor: pointer;
+}
+
+/* ===== 相册卡片网格 ===== */
+.album-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 16px;
+}
+
+.album-card {
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--card-bg);
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.album-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
+}
+
+.album-cover {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: var(--button-bg-two);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.album-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.album-cover-placeholder {
+    font-size: 2rem;
+    color: var(--text-light);
+    opacity: 0.6;
+}
+
+/* 系统相册角标 */
+.album-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    padding: 2px 10px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font-size: 11px;
+}
+
+.album-card-info {
+    padding: 10px 12px 12px;
+}
+
+.album-title {
+    font-weight: 600;
+    color: var(--text-dark);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.album-meta {
+    margin-top: 2px;
+    font-size: 12.5px;
+    color: var(--text-light);
+}
+
+.album-meta .fas {
+    margin-right: 4px;
+}
+
+/* ===== 相册详情（照片墙） ===== */
+.album-back {
+    margin-bottom: 14px;
+    padding: 6px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    background: var(--button-bg-one);
+    color: var(--button-text-one);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.album-back:hover {
+    background: var(--button-bg-two);
+}
+
+.album-detail-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.album-detail-head h3 {
+    color: var(--text-dark);
+}
+
+.album-desc {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-top: 2px;
+}
+
+.album-detail-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.album-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    background: var(--button-bg-one);
+    color: var(--button-text-one);
+    font-size: 13px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.album-action:hover {
+    background: var(--button-bg-two);
+    color: var(--button-text-two);
+}
+
+.album-action.danger:hover {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+    border-color: #e74c3c;
+}
+
+/* 照片墙：九宫格 */
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.photo-cell {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    cursor: zoom-in;
+}
+
+.photo-cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: var(--transition);
+}
+
+.photo-cell:hover img {
+    transform: scale(1.06);
+}
+
+/* 照片来源角标 */
+.photo-source {
+    position: absolute;
+    left: 6px;
+    bottom: 6px;
+    padding: 1px 8px;
+    border-radius: 9px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    font-size: 11px;
+}
+
+/* 加载/空态 */
+.album-loading,
+.album-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--text-light);
+    padding: 30px 0;
+}

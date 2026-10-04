@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from ..database import get_db
 from ..models import Blog, BlogComment, User
+from .albums import SYSTEM_ALBUM_TITLES, auto_archive
 from .auth import get_current_user
 from ..schemas import (
     BlogCommentCreate,
@@ -70,6 +71,9 @@ def create_blog(
     db.add(blog)
     db.commit()
     db.refresh(blog)
+    # 封面自动归档进该用户的「博客配图」系统相册
+    if payload.cover:
+        auto_archive(db, user.id, [payload.cover], "blog", blog.id, SYSTEM_ALBUM_TITLES["blog"])
     return blog
 
 
