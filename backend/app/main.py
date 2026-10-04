@@ -15,7 +15,7 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy import inspect, text
 
 from .database import Base, engine
-from .routers import auth, messages, moments
+from .routers import auth, messages, moments, stats
 
 # SQLite 模式下确保数据目录存在（DATABASE_URL 为 postgresql 时无副作用）
 os.makedirs("data", exist_ok=True)
@@ -38,6 +38,8 @@ _ensure_column("moments", "likes", "INTEGER NOT NULL DEFAULT 0")
 _ensure_column("moment_comments", "likes", "INTEGER NOT NULL DEFAULT 0")
 _ensure_column("moments", "author_id", "INTEGER")
 _ensure_column("moment_comments", "user_id", "INTEGER")
+_ensure_column("messages", "user_id", "INTEGER")
+_ensure_column("messages", "signature", "VARCHAR(50)")
 
 app = FastAPI(title="小杰的杂物间 API", version="0.1.0")
 
@@ -50,6 +52,7 @@ app.add_middleware(
 )
 
 app.include_router(messages.router, prefix="/api")
+app.include_router(stats.router, prefix="/api")
 app.include_router(moments.router, prefix="/api")
 app.include_router(auth.router, prefix="/api/auth")
 

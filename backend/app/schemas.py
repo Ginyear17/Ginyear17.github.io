@@ -6,7 +6,8 @@ from pydantic import BaseModel, Field
 
 
 class MessageCreate(BaseModel):
-    name: str = Field(default="匿名", max_length=50)
+    # 署名选填：显示在留言右下角的“——署名”
+    signature: str | None = Field(default=None, max_length=50)
     content: str = Field(min_length=1, max_length=500)
 
 
@@ -15,6 +16,8 @@ class MessageOut(BaseModel):
     name: str
     content: str
     created_at: datetime
+    user_id: int | None = None
+    signature: str | None = None
 
     model_config = {"from_attributes": True}
 
@@ -22,6 +25,11 @@ class MessageOut(BaseModel):
 class MessageList(BaseModel):
     total: int
     items: list[MessageOut]
+
+
+class VisitCreate(BaseModel):
+    visitor_id: str = Field(min_length=8, max_length=64)
+    path: str = Field(default="/", max_length=255)
 
 
 class MomentCreate(BaseModel):

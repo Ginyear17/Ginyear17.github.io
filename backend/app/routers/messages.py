@@ -1,11 +1,12 @@
 """留言板 API"""
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from ..database import get_db
-from ..models import Message
+from ..models import Message, User
+from .auth import get_current_user
 from ..schemas import MessageCreate, MessageOut
 
 router = APIRouter()
@@ -29,9 +30,20 @@ def list_messages(
 
 
 @router.post("/messages", response_model=MessageOut, status_code=201)
-def create_message(payload: MessageCreate, db: Session = Depends(get_db)):
-    """发布留言（暂无登录鉴权，后续接入用户系统后再加）"""
-    message = Message(name=payload.name, content=payload.content)
+def create_message(
+    payload: MessageCreate,
+    db: Session = Depends(get_db),
+    user: User | None = Depends(get_current_user),
+):
+    """发布留言（需登录；左上角显示用户名，署名选填显示在右下角）"""
+    if user is None:
+        raise HTTPException(status_code=401, detail="请先登录后再留言")
+    message = Message(
+        name=user.username,
+        user_id=user.id,
+        signature=payload.signature or None,
+        content=payload.content,
+    )
     db.add(message)
     db.commit()
     db.refresh(message)

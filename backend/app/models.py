@@ -14,11 +14,28 @@ class Message(Base):
     __tablename__ = "messages"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    # 用户名（登录后自动取用；历史匿名留言为“匿名”）
     name: Mapped[str] = mapped_column(String(50), default="匿名")
+    # 留言者（接入用户系统后记录；历史匿名留言为 NULL）
+    user_id: Mapped[int | None] = mapped_column(default=None)
+    # 署名（选填，显示在留言右下角的“——署名”；留空不显示）
+    signature: Mapped[str | None] = mapped_column(String(50), default=None)
     content: Mapped[str] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
 
-    # TODO: 回复功能（parent_id 自关联）+ 站点访问量统计表
+    # TODO: 回复功能（parent_id 自关联）
+
+
+class Visit(Base):
+    """站点访问记录：用于页脚的访问量（PV）与访客量（UV）统计"""
+
+    __tablename__ = "visits"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    # 浏览器端生成的持久唯一 ID（存 localStorage），UV 按它去重
+    visitor_id: Mapped[str] = mapped_column(String(64), index=True)
+    path: Mapped[str] = mapped_column(String(255), default="/")
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
 
 
 class Moment(Base):

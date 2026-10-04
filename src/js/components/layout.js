@@ -326,8 +326,9 @@ export function footerHTML() {
                     </a>
                 </div>
                 <div class="footer-stats">
-                    <span>访问量：1</span>
-                    <span>访客量：1</span>
+                    <!-- 访问量/访客量：由 main.js 的 initSiteStats 从后端 /api/stats 实时拉取 -->
+                    <span id="footer-pv">访问量：--</span>
+                    <span id="footer-uv">访客量：--</span>
                 </div>
             </div>
         </div>
