@@ -138,11 +138,11 @@ def _send_email(to: str, code: str) -> None:
     sender = os.getenv("SMTP_FROM", user)
 
     msg = MIMEText(
-        f"你的注册验证码是：{code}\n{CODE_TTL // 60} 分钟内有效，请勿泄露给他人。\n\n—— 小杰的杂物间",
+        f"你的注册验证码是：{code}\n{CODE_TTL // 60} 分钟内有效，请勿泄露给他人。\n\n—— 拾光小筑",
         "plain", "utf-8",
     )
-    msg["Subject"] = Header("注册验证码 - 小杰的杂物间", "utf-8")
-    msg["From"] = formataddr((str(Header("小杰的杂物间", "utf-8")), sender))
+    msg["Subject"] = Header("注册验证码 - 拾光小筑", "utf-8")
+    msg["From"] = formataddr((str(Header("拾光小筑", "utf-8")), sender))
     msg["To"] = to
 
     if use_ssl:

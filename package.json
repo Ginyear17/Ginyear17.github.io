@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.1.0",
   "type": "module",
-  "description": "小杰的杂物间 - 个人博客站点（Vite 多页应用）",
+  "description": "拾光小筑 - 个人博客站点（Vite 多页应用）",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

@@ -1,4 +1,4 @@
-# 小杰的杂物间（Ginyear17.github.io）
+# 拾光小筑（Ginyear17.github.io）
 
 > 个人博客站点 · 纯原生 HTML / CSS / JavaScript · 课程设计（Coursework Design）
 > 线上地址：<https://ginyear17.github.io/>

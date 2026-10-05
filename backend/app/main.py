@@ -52,7 +52,7 @@ _ensure_column("users", "is_admin", "INTEGER NOT NULL DEFAULT 0")
 seed_blogs()
 ensure_admin_exists()
 
-app = FastAPI(title="小杰的杂物间 API", version="0.1.0")
+app = FastAPI(title="拾光小筑 API", version="0.1.0")
 
 app.add_middleware(
     CORSMiddleware,

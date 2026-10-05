@@ -108,7 +108,7 @@ export async function initBlogDetail() {
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         const blog = await res.json()
 
-        document.title = `${blog.title} · 小杰的杂物间`
+        document.title = `${blog.title} · 拾光小筑`
         detailEl.innerHTML = `
             <h2 class="blog-detail-title">${escapeHtml(blog.title)}</h2>
             <div class="blog-detail-meta">

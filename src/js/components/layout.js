@@ -42,7 +42,7 @@ export function headerHTML() {
             <!--Logo-->
             <a href="/" class="logo">
                 <img src="${logoUrl}" alt="Logo">
-                <span class="logo-text">小杰的杂物间</span>
+                <span class="logo-text">拾光小筑</span>
             </a>
 
             <!-- Desktop Navigation -->
@@ -308,7 +308,7 @@ export function footerHTML() {
     <footer class="footer">
         <div class="container footer-container">
             <div class="footer-info">
-                <p>2025 © <a href="/" class="footer-link">小杰的杂物间</a> -
+                <p>2026 © <a href="/" class="footer-link">拾光小筑</a> -
                     <a href="https://beian.miit.gov.cn/"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -316,7 +316,7 @@ export function footerHTML() {
                         闽ICP备2025xxxxxx号-1
                     </a>
                 </p>
-                <p>This is a courseworkDesign</p>
+                <p>树影与窗，拾光而居</p>
             </div>
             <div>
                 <div class="footer-links">
