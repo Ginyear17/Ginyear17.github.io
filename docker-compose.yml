@@ -2,6 +2,7 @@
 # 前置：服务器需安装 Docker 和 Docker Compose 插件
 # 本机部署（飞牛 NAS）：复用 honcho-database-1 的 PostgreSQL（pgvector/pg15），
 # 在实例内新建了 ginyear 库；api 通过宿主机 bridge 网关 172.17.0.1 访问 15433 映射端口。
+# 敏感配置（SECRET_KEY / SMTP_*）放同目录 .env（已 gitignore），勿入库。
 # 如需独立数据库：把 db 服务加回来并把 DATABASE_URL 改回 db:5432。
 services:
   # 前端：Vite 构建 + nginx 托管静态文件 + 反代 /api
@@ -22,4 +23,16 @@ services:
       DATABASE_URL: postgresql+psycopg://postgres:postgres@172.17.0.1:15433/ginyear
       # 留言时间显示北京时间（datetime.now() 取容器时区）
       TZ: Asia/Shanghai
+      # 会话签名密钥（HMAC Cookie），必须设置随机值，见 .env
+      SECRET_KEY: ${SECRET_KEY:?请在 .env 设置 SECRET_KEY}
+      # 邮箱验证码注册（不配 SMTP 则发送验证码返回 503，其余功能正常）
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-465}
+      SMTP_SSL: ${SMTP_SSL:-true}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+    # 说说配图 / 相册图片持久化（bind mount，容器重建不丢）
+    volumes:
+      - ./uploads:/app/uploads
     restart: unless-stopped
