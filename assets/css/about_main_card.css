@@ -131,6 +131,47 @@ body.dark .main-card button:hover {
     background-color: var(--button-bg-four-dark);
 }
 
+/* 访谈式问答样式（关于页 v2） */
+.main-card .qa {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid #eee;
+}
+.main-card .qa-question {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-size: 1.15rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 0.9375rem;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+body.dark .main-card .qa-question {
+    color: var(--primary-dark);
+}
+.main-card .qa-question i {
+    color: var(--button-bg-three);
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+.main-card .qa-answer p {
+    line-height: 1.9;
+    color: #555;
+    margin-bottom: 0.625rem;
+}
+body.dark .main-card .qa-answer p {
+    color: var(--text-light);
+}
+.main-card .qa-answer .qa-link {
+    color: var(--button-bg-three);
+    text-decoration: underline;
+}
+body.dark .main-card .qa-answer .qa-link {
+    color: var(--primary-dark);
+}
+
 /* Tab 选项卡样式 */
 .tab-container {
     position: relative;

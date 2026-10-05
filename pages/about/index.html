@@ -20,188 +20,144 @@
 
     <main class="main">
         <div class="main-card">
+            <!-- 访谈式自述：每个 Tab 是一组自问自答 -->
             <div class="tab-container">
-                <main>
-                    <!-- 导航区域 -->
-                    <div class="tab-nav">
-                        <input type="radio" id="tab1" name="tabs" checked>
-                        <label for="tab1" class="tab-label">求学经历</label>
+                <div class="tab-nav">
+                    <input type="radio" id="tab1" name="tabs" checked>
+                    <label for="tab1" class="tab-label">我是谁</label>
 
-                        <input type="radio" id="tab2" name="tabs">
-                        <label for="tab2" class="tab-label">荣誉成就</label>
+                    <input type="radio" id="tab2" name="tabs">
+                    <label for="tab2" class="tab-label">关于小筑</label>
 
-                        <input type="radio" id="tab3" name="tabs">
-                        <label for="tab3" class="tab-label">兴趣爱好</label>
+                    <input type="radio" id="tab3" name="tabs">
+                    <label for="tab3" class="tab-label">现在</label>
 
-                        <input type="radio" id="tab4" name="tabs">
-                        <label for="tab4" class="tab-label">未来规划</label>
+                    <input type="radio" id="tab4" name="tabs">
+                    <label for="tab4" class="tab-label">日常</label>
 
-                        <input type="radio" id="tab5" name="tabs">
-                        <label for="tab5" class="tab-label">联系我</label>
+                    <input type="radio" id="tab5" name="tabs">
+                    <label for="tab5" class="tab-label">想对你说</label>
 
-                        <!-- 关于我区域 -->
-                        <section id="about">
-                            <h2>个人信息</h2>
-                            <table>
-                                <tr>
-                                    <th>姓名</th>
-                                    <td>许杰</td>
-                                </tr>
-                                <tr>
-                                    <th>年龄</th>
-                                    <td>20岁</td>
-                                </tr>
-                                <tr>
-                                    <th>籍贯</th>
-                                    <td>福建省福州市</td>
-                                </tr>
-                                <tr>
-                                    <th>专业</th>
-                                    <td>数据科学与大数据技术</td>
-                                </tr>
-                                <tr>
-                                    <th>邮箱</th>
-                                    <td>2579478356@qq.com</td>
-                                </tr>
-                            </table>
-                        </section>
+                    <div class="tab-content">
+                        <!-- 我是谁 -->
+                        <div class="content1">
+                            <section class="qa">
+                                <div class="qa-question">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span>先自我介绍一下？</span>
+                                </div>
+                                <div class="qa-answer">
+                                    <p>我是许杰，网络上叫 Ginyear17，朋友们喊我 gin。</p>
+                                    <p>集美大学数据科学专业毕业，现在在厦门，白天和数字打交道，晚上在拾光小筑里拾掇日子。</p>
+                                </div>
+                            </section>
+                            <section class="qa">
+                                <div class="qa-question">
+                                    <i class="fas fa-question-circle"></i>
+                                    <span>那这里是什么地方？</span>
+                                </div>
+                                <div class="qa-answer">
+                                    <p>是我的小房子：博客里写折腾过的东西，相册里放拍下的瞬间，说说里记零碎的日常，留言板留给路过的你。</p>
+                                    <p>你站在这片树影与窗里，就是在参观我的一部分。</p>
+                                </div>
+                            </section>
+                        </div>
 
-                        <div class="tab-content">
-                            <div class="content1">
-                                <!-- 求学经历内容 -->
-                                <section id="education">
-                                    <h2>求学经历</h2>
-                                    <ol>
-                                        <li>
-                                            <h3>闽侯县第三中学（2019-2022）</h3>
-                                            <p>高中阶段，我主要学习理科知识，并参加了学校的兴趣社团。</p>
-                                        </li>
-                                        <li>
-                                            <h3>集美大学数据科学与大数据技术专业（2022-至今）</h3>
-                                            <p>大学期间，我系统学习了计算机基础理论和编程技能，包括：</p>
-                                            <ul>
-                                                <li>C/C++程序设计</li>
-                                                <li>数据结构与算法</li>
-                                                <li>操作系统原理</li>
-                                                <li>计算机网络</li>
-                                                <li>数据库系统</li>
-                                                <li>Web前端开发</li>
-                                            </ul>
-                                        </li>
-                                    </ol>
-                                </section>
-                            </div>
+                        <!-- 关于小筑 -->
+                        <div class="content2">
+                            <section class="qa">
+                                <div class="qa-question">
+                                    <i class="fas fa-home"></i>
+                                    <span>为什么叫「拾光小筑」？</span>
+                                </div>
+                                <div class="qa-answer">
+                                    <p>一年前它还叫「小杰的杂物间」，是个课程设计——那时候什么都往里放，有点乱。</p>
+                                    <p>后来它慢慢长成了真正属于我的地方，我想给它一个配得上的名字。<strong>拾光</strong>，是捡起时光：照片、文字、歌、零零碎碎的日常，都是捡回来的。<strong>树影与窗</strong>，是它想成为的样子——安安静静的，有一扇透光的窗。</p>
+                                </div>
+                            </section>
+                            <section class="qa">
+                                <div class="qa-question">
+                                    <i class="fas fa-code-branch"></i>
+                                    <span>它是怎么做出来的？</span>
+                                </div>
+                                <div class="qa-answer">
+                                    <p>前端是 Vite 多页应用，后端是 FastAPI，跑在自家 NAS 的 Docker 里——从一台一年前的静态课设，长成现在前后端都有的小站。</p>
+                                    <p>技术栈写在博客里，想看的可以去翻。</p>
+                                </div>
+                            </section>
+                        </div>
 
-                            <div class="content2">
-                                <!-- 荣誉成就内容 -->
-                                <section id="honors">
-                                    <h2>荣誉与成就</h2>
-                                    <ul>
-                                        <li>2022-2023学年第一学期获得专业三等奖学金</li>
-                                        <li>2024-2025学年第一学期获得专业三等奖学金</li>
-                                        <li>2023-2024学年第二学期在暑期社会实践中获得"先进个人"荣誉称号</li>
-                                        <li>2024-2025学年第二学期获得校"优秀共青团员"荣誉称号</li>
-                                        <li>2023-2024学年在校易班担任技术部部长</li>
-                                        <li>2024-2025学年在校易班担任网络技术中心主席</li>
-                                    </ul>
-                                </section>
-                            </div>
+                        <!-- 现在 -->
+                        <div class="content3">
+                            <section class="qa">
+                                <div class="qa-question">
+                                    <i class="fas fa-briefcase"></i>
+                                    <span>最近在忙什么？</span>
+                                </div>
+                                <div class="qa-answer">
+                                    <p>在厦门做量化方向的工作，最近刚转正。白天和因子、回测、数字打交道，下班回来就折腾自己的小服务器——NAS、Docker、AI 模型，都是我的玩具。</p>
+                                    <p>这台网站就住在自家机器上，偶尔半夜断电除外。</p>
+                                </div>
+                            </section>
+                            <section class="qa">
+                                <div class="qa-question">
+                                    <i class="fas fa-compass"></i>
+                                    <span>接下来想做什么？</span>
+                                </div>
+                                <div class="qa-answer">
+                                    <p>刚转正，还在找自己在技术里的位置——量化、算法、AI，都有兴趣，都想再走深一点。</p>
+                                    <p>总之先把日子过好，把小筑搭好，剩下的边走边看。</p>
+                                </div>
+                            </section>
+                        </div>
 
-                            <div class="content3">
-                                <!-- 兴趣爱好内容 -->
-                                <section id="hobbies">
-                                    <h2>兴趣爱好</h2>
-                                    <p>除了专业学习，我还有丰富的课余生活：</p>
-                                    <div>
-                                        <h3>技术爱好</h3>
-                                        <ul>
-                                            <li>Web开发：熟悉HTML、CSS和JavaScript</li>
-                                            <li>人工智能：正在学习机器学习相关知识</li>
-                                        </ul>
-                                        
-                                        <h3>其他爱好</h3>
-                                        <ul>
-                                            <li>乒乓球：曾经加入院乒协，每周参加训练，偶尔参加比赛</li>
-                                            <li>摄影：喜欢记录校园和旅行中的美景</li>
-                                        </ul>
-                                    </div>
-                                </section>
-                            </div>
+                        <!-- 日常 -->
+                        <div class="content4">
+                            <section class="qa">
+                                <div class="qa-question">
+                                    <i class="fas fa-camera"></i>
+                                    <span>不工作的时候喜欢干什么？</span>
+                                </div>
+                                <div class="qa-answer">
+                                    <p>拍照——相册里那些，都是我慢慢攒的；听歌——侧栏那个播放器里的十首，是我挑了很久的；折腾技术——把家里的 NAS 折腾成小机房；偶尔打打 Minecraft，在服务器里盖房子。</p>
+                                    <p>以前还打乒乓球，进过院乒协，现在球拍落灰了。</p>
+                                </div>
+                            </section>
+                            <section class="qa">
+                                <div class="qa-question">
+                                    <i class="fas fa-cat"></i>
+                                    <span>乌七是谁？</span>
+                                </div>
+                                <div class="qa-answer">
+                                    <p>乌七是我姐的猫，但严格来说，它也是我们家的猫。不认生，谁来都蹭，还会自己开门。</p>
+                                </div>
+                            </section>
+                        </div>
 
-                            <div class="content4">
-                                <!-- 未来规划内容 -->
-                                <section id="plans">
-                                    <h2>学习习惯与未来规划</h2>
-                                    
-                                    <h3>学习习惯</h3>
-                                    <p>我的学习方式主要有以下几点：</p>
-                                    <ul>
-                                        <li>制定明确的学习计划，合理安排时间</li>
-                                        <li>采用番茄工作法提高学习效率</li>
-                                        <li>通过项目实践巩固理论知识</li>
-                                        <li>积极参与团队合作，互相学习</li>
-                                    </ul>
-                                    
-                                    <h3>进步方向</h3>
-                                    <p>我认为自己需要在以下几个方面继续努力：</p>
-                                    <ul>
-                                        <li>深入学习算法和数据结构</li>
-                                        <li>提升英语阅读和交流能力</li>
-                                        <li>增强项目实战经验</li>
-                                        <li>培养创新思维和问题解决能力</li>
-                                    </ul>
-                                    
-                                    <h3>未来规划</h3>
-                                    <p>我对未来的规划包括：</p>
-                                    <ol>
-                                        <li>大学期间：系统掌握专业知识，参与各类竞赛和项目，为就业打下坚实基础</li>
-                                        <li>毕业后：希望加入一家技术领先的互联网公司，从事Web开发或AI相关工作</li>
-                                        <li>长期目标：成为一名全栈工程师，并在特定领域有所专长</li>
-                                    </ol>
-                                </section>
-                            </div>
-
-                            <div class="content5">
-                                <!-- 联系表单内容 -->
-                                <section id="contact">
-                                    <h2>联系我</h2>
-                                    <p>如果您有任何问题，欢迎通过以下方式联系我：</p>
-                                    
-                                    <form action="#" method="post">
-                                        <div>
-                                            <label for="name">您的姓名：</label>
-                                            <input type="text" id="name" name="name" required>
-                                        </div>
-                                        
-                                        <div>
-                                            <label for="email">您的邮箱：</label>
-                                            <input type="email" id="email" name="email" required>
-                                        </div>
-                                        
-                                        <div>
-                                            <label for="subject">主题：</label>
-                                            <select id="subject" name="subject">
-                                                <option value="cooperation">合作意向</option>
-                                                <option value="question">问题咨询</option>
-                                                <option value="suggestion">建议反馈</option>
-                                                <option value="other">其他</option>
-                                            </select>
-                                        </div>
-                                        
-                                        <div>
-                                            <label for="message">留言内容：</label>
-                                            <textarea id="message" name="message" rows="5" required></textarea>
-                                        </div>
-                                        
-                                        <div>
-                                            <button type="submit">提交</button>
-                                        </div>
-                                    </form>
-                                </section>
-                            </div>
+                        <!-- 想对你说 -->
+                        <div class="content5">
+                            <section class="qa">
+                                <div class="qa-question">
+                                    <i class="fas fa-envelope-open-text"></i>
+                                    <span>为什么建这个网站？</span>
+                                </div>
+                                <div class="qa-answer">
+                                    <p>想有个自己的地方放东西，也想有人来坐坐。这里的东西都是我捡来的时光，如果你愿意，也可以在留言板留下你的——我会看的。</p>
+                                </div>
+                            </section>
+                            <section class="qa">
+                                <div class="qa-question">
+                                    <i class="fas fa-paper-plane"></i>
+                                    <span>怎么找到你？</span>
+                                </div>
+                                <div class="qa-answer">
+                                    <p>想说话，去<a href="/pages/board/index.html" class="qa-link">留言板</a>；想围观代码，去 <a href="https://github.com/Ginyear17" target="_blank" rel="noopener noreferrer" class="qa-link">GitHub</a>；想写邮件，<a href="mailto:2579478356@qq.com" class="qa-link">2579478356@qq.com</a>。</p>
+                                    <p>看到就会回，可能慢一点。</p>
+                                </div>
+                            </section>
                         </div>
                     </div>
-                </main>
+                </div>
             </div>
 
         </div>
@@ -215,3 +171,4 @@
     <script src="/vendors/lunar-javascript-1.7.3/lunar.js"></script>
     <script type="module" src="/src/js/pages/about.js"></script>
 </body>
+</html>
