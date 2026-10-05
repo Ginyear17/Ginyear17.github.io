@@ -152,6 +152,9 @@
 /* 验证码行：输入框和发送按钮同行 */
 #register-form .label-group-code {
     display: flex;
+    /* 必须换行：label(flex-basis:100%) 独占第一行，
+       否则 input 会被 nowrap 压缩到 ~0 宽（实测 8px，无法输入） */
+    flex-wrap: wrap;
     align-items: center;
     gap: 0.5rem;
 }
