@@ -185,6 +185,11 @@ body.dark .load-more:hover {
     cursor: default;
 }
 
+/* 文章点赞：靠右（.like-btn 基础样式来自 moments.css，博客详情页已引入） */
+.blog-detail-meta .blog-like {
+    margin-left: auto;
+}
+
 .blog-detail-content {
     font-size: 0.9375rem;
     line-height: 1.9;

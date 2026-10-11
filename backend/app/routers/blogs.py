@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import func, select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from ..database import get_db
 from ..models import Blog, BlogComment, User
@@ -87,15 +87,17 @@ def list_blog_comments(
     limit: int = Query(50, ge=1, le=100),
     db: Session = Depends(get_db),
 ):
-    """博客评论列表（旧 → 新）"""
+    """博客评论列表（旧 → 新，顶层评论带 replies）"""
     if db.get(Blog, blog_id) is None:
         raise HTTPException(status_code=404, detail="文章不存在或已被删除")
     total = db.scalar(
         select(func.count()).select_from(BlogComment).where(BlogComment.blog_id == blog_id)
     )
+    # 只取顶层评论（parent_id 为 NULL），回复嵌在各自 replies 里
     items = db.scalars(
         select(BlogComment)
-        .where(BlogComment.blog_id == blog_id)
+        .options(selectinload(BlogComment.replies))
+        .where(BlogComment.blog_id == blog_id, BlogComment.parent_id.is_(None))
         .order_by(BlogComment.id.asc())
         .offset(offset)
         .limit(limit)
@@ -110,35 +112,27 @@ def create_blog_comment(
     db: Session = Depends(get_db),
     user: User | None = Depends(get_current_user),
 ):
-    """发表评论（需登录，昵称自动使用用户名）"""
+    """发表评论（需登录，昵称自动使用用户名；可带 parent_id 回复某评论）"""
     if user is None:
         raise HTTPException(status_code=401, detail="请先登录后再评论")
-    if db.get(Blog, blog_id) is None:
+    blog = db.get(Blog, blog_id)
+    if blog is None:
         raise HTTPException(status_code=404, detail="文章不存在或已被删除")
-    comment = BlogComment(blog_id=blog_id, name=user.username, user_id=user.id, content=payload.content)
+    # 回复归一化：无论回复顶层评论还是回复某条回复，都挂到其顶层评论下（保持一层嵌套）
+    parent_id = None
+    if payload.parent_id is not None:
+        parent = db.get(BlogComment, payload.parent_id)
+        if parent is None or parent.blog_id != blog_id:
+            raise HTTPException(status_code=404, detail="要回复的评论不存在或已被删除")
+        parent_id = parent.parent_id or parent.id
+    comment = BlogComment(
+        blog_id=blog_id,
+        parent_id=parent_id,
+        name=user.username,
+        user_id=user.id,
+        content=payload.content,
+    )
     db.add(comment)
     db.commit()
     db.refresh(comment)
     return comment
-
-
-@router.post("/blogs/{blog_id}/comments/{comment_id}/like")
-def like_blog_comment(blog_id: int, comment_id: int, db: Session = Depends(get_db)):
-    """给评论点赞（+1，重复点赞由前端 localStorage 限制）"""
-    comment = db.get(BlogComment, comment_id)
-    if comment is None or comment.blog_id != blog_id:
-        raise HTTPException(status_code=404, detail="评论不存在或已被删除")
-    comment.likes += 1
-    db.commit()
-    return {"likes": comment.likes}
-
-
-@router.delete("/blogs/{blog_id}/comments/{comment_id}/like")
-def unlike_blog_comment(blog_id: int, comment_id: int, db: Session = Depends(get_db)):
-    """取消评论点赞（-1，最低为 0）"""
-    comment = db.get(BlogComment, comment_id)
-    if comment is None or comment.blog_id != blog_id:
-        raise HTTPException(status_code=404, detail="评论不存在或已被删除")
-    comment.likes = max(0, comment.likes - 1)
-    db.commit()
-    return {"likes": comment.likes}

@@ -121,16 +121,21 @@ class MomentList(BaseModel):
 class MomentCommentCreate(BaseModel):
     name: str = Field(default="匿名", max_length=50)
     content: str = Field(min_length=1, max_length=500)
+    # 回复目标评论 ID（选填；NULL = 顶层评论，非 NULL = 对某评论的回复）
+    parent_id: int | None = None
 
 
 class MomentCommentOut(BaseModel):
     id: int
     moment_id: int
+    parent_id: int | None = None
     name: str
     content: str
     likes: int = 0
     user_id: int | None = None
     created_at: datetime
+    # 该评论下的回复列表（旧 → 新；回复的回复会挂到其顶层评论下）
+    replies: list["MomentCommentOut"] = Field(default_factory=list)
 
     model_config = {"from_attributes": True}
 
@@ -204,16 +209,21 @@ class BlogList(BaseModel):
 
 class BlogCommentCreate(BaseModel):
     content: str = Field(min_length=1, max_length=500)
+    # 回复目标评论 ID（选填；NULL = 顶层评论，非 NULL = 对某评论的回复）
+    parent_id: int | None = None
 
 
 class BlogCommentOut(BaseModel):
     id: int
     blog_id: int
+    parent_id: int | None = None
     name: str
     content: str
     likes: int = 0
     user_id: int | None = None
     created_at: datetime
+    # 该评论下的回复列表（旧 → 新）
+    replies: list["BlogCommentOut"] = Field(default_factory=list)
 
     model_config = {"from_attributes": True}
 
@@ -221,3 +231,10 @@ class BlogCommentOut(BaseModel):
 class BlogCommentList(BaseModel):
     total: int
     items: list[BlogCommentOut]
+
+
+class LikeStatusOut(BaseModel):
+    """某个目标的点赞状态：数量 + 当前用户是否已赞"""
+
+    likes: int = 0
+    liked: bool = False

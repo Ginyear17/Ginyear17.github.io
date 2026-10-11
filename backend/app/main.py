@@ -15,7 +15,7 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy import inspect, text
 
 from .database import Base, engine
-from .routers import albums, auth, blogs, messages, moments, stats
+from .routers import albums, auth, blogs, likes, messages, moments, stats
 from .seed import ensure_admin_exists, seed_blogs
 
 # SQLite 模式下确保数据目录存在（DATABASE_URL 为 postgresql 时无副作用）
@@ -47,6 +47,9 @@ _ensure_column("blogs", "author_id", "INTEGER")
 _ensure_column("messages", "parent_id", "INTEGER")
 # 站长标记（v1.3 新增）
 _ensure_column("users", "is_admin", "INTEGER NOT NULL DEFAULT 0")
+# 评论嵌套回复（v1.5 新增）
+_ensure_column("moment_comments", "parent_id", "INTEGER")
+_ensure_column("blog_comments", "parent_id", "INTEGER")
 # 个人中心（v1.4 新增）：头像 / 个性签名 / 个人网站 / 所在地
 _ensure_column("users", "avatar", "VARCHAR(255)")
 _ensure_column("users", "bio", "VARCHAR(200)")
@@ -69,6 +72,7 @@ app.add_middleware(
 
 app.include_router(messages.router, prefix="/api")
 app.include_router(blogs.router, prefix="/api")
+app.include_router(likes.router, prefix="/api")
 app.include_router(stats.router, prefix="/api")
 app.include_router(moments.router, prefix="/api")
 app.include_router(albums.router, prefix="/api")

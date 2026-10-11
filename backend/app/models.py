@@ -2,7 +2,15 @@
 
 from datetime import datetime
 
-from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, String, Text
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    DateTime,
+    ForeignKey,
+    String,
+    Text,
+    UniqueConstraint,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .database import Base
@@ -131,12 +139,23 @@ class BlogComment(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     blog_id: Mapped[int] = mapped_column(ForeignKey("blogs.id", ondelete="CASCADE"), index=True)
+    # 回复目标（自关联：NULL = 顶层评论；非 NULL = 对某条评论的回复）
+    parent_id: Mapped[int | None] = mapped_column(
+        ForeignKey("blog_comments.id", ondelete="CASCADE"), default=None
+    )
     name: Mapped[str] = mapped_column(String(50), default="匿名")
     # 评论者（需登录评论，自动取用户名）
     user_id: Mapped[int | None] = mapped_column(default=None)
     likes: Mapped[int] = mapped_column(default=0)
     content: Mapped[str] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+
+    parent: Mapped["BlogComment | None"] = relationship(
+        back_populates="replies", remote_side="BlogComment.id"
+    )
+    replies: Mapped[list["BlogComment"]] = relationship(
+        back_populates="parent", cascade="all, delete-orphan", order_by="BlogComment.id"
+    )
 
 
 class Moment(Base):
@@ -168,8 +187,9 @@ class Moment(Base):
 
     @property
     def top_comments(self) -> list["MomentComment"]:
-        """点赞数最高的 3 条评论（列表页预览用），同赞数按时间新→旧"""
-        return sorted(self.comments, key=lambda c: (-c.likes, -c.id))[:3]
+        """列表页评论预览：顶层评论中点赞数最高的 3 条，同赞数按时间新→旧"""
+        top_level = [c for c in self.comments if c.parent_id is None]
+        return sorted(top_level, key=lambda c: (-c.likes, -c.id))[:3]
 
 
 class MomentComment(Base):
@@ -179,6 +199,10 @@ class MomentComment(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     moment_id: Mapped[int] = mapped_column(ForeignKey("moments.id", ondelete="CASCADE"), index=True)
+    # 回复目标（自关联：NULL = 顶层评论；非 NULL = 对某条评论的回复）
+    parent_id: Mapped[int | None] = mapped_column(
+        ForeignKey("moment_comments.id", ondelete="CASCADE"), default=None
+    )
     name: Mapped[str] = mapped_column(String(50), default="匿名")
     # 评论者（接入用户系统后记录；历史匿名评论为 NULL）
     user_id: Mapped[int | None] = mapped_column(default=None)
@@ -188,6 +212,31 @@ class MomentComment(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
 
     moment: Mapped["Moment"] = relationship(back_populates="comments")
+    parent: Mapped["MomentComment | None"] = relationship(
+        back_populates="replies", remote_side="MomentComment.id"
+    )
+    replies: Mapped[list["MomentComment"]] = relationship(
+        back_populates="parent", cascade="all, delete-orphan", order_by="MomentComment.id"
+    )
+
+
+class Like(Base):
+    """点赞记录（账号绑定：一个用户对一个目标只能赞一次）。
+
+    target_type ∈ {moment, moment_comment, blog, blog_comment, message}
+    点赞数 = COUNT(本表按 target)；likes 列保留作冗余展示计数（点赞/取消时同步增减）。
+    """
+
+    __tablename__ = "likes"
+    __table_args__ = (
+        UniqueConstraint("user_id", "target_type", "target_id", name="uq_like_user_target"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    target_type: Mapped[str] = mapped_column(String(20))
+    target_id: Mapped[int] = mapped_column(index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
 
 
 class User(Base):

@@ -187,35 +187,150 @@ function showToast(text) {
 }
 
 /**
- * 点赞按钮：点击 +1 / 再点 -1（可取消），localStorage 记录当前状态
- * 按钮需带 data-url（点赞接口）和 data-key（本地状态键）
- * 导出供博客评论等模块复用
+ * 点赞按钮（账号绑定）：需登录，一个账号对一个目标只能赞一次。
+ * 按钮需带 data-type（moment/moment_comment/blog/blog_comment/message）和 data-id。
+ * 初始状态从后端 /api/likes/status 拉取；点击 POST/DELETE /api/likes/{type}/{id}。
+ * 导出供博客评论 / 留言板等模块复用。
  */
 export function bindLike(btn) {
-    const key = `liked:${btn.dataset.key}`;
+    const type = btn.dataset.type;
+    const id = btn.dataset.id;
+    if (!type || !id) return;
+    const countEl = btn.querySelector('.like-count');
     // 图标与颜色跟随状态
-    const sync = (liked) => {
+    const sync = (liked, likes) => {
         btn.classList.toggle('liked', liked);
         btn.querySelector('i').className = liked ? 'fas fa-heart' : 'far fa-heart';
+        if (likes !== undefined && countEl) countEl.textContent = likes;
     };
-    sync(localStorage.getItem(key) === '1');
+    // 初始状态：账号绑定，从后端拉取
+    fetch(`/api/likes/status?type=${type}&ids=${id}`)
+        .then((r) => r.json())
+        .then((m) => { const s = m[String(id)]; if (s) sync(s.liked, s.likes); })
+        .catch(() => {});
 
     btn.addEventListener('click', async () => {
-        const wasLiked = localStorage.getItem(key) === '1';
+        // 点赞需登录
+        const me = await fetch('/api/auth/me').then((r) => (r.ok ? r.json() : null)).catch(() => null);
+        if (!me) { document.querySelector('.user-btn')?.click(); return; }
+        const wasLiked = btn.classList.contains('liked');
         btn.disabled = true;
         try {
-            const res = await fetch(btn.dataset.url, { method: wasLiked ? 'DELETE' : 'POST' });
+            const res = await fetch(`/api/likes/${type}/${id}`, { method: wasLiked ? 'DELETE' : 'POST' });
+            if (res.status === 401) { document.querySelector('.user-btn')?.click(); return; }
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const { likes } = await res.json();
-            btn.querySelector('.like-count').textContent = likes;
-            localStorage.setItem(key, wasLiked ? '0' : '1');
-            sync(!wasLiked);
+            const { likes, liked } = await res.json();
+            sync(liked, likes);
         } catch (err) {
             alert(`点赞操作失败：${err.message}`);
         } finally {
             btn.disabled = false;
         }
     });
+}
+
+/** 内联回复表单：点「回复」展开，提交后触发 onReload 刷新评论区 */
+export function createReplyForm(parentId, replyUrl, onReload) {
+    const form = document.createElement('form');
+    form.className = 'reply-form';
+    form.innerHTML = `
+      <textarea placeholder="回复...（500 字以内）" maxlength="500" required></textarea>
+      <div class="reply-form-footer">
+        <button type="button" class="reply-cancel">取消</button>
+        <button type="submit">回复</button>
+      </div>`;
+    form.querySelector('.reply-cancel').addEventListener('click', () => form.remove());
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const content = form.querySelector('textarea').value.trim();
+        if (!content) return;
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        try {
+            const res = await fetch(replyUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content, parent_id: parentId }),
+            });
+            if (res.status === 401) { document.querySelector('.user-btn')?.click(); return; }
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error(err.detail || `HTTP ${res.status}`);
+            }
+            form.remove();
+            onReload?.();
+        } catch (err) {
+            alert(`回复失败：${err.message}`);
+            submitBtn.disabled = false;
+        }
+    });
+    return form;
+}
+
+/** 单条评论元素（顶层评论）：正文 + 点赞 + 回复按钮 + 嵌套回复列表 */
+export function createCommentElement(c, ctx) {
+    const item = document.createElement('div');
+    item.className = 'moment-comment';
+    item.innerHTML = `
+      <div class="comment-header">
+        <span class="comment-name"></span>
+        <span class="comment-time"></span>
+      </div>
+      <div class="comment-body">
+        <p class="comment-content"></p>
+        <span class="comment-actions">
+          <button type="button" class="like-btn comment-like" data-type="${ctx.likeType}" data-id="${c.id}" aria-label="点赞">
+            <i class="far fa-heart"></i> <span class="like-count">${c.likes ?? 0}</span>
+          </button>
+          <button type="button" class="reply-toggle"><i class="fas fa-reply"></i> 回复</button>
+        </span>
+      </div>
+      <div class="comment-replies"></div>`;
+    item.querySelector('.comment-name').textContent = c.name;
+    item.querySelector('.comment-time').textContent = relativeTime(c.created_at);
+    item.querySelector('.comment-content').textContent = c.content;
+    item.querySelector('.like-btn').addEventListener('click', null); // 占位防重复
+    item.querySelectorAll('.like-btn').forEach(bindLike);
+
+    // 回复按钮 → 内联回复表单（挂在评论下的 replies 容器里）
+    const repliesEl = item.querySelector('.comment-replies');
+    item.querySelector('.reply-toggle').addEventListener('click', () => {
+        const existing = repliesEl.querySelector('.reply-form');
+        if (existing) { existing.remove(); return; }
+        repliesEl.appendChild(createReplyForm(c.id, ctx.replyUrl, ctx.onReload));
+    });
+
+    // 嵌套回复（旧 → 新）
+    (c.replies || []).forEach((r) => {
+        const rEl = document.createElement('div');
+        rEl.className = 'comment-reply';
+        rEl.innerHTML = `
+          <div class="comment-header">
+            <span class="comment-name"></span>
+            <span class="comment-time"></span>
+          </div>
+          <div class="comment-body">
+            <p class="comment-content"></p>
+            <span class="comment-actions">
+              <button type="button" class="like-btn comment-like" data-type="${ctx.likeType}" data-id="${r.id}" aria-label="点赞">
+                <i class="far fa-heart"></i> <span class="like-count">${r.likes ?? 0}</span>
+              </button>
+              <button type="button" class="reply-toggle"><i class="fas fa-reply"></i> 回复</button>
+            </span>
+          </div>`;
+        rEl.querySelector('.comment-name').textContent = r.name;
+        rEl.querySelector('.comment-time').textContent = relativeTime(r.created_at);
+        rEl.querySelector('.comment-content').textContent = r.content;
+        rEl.querySelectorAll('.like-btn').forEach(bindLike);
+        // 回复某条回复：后端会归一化挂到顶层评论下
+        rEl.querySelector('.reply-toggle').addEventListener('click', () => {
+            const existing = rEl.querySelector('.reply-form');
+            if (existing) { existing.remove(); return; }
+            rEl.appendChild(createReplyForm(r.id, ctx.replyUrl, ctx.onReload));
+        });
+        repliesEl.appendChild(rEl);
+    });
+    return item;
 }
 
 /**
@@ -241,7 +356,7 @@ function renderMoment(msg, { list = false } = {}) {
         <span class="moment-time"></span>
         <span class="moment-lunar"></span>
         ${list ? `<a class="moment-comments" href="./detail.html?id=${msg.id}"><i class="fas fa-comment"></i> <span class="count">${count}</span></a>` : ''}
-        <button type="button" class="like-btn" data-url="/api/moments/${msg.id}/like" data-key="moment_${msg.id}" aria-label="点赞">
+        <button type="button" class="like-btn" data-type="moment" data-id="${msg.id}" aria-label="点赞">
           <i class="far fa-heart"></i> <span class="like-count">${msg.likes ?? 0}</span>
         </button>
         ${list ? '<a class="moment-link">查看详情 <i class="fas fa-angle-right"></i></a>' : ''}
@@ -257,7 +372,7 @@ function renderMoment(msg, { list = false } = {}) {
             const line = document.createElement('p');
             line.className = 'preview-line';
             line.innerHTML = `<span class="preview-name"></span><span class="preview-text"></span>
-              <button type="button" class="like-btn preview-like" data-url="/api/moments/${c.moment_id}/comments/${c.id}/like" data-key="comment_${c.id}" aria-label="点赞">
+              <button type="button" class="like-btn preview-like" data-type="moment_comment" data-id="${c.id}" aria-label="点赞">
                 <i class="far fa-heart"></i> <span class="like-count"></span>
               </button>`;
             line.querySelector('.preview-name').textContent = `${c.name}：`;
@@ -358,7 +473,7 @@ export function initMomentDetail() {
             card.querySelector('.moment-time').textContent = fullTime(msg.created_at); // 详情显示完整时间
             detailEl.appendChild(card);
 
-            // 操作栏：编辑 / 删除 / 分享（暂无鉴权，后续接入用户系统后仅限本人）
+            // 操作栏：编辑 / 删除 / 分享（编辑、删除仅站长可用；后端 403 兜底）
             const actions = document.createElement('div');
             actions.className = 'moment-actions';
             actions.innerHTML = `
@@ -366,6 +481,19 @@ export function initMomentDetail() {
         <button type="button" class="action-btn danger" data-act="del"><i class="fas fa-trash"></i> 删除</button>
         <button type="button" class="action-btn" data-act="share"><i class="fas fa-share-nodes"></i> 分享</button>`;
             detailEl.appendChild(actions);
+            // 非站长：隐藏编辑/删除按钮
+            fetch('/api/auth/me')
+                .then((r) => (r.ok ? r.json() : null))
+                .then((user) => {
+                    if (!user?.is_admin) {
+                        actions.querySelector('[data-act="edit"]').style.display = 'none';
+                        actions.querySelector('[data-act="del"]').style.display = 'none';
+                    }
+                })
+                .catch(() => {
+                    actions.querySelector('[data-act="edit"]').style.display = 'none';
+                    actions.querySelector('[data-act="del"]').style.display = 'none';
+                });
 
             // ===== 编辑：正文替换为输入框，保存后 PUT =====
             actions.querySelector('[data-act="edit"]').addEventListener('click', () => {
@@ -509,24 +637,11 @@ export function initMomentComments() {
         .catch(() => {});
 
     function renderComment(c) {
-        const item = document.createElement('div');
-        item.className = 'moment-comment';
-        item.innerHTML = `
-      <div class="comment-header">
-        <span class="comment-name"></span>
-        <span class="comment-time"></span>
-      </div>
-      <div class="comment-body">
-        <p class="comment-content"></p>
-        <button type="button" class="like-btn comment-like" data-url="/api/moments/${c.moment_id}/comments/${c.id}/like" data-key="comment_${c.id}" aria-label="点赞">
-          <i class="far fa-heart"></i> <span class="like-count">${c.likes ?? 0}</span>
-        </button>
-      </div>`;
-        item.querySelector('.comment-name').textContent = c.name;
-        item.querySelector('.comment-time').textContent = relativeTime(c.created_at);
-        item.querySelector('.comment-content').textContent = c.content;
-        item.querySelectorAll('.like-btn').forEach(bindLike);
-        return item;
+        return createCommentElement(c, {
+            likeType: 'moment_comment',
+            replyUrl: `/api/moments/${id}/comments`,
+            onReload: loadComments,
+        });
     }
 
     async function loadComments() {
@@ -594,6 +709,21 @@ export function initMomentForm() {
     const MAX_CHARS = 1000;
     // 已上传图片的 URL（点 × 删除时不回收磁盘文件，后续做存储清理）
     const uploadedUrls = [];
+
+    // ===== 站长门控：说说仅站长可发布，非站长隐藏表单并提示 =====
+    fetch('/api/auth/me')
+        .then((r) => (r.ok ? r.json() : null))
+        .then((user) => {
+            if (user?.is_admin) return;
+            form.style.display = 'none';
+            const notice = document.createElement('p');
+            notice.className = 'moment-empty';
+            notice.textContent = user
+                ? '仅站长可发布说说。'
+                : '发布说说需要先登录站长账号（点击右上角头像登录）。';
+            form.before(notice);
+        })
+        .catch(() => {});
 
     // 字数统计
     function updateCount() {

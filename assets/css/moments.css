@@ -806,6 +806,118 @@
     padding: 0.125rem 0.375rem;
 }
 
+/* ===== 评论嵌套回复 ===== */
+.comment-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex-shrink: 0;
+}
+
+/* 回复按钮 */
+.comment-actions .reply-toggle {
+    padding: 0.125rem 0.5rem;
+    border: none;
+    border-radius: 0.75rem;
+    background: transparent;
+    color: var(--text-light);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.comment-actions .reply-toggle:hover {
+    color: var(--button-bg-four);
+    background: rgba(0, 0, 0, 0.04);
+}
+
+body.dark .comment-actions .reply-toggle:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* 评论下的回复容器：左侧竖线缩进 */
+.comment-replies {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    margin: 0.5rem 0 0.25rem 1rem;
+    padding-left: 0.75rem;
+    border-left: 0.125rem solid var(--border-color);
+}
+
+.comment-reply {
+    padding: 0.5rem 0.625rem;
+    background: var(--button-bg-one);
+    border-radius: 0.5rem;
+}
+
+.comment-reply .comment-header {
+    margin-bottom: 0.125rem;
+}
+
+.comment-reply .comment-body {
+    align-items: baseline;
+}
+
+.comment-reply .comment-content {
+    font-size: 0.8125rem;
+}
+
+/* 评论内联回复表单 */
+.comment-replies .reply-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    margin-top: 0.375rem;
+}
+
+.comment-replies .reply-form textarea {
+    width: 100%;
+    min-height: 3.5rem;
+    padding: 0.5rem 0.625rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    background: var(--card-bg);
+    color: var(--text-color);
+    font: inherit;
+    font-size: 0.8125rem;
+    resize: vertical;
+    outline: none;
+    transition: var(--transition);
+}
+
+.comment-replies .reply-form textarea:focus {
+    border-color: var(--button-bg-three);
+}
+
+.comment-replies .reply-form-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.375rem;
+}
+
+.comment-replies .reply-form button {
+    padding: 0.3125rem 0.875rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    background: var(--card-bg);
+    color: var(--text-color);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.comment-replies .reply-form button[type='submit'] {
+    background: var(--button-bg-four);
+    border-color: var(--button-bg-four);
+    color: #fff;
+}
+
+.comment-replies .reply-form button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 /* ===== 移动端适配 ===== */
 @media (max-width: 768px) {
     .moment-timeline {

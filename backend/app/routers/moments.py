@@ -39,7 +39,7 @@ def list_moments(
     total = db.scalar(select(func.count()).select_from(Moment))
     items = db.scalars(
         select(Moment)
-        .options(selectinload(Moment.comments))  # 预加载评论，避免 N+1 查询
+        .options(selectinload(Moment.comments).selectinload(MomentComment.replies))  # 预加载评论及回复，避免 N+1
         .order_by(Moment.id.desc())
         .offset(offset)
         .limit(limit)
@@ -50,7 +50,11 @@ def list_moments(
 @router.get("/moments/{moment_id}", response_model=MomentOut)
 def get_moment(moment_id: int, db: Session = Depends(get_db)):
     """单条说说详情（详情页用），不存在返回 404"""
-    moment = db.get(Moment, moment_id)
+    moment = db.scalar(
+        select(Moment)
+        .options(selectinload(Moment.comments).selectinload(MomentComment.replies))
+        .where(Moment.id == moment_id)
+    )
     if moment is None:
         raise HTTPException(status_code=404, detail="说说不存在或已被删除")
     return moment
@@ -69,9 +73,11 @@ def list_comments(
     total = db.scalar(
         select(func.count()).select_from(MomentComment).where(MomentComment.moment_id == moment_id)
     )
+    # 只取顶层评论（parent_id 为 NULL），回复嵌在各自 replies 里
     items = db.scalars(
         select(MomentComment)
-        .where(MomentComment.moment_id == moment_id)
+        .options(selectinload(MomentComment.replies))
+        .where(MomentComment.moment_id == moment_id, MomentComment.parent_id.is_(None))
         .order_by(MomentComment.id.asc())
         .offset(offset)
         .limit(limit)
@@ -86,13 +92,25 @@ def create_comment(
     db: Session = Depends(get_db),
     user: User | None = Depends(get_current_user),
 ):
-    """发表评论（需登录，昵称自动使用用户名）"""
+    """发表评论（需登录，昵称自动使用用户名；可带 parent_id 回复某评论）"""
     if user is None:
         raise HTTPException(status_code=401, detail="请先登录后再评论")
-    if db.get(Moment, moment_id) is None:
+    moment = db.get(Moment, moment_id)
+    if moment is None:
         raise HTTPException(status_code=404, detail="说说不存在或已被删除")
+    # 回复归一化：无论回复顶层评论还是回复某条回复，都挂到其顶层评论下（保持一层嵌套）
+    parent_id = None
+    if payload.parent_id is not None:
+        parent = db.get(MomentComment, payload.parent_id)
+        if parent is None or parent.moment_id != moment_id:
+            raise HTTPException(status_code=404, detail="要回复的评论不存在或已被删除")
+        parent_id = parent.parent_id or parent.id
     comment = MomentComment(
-        moment_id=moment_id, name=user.username, user_id=user.id, content=payload.content
+        moment_id=moment_id,
+        parent_id=parent_id,
+        name=user.username,
+        user_id=user.id,
+        content=payload.content,
     )
     db.add(comment)
     db.commit()
@@ -107,12 +125,14 @@ def update_moment(
     db: Session = Depends(get_db),
     user: User | None = Depends(get_current_user),
 ):
-    """编辑说说（仅限作者本人；历史未记录作者的数据不限制）"""
+    """编辑说说（仅站长）"""
+    if user is None:
+        raise HTTPException(status_code=401, detail="请先登录")
+    if not user.is_admin:
+        raise HTTPException(status_code=403, detail="仅站长可编辑说说")
     moment = db.get(Moment, moment_id)
     if moment is None:
         raise HTTPException(status_code=404, detail="说说不存在或已被删除")
-    if user is None or (moment.author_id is not None and moment.author_id != user.id):
-        raise HTTPException(status_code=403, detail="只能编辑自己发布的说说")
     moment.content = payload.content
     moment.images = payload.images
     db.commit()
@@ -126,58 +146,16 @@ def delete_moment(
     db: Session = Depends(get_db),
     user: User | None = Depends(get_current_user),
 ):
-    """删除说说（仅限作者本人；评论随 ORM cascade 一并删除）"""
+    """删除说说（仅站长；评论随 ORM cascade 一并删除）"""
+    if user is None:
+        raise HTTPException(status_code=401, detail="请先登录")
+    if not user.is_admin:
+        raise HTTPException(status_code=403, detail="仅站长可删除说说")
     moment = db.get(Moment, moment_id)
     if moment is None:
         raise HTTPException(status_code=404, detail="说说不存在或已被删除")
-    if user is None or (moment.author_id is not None and moment.author_id != user.id):
-        raise HTTPException(status_code=403, detail="只能删除自己发布的说说")
     db.delete(moment)
     db.commit()
-
-
-@router.post("/moments/{moment_id}/like")
-def like_moment(moment_id: int, db: Session = Depends(get_db)):
-    """给说说点赞（+1，无用户系统，重复点赞由前端 localStorage 限制）"""
-    moment = db.get(Moment, moment_id)
-    if moment is None:
-        raise HTTPException(status_code=404, detail="说说不存在或已被删除")
-    moment.likes += 1
-    db.commit()
-    return {"likes": moment.likes}
-
-
-@router.delete("/moments/{moment_id}/like")
-def unlike_moment(moment_id: int, db: Session = Depends(get_db)):
-    """取消说说点赞（-1，最低为 0）"""
-    moment = db.get(Moment, moment_id)
-    if moment is None:
-        raise HTTPException(status_code=404, detail="说说不存在或已被删除")
-    moment.likes = max(0, moment.likes - 1)
-    db.commit()
-    return {"likes": moment.likes}
-
-
-@router.post("/moments/{moment_id}/comments/{comment_id}/like")
-def like_comment(moment_id: int, comment_id: int, db: Session = Depends(get_db)):
-    """给评论点赞（校验评论属于该说说）"""
-    comment = db.get(MomentComment, comment_id)
-    if comment is None or comment.moment_id != moment_id:
-        raise HTTPException(status_code=404, detail="评论不存在或已被删除")
-    comment.likes += 1
-    db.commit()
-    return {"likes": comment.likes}
-
-
-@router.delete("/moments/{moment_id}/comments/{comment_id}/like")
-def unlike_comment(moment_id: int, comment_id: int, db: Session = Depends(get_db)):
-    """取消评论点赞（-1，最低为 0）"""
-    comment = db.get(MomentComment, comment_id)
-    if comment is None or comment.moment_id != moment_id:
-        raise HTTPException(status_code=404, detail="评论不存在或已被删除")
-    comment.likes = max(0, comment.likes - 1)
-    db.commit()
-    return {"likes": comment.likes}
 
 
 @router.post("/moments", response_model=MomentOut, status_code=201)
@@ -186,9 +164,11 @@ def create_moment(
     db: Session = Depends(get_db),
     user: User | None = Depends(get_current_user),
 ):
-    """发布说说（需登录）"""
+    """发布说说（仅站长）"""
     if user is None:
         raise HTTPException(status_code=401, detail="请先登录后再发布")
+    if not user.is_admin:
+        raise HTTPException(status_code=403, detail="仅站长可发布说说")
     moment = Moment(content=payload.content, images=payload.images, author_id=user.id)
     db.add(moment)
     db.commit()

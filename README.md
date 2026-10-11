@@ -130,7 +130,15 @@ Ginyear17.github.io/
 - **详情页 `detail.html?id=xx`**：按 id 加载正文，每次访问浏览量 +1，
   页面标题同步为文章标题；正文用 **Markdown** 渲染
   （`marked` + `DOMPurify` 消毒 + `highlight.js` 代码高亮，见 `src/js/markdown.js`）；
-  下方评论区（复用说说评论组件：需登录 / 点赞 / 昵称自动取用户名）
+  下方评论区（需登录 / 点赞账号绑定 / 昵称自动取用户名 / 支持嵌套回复）
+
+### 权限模型
+
+- **站长**（`users.is_admin`，首个注册用户自动成为）：可发布/编辑/删除博客与说说
+- **普通用户**：可发布留言板留言、可在博客/说说/留言板下评论与点赞
+- **点赞账号绑定**：统一点赞模块 `/api/likes/{type}/{id}`
+  （见 `backend/app/routers/likes.py`），一个账号对一个目标只能赞一次，取消即删除记录；
+  type ∈ {moment, moment_comment, blog, blog_comment, message}；前端需登录，未登录点赞弹登录框
 - **发布页 `write.html`**：标题 / 分类 / 封面（复用 `/api/upload` 上传）/ 摘要 / 正文，
   正文为 Markdown 编辑器（左侧书写右侧实时预览，窄屏堆叠），
   摘要留空自动截取正文开头；`POST /api/blogs` **仅站长可发**，成功后跳转详情页；
@@ -231,8 +239,8 @@ git pull && docker compose up -d --build
 3. **搜索与加载更多是占位**：`scripts.js` 中均为 `alert('...将在这里实现')`。
 4. **音乐播放器**：进度条 / 播放时间显示的代码整段被注释掉未启用；
    `loadMusic` 自动播放失败的分支引用了未定义变量（被 catch 吞掉，无实际影响）。
-5. **站长机制较简单**：首个注册的用户自动成为站长（`users.is_admin`），
-   仅站长可发布博客、显示「写博客」入口；如需换站长需手动改库。
+5. **站长机制较简单**：首个注册的用户自动成为站长（`users.is_admin`）；换站长需手动改库。
+   （点赞已改为账号绑定 `likes` 表，早期 localStorage 方案的旧点赞数不保留）
 6. **关于页**：内容为静态文案，改资料需手改 `pages/about/index.html`。
 7. **ICP 备案号为占位**：`闽ICP备2025xxxxxx号-1`。（页脚访问量 / 访客量已接入后端实时统计：
    `visits` 表 + `/api/stats/*`，每个浏览器会话上报一次）

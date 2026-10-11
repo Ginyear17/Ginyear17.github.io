@@ -1,7 +1,7 @@
 // 博客模块：列表页 / 详情页 / 发布页 / 首页卡片 / 评论区 共用的取数与渲染逻辑
 // 页面入口（src/js/pages/blog*.js、home.js）按各页面元素存在与否调用对应 init
 import { renderMarkdown, highlightCode } from './markdown.js'
-import { bindLike } from './moments.js'
+import { bindLike, createCommentElement } from './moments.js'
 
 const PAGE_SIZE = 10
 const DEFAULT_COVER = '/assets/images/album/光影.jpg'
@@ -115,10 +115,15 @@ export async function initBlogDetail() {
                 <span><i class="fas fa-calendar"></i> ${formatDate(blog.created_at)}</span>
                 <span><i class="fas fa-eye"></i> ${blog.views}</span>
                 <span class="post-category">${escapeHtml(blog.category)}</span>
+                <button type="button" class="like-btn blog-like" data-type="blog" data-id="${blog.id}" aria-label="点赞文章">
+                  <i class="far fa-heart"></i> <span class="like-count">${blog.likes ?? 0}</span>
+                </button>
             </div>
             <div class="blog-detail-content blog-md">${renderContent(blog.content)}</div>`
         // 代码块语法高亮（需在插入 DOM 后执行）
         highlightCode(detailEl.querySelector('.blog-detail-content'))
+        // 文章点赞（账号绑定）
+        detailEl.querySelectorAll('.like-btn').forEach(bindLike)
     } catch {
         detailEl.innerHTML = '<p class="blog-empty">文章加载失败，请稍后再试。</p>'
     }
@@ -319,24 +324,11 @@ export function initBlogComments() {
         .catch(() => {})
 
     function renderComment(c) {
-        const item = document.createElement('div')
-        item.className = 'moment-comment'
-        item.innerHTML = `
-      <div class="comment-header">
-        <span class="comment-name"></span>
-        <span class="comment-time"></span>
-      </div>
-      <div class="comment-body">
-        <p class="comment-content"></p>
-        <button type="button" class="like-btn comment-like" data-url="/api/blogs/${c.blog_id}/comments/${c.id}/like" data-key="blog_comment_${c.id}" aria-label="点赞">
-          <i class="far fa-heart"></i> <span class="like-count">${c.likes ?? 0}</span>
-        </button>
-      </div>`
-        item.querySelector('.comment-name').textContent = c.name
-        item.querySelector('.comment-time').textContent = new Date(c.created_at).toLocaleString('zh-CN')
-        item.querySelector('.comment-content').textContent = c.content
-        item.querySelectorAll('.like-btn').forEach(bindLike)
-        return item
+        return createCommentElement(c, {
+            likeType: 'blog_comment',
+            replyUrl: `/api/blogs/${id}/comments`,
+            onReload: loadComments,
+        })
     }
 
     async function loadComments() {

@@ -1,5 +1,8 @@
 // 留言板：接入 FastAPI 后端 /api/messages（开发时经 Vite 代理转发）
 // 留言需登录：左上角显示用户名，署名选填显示在留言右下角的“——署名”
+// 点赞：账号绑定（复用 moments.js 的 bindLike，data-type=message）
+import { bindLike } from './moments.js'
+
 export function initBoard() {
     const listEl = document.getElementById('message-list');
     const form = document.getElementById('message-form');
@@ -41,6 +44,9 @@ export function initBoard() {
       <div class="message-header">
         <span class="message-name"></span>
         <span class="message-time"></span>
+        <button type="button" class="like-btn message-like" data-type="message" data-id="${msg.id}" aria-label="点赞留言">
+          <i class="far fa-heart"></i> <span class="like-count">0</span>
+        </button>
       </div>
       <p class="message-content"></p>
       <p class="message-signature" style="display: none;"></p>
@@ -74,12 +80,17 @@ export function initBoard() {
             line.innerHTML = `
         <span class="reply-name"></span>
         <span class="reply-text"></span>
+        <button type="button" class="like-btn reply-like" data-type="message" data-id="${r.id}" aria-label="点赞回复">
+          <i class="far fa-heart"></i> <span class="like-count">0</span>
+        </button>
         <span class="reply-time"></span>`;
             line.querySelector('.reply-name').textContent = r.name;
             line.querySelector('.reply-text').textContent = r.content;
             line.querySelector('.reply-time').textContent = formatTime(r.created_at);
             repliesEl.appendChild(line);
         });
+        // 绑定留言 / 回复的点赞按钮（账号绑定，初始状态由 bindLike 从后端拉取）
+        div.querySelectorAll('.like-btn').forEach(bindLike);
         // 回复数（超过 0 才显示）
         const countEl = div.querySelector('.reply-count');
         if (replies.length) countEl.textContent = `（${replies.length}）`;
