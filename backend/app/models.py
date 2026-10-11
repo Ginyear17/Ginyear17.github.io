@@ -202,4 +202,11 @@ class User(Base):
     password_hash: Mapped[str] = mapped_column(String(200))
     # 站长标记：首个注册的用户自动成为站长，可发布博客
     is_admin: Mapped[bool] = mapped_column(default=False)
+    # 个人中心（v1.4）：头像 URL（/uploads/avatars/...，选填）
+    avatar: Mapped[str | None] = mapped_column(String(255), default=None)
+    # 个性签名（个人中心展示/编辑）
+    bio: Mapped[str | None] = mapped_column(String(200), default=None)
+    # 个人网站 / 所在地（个人中心展示/编辑）
+    website: Mapped[str | None] = mapped_column(String(255), default=None)
+    location: Mapped[str | None] = mapped_column(String(100), default=None)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)

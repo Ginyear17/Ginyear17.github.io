@@ -223,6 +223,24 @@
     border: 1px solid var(--border-color);
 }
 
+/* 个人中心入口：链接式按钮（不受 .button-group button 固定宽度约束） */
+#profile-center-btn {
+    width: auto;
+    margin: 0;
+    padding: 0.4375rem 1.25rem;
+    background-color: var(--button-bg-three);
+    color: var(--button-text-three);
+    border: none;
+    border-radius: 1em;
+    cursor: pointer;
+    font-size: 0.8125rem;
+    transition: background-color 0.3s;
+}
+
+#profile-center-btn:hover {
+    background-color: var(--button-bg-four);
+}
+
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }

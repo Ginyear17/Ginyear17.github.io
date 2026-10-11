@@ -21,17 +21,20 @@ import re
 import secrets
 import smtplib
 import time
+from datetime import datetime
 from email.header import Header
 from email.mime.text import MIMEText
 from email.utils import formataddr
+from pathlib import Path
 
-from fastapi import APIRouter, Depends, HTTPException, Request, Response
+from fastapi import APIRouter, Depends, File, HTTPException, Request, Response, UploadFile
 from pydantic import BaseModel, Field
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from ..database import get_db
 from ..models import User
+from ..schemas import AvatarOut, EmailChangeIn, PasswordChangeIn, ProfileUpdate
 
 router = APIRouter()
 
@@ -124,6 +127,16 @@ CODE_DAILY_LIMIT = 10             # 同邮箱每日最多发 10 封
 _code_store: dict[str, dict] = {}  # email -> {"hash": …, "exp": 时间戳, "attempts": n}
 _send_log: dict[str, dict] = {}    # email -> {"last": 时间戳, "day": "YYYYMMDD", "count": n}
 
+# ===== 头像上传 =====
+AVATAR_UPLOAD_DIR = Path("uploads/avatars")
+AVATAR_ALLOWED_TYPES = {
+    "image/jpeg": ".jpg",
+    "image/png": ".png",
+    "image/gif": ".gif",
+    "image/webp": ".webp",
+}
+MAX_AVATAR_SIZE = 2 * 1024 * 1024  # 2MB
+
 
 def _smtp_configured() -> bool:
     return bool(os.getenv("SMTP_HOST") and os.getenv("SMTP_USER") and os.getenv("SMTP_PASSWORD"))
@@ -138,10 +151,10 @@ def _send_email(to: str, code: str) -> None:
     sender = os.getenv("SMTP_FROM", user)
 
     msg = MIMEText(
-        f"你的注册验证码是：{code}\n{CODE_TTL // 60} 分钟内有效，请勿泄露给他人。\n\n—— 拾光小筑",
+        f"你的验证码是：{code}\n{CODE_TTL // 60} 分钟内有效，请勿泄露给他人。\n\n—— 拾光小筑",
         "plain", "utf-8",
     )
-    msg["Subject"] = Header("注册验证码 - 拾光小筑", "utf-8")
+    msg["Subject"] = Header("验证码 - 拾光小筑", "utf-8")
     msg["From"] = formataddr((str(Header("拾光小筑", "utf-8")), sender))
     msg["To"] = to
 
@@ -160,7 +173,6 @@ def _send_email(to: str, code: str) -> None:
 class SendCodeIn(BaseModel):
     email: str
 
-
 class RegisterIn(BaseModel):
     username: str = Field(min_length=2, max_length=20)
     email: str
@@ -176,6 +188,13 @@ class LoginIn(BaseModel):
 class UserOut(BaseModel):
     id: int
     username: str
+    email: str | None = None
+    # 个人中心（v1.4）：头像 / 个性签名 / 个人网站 / 所在地 / 注册时间
+    avatar: str | None = None
+    bio: str | None = None
+    website: str | None = None
+    location: str | None = None
+    created_at: datetime | None = None
     # 前端据此显示「写博客」入口等站长功能
     is_admin: bool = False
 
@@ -286,3 +305,95 @@ def logout(response: Response):
 def me(user: User | None = Depends(get_current_user)):
     """当前登录用户，未登录返回 null"""
     return user
+
+
+@router.put("/profile", response_model=UserOut)
+def update_profile(
+    payload: ProfileUpdate,
+    db: Session = Depends(get_db),
+    user: User | None = Depends(get_current_user),
+):
+    """个人中心：更新基础资料（用户名 / 头像 / 个性签名 / 个人网站 / 所在地）"""
+    user = require_user(user)
+    username = payload.username.strip()
+    if not USERNAME_RE.match(username):
+        raise HTTPException(status_code=422, detail="用户名需为 2~20 位中英文、数字或下划线")
+    conflict = db.scalar(select(User).where(User.username == username, User.id != user.id))
+    if conflict is not None:
+        raise HTTPException(status_code=409, detail="用户名已被占用")
+
+    user.username = username
+    # 仅更新请求中显式提供的字段，避免部分更新清空其余资料
+    for field in ("avatar", "bio", "website", "location"):
+        if field in payload.model_fields_set:
+            value = (getattr(payload, field) or "").strip() or None
+            setattr(user, field, value)
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+@router.post("/change-password", status_code=204)
+def change_password(
+    payload: PasswordChangeIn,
+    db: Session = Depends(get_db),
+    user: User | None = Depends(get_current_user),
+):
+    """个人中心：修改密码（需校验当前密码）"""
+    user = require_user(user)
+    if not verify_password(payload.old_password, user.password_hash):
+        raise HTTPException(status_code=400, detail="当前密码不正确")
+    user.password_hash = hash_password(payload.new_password)
+    db.commit()
+
+
+@router.post("/change-email", response_model=UserOut)
+def change_email(
+    payload: EmailChangeIn,
+    db: Session = Depends(get_db),
+    user: User | None = Depends(get_current_user),
+):
+    """个人中心：换绑邮箱（新邮箱需通过验证码校验）"""
+    user = require_user(user)
+    email = payload.email.strip().lower()
+    if not EMAIL_RE.match(email):
+        raise HTTPException(status_code=422, detail="邮箱格式不正确")
+    if email == user.email:
+        raise HTTPException(status_code=400, detail="新邮箱与原邮箱相同")
+    if db.scalar(select(User).where(User.email == email, User.id != user.id)):
+        raise HTTPException(status_code=409, detail="该邮箱已被其他账号使用")
+
+    entry = _code_store.get(email)
+    if not entry or entry["exp"] < time.time():
+        raise HTTPException(status_code=400, detail="验证码已过期，请重新发送")
+    if entry["attempts"] >= CODE_MAX_ATTEMPTS:
+        raise HTTPException(status_code=429, detail="验证码错误次数过多，请重新发送")
+    if not verify_password(payload.code, entry["hash"]):
+        entry["attempts"] += 1
+        raise HTTPException(status_code=400, detail="验证码错误")
+
+    user.email = email
+    _code_store.pop(email, None)  # 验证码一次性
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+@router.post("/avatar", response_model=AvatarOut)
+async def upload_avatar(
+    file: UploadFile = File(...),
+    user: User | None = Depends(get_current_user),
+):
+    """个人中心：上传头像，返回可访问的 URL（随后由 PUT /profile 保存）"""
+    require_user(user)
+    ext = AVATAR_ALLOWED_TYPES.get(file.content_type)
+    if ext is None:
+        raise HTTPException(status_code=415, detail="仅支持 jpg/png/gif/webp 图片")
+    data = await file.read()
+    if len(data) > MAX_AVATAR_SIZE:
+        raise HTTPException(status_code=413, detail="头像图片不能超过 2MB")
+
+    AVATAR_UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+    name = f"avatar-{secrets.token_hex(8)}{ext}"
+    (AVATAR_UPLOAD_DIR / name).write_bytes(data)
+    return AvatarOut(url=f"/uploads/avatars/{name}")

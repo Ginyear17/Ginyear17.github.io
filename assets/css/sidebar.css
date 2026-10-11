@@ -199,10 +199,51 @@ body.dark .section-title i {
     color: var(--text-color); /* 使用全局文本颜色 */
 }
 
-.recent-post-icon {
-    margin-left: 0.5rem; /* 给图标和文字之间添加间距 */
-    color: var(--text-light); /* 设置图标颜色 */
-    font-size: 0.75rem; /* 调整图标大小 */
+/* 侧栏「最新动态」动态列表：类型徽标 + 标题 + 相对时间 */
+.recent-post-link {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-width: 0;
+}
+
+.recent-post-text {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.recent-post-badge {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.65rem;
+    line-height: 1;
+    padding: 0.15rem 0.35rem;
+    border-radius: 0.25rem;
+    color: #fff;
+}
+
+.recent-post-badge i {
+    font-size: 0.6rem;
+}
+
+.recent-post-badge.blog {
+    background-color: var(--primary-color);
+}
+
+.recent-post-badge.moment {
+    background-color: #f0a35e;
+}
+
+.recent-post-time {
+    flex-shrink: 0;
+    margin-left: 0.5rem;
+    font-size: 0.7rem;
+    color: var(--text-light);
 }
 
 .music-card-special {

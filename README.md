@@ -52,7 +52,7 @@ Ginyear17.github.io/
 │   │   ├── base.css            #   全局基础样式 / CSS 变量 / 深色主题 / @font-face 字体 / 背景图
 │   │   ├── header.css / footer.css / sidebar.css / main-card.css / modal.css
 │   │   ├── slider.css / blog-posts.css / click-appears.css   # 仅首页
-│   │   └── about_main_card.css # 仅关于页
+│   │   └── about.css           # 仅关于页
 │   ├── fonts/                  # 3 个 TTF 字体（base.css @font-face 引用）
 │   ├── images/
 │   │   ├── logo.png / logo.webp / logo2.webp
@@ -98,7 +98,8 @@ Ginyear17.github.io/
 - **侧栏**：
   - 作者卡片（头像 + `author-bio.js` 每次刷新随机换一条个性签名，共 9 条）
   - **日历卡片**：每秒更新的实时时间、日期、时段欢迎语，以及用 lunar 库计算的农历日期
-  - 实用网站链接列表（17 条）
+  - **最新动态**：实时合并最新文章 + 说说（`initSidebarRecent` 从 `/api/blogs`、`/api/moments` 拉取，
+    按时间倒序展示并带类型徽标，每分钟自动刷新）
   - **音乐播放器卡片**：内置 10 首本地 mp3，随机切歌 / 播放暂停 / 静音 / 下一首，
     旋转封面 + 双高斯模糊背景；通过 `sessionStorage` 记录播放进度，**跨页面续播**
 - **登录模态框**：账号 / 密码 / 注册按钮（仅有 UI，逻辑未完成）
@@ -107,8 +108,20 @@ Ginyear17.github.io/
 
 ### 关于页 `pages/about/index.html`
 
-唯一有完整内容的子页面。用纯 CSS 单选按钮（`:checked` + 兄弟选择器）实现 5 个 Tab：
-个人信息、求学经历、荣誉成就、兴趣爱好 / 未来规划、联系表单（无提交逻辑）。
+唯一有完整内容的子页面。个人主页式单页滚动布局（样式见 `assets/css/about.css`）：
+
+- **名片 Hero**：背景为相册照片（`IMG_20241202_173347.jpg`）+ 左侧压暗渐变蒙版，
+  展示头像、站名、「树影与窗 · 拾光而居」副标题、一句话简介、方向标签（数据科学 / 量化·算法·AI / NAS），
+  以及留言板 / GitHub / 邮箱入口
+- **吸顶页内导航**：`关于这小站` / `小筑的故事` / `现在` / `日常` / `想对你说` 五个锚点，
+  高亮由 `src/js/pages/about.js` 按「判定线」计算；宽屏下「现在」与「日常」同处一行、
+  纵向位置相同，滚动无法区分，因此点击锚点时直接锁定被点项
+- **Bento 内容网格**：≥1100px 切两列（`.g-wide` 卡片整行铺开），包含
+  关于这小站（简介 + 兴趣标签）、小筑的故事（成长时间线 + 技术栈注脚）、
+  照片卡（「光影」；单列时固定 18rem 高，避免按原图比例撑得过高）、
+  现在（在做 / 在折腾 / 想去 的标签列表）、日常（6 格爱好瓷砖）、
+  想对你说（留言板 / GitHub / 邮箱 / Steam 联系卡）
+- 文案不含真实姓名、昵称、城市等可定位到个人的信息
 
 ### 博客 `pages/blog/`
 
@@ -220,7 +233,7 @@ git pull && docker compose up -d --build
    `loadMusic` 自动播放失败的分支引用了未定义变量（被 catch 吞掉，无实际影响）。
 5. **站长机制较简单**：首个注册的用户自动成为站长（`users.is_admin`），
    仅站长可发布博客、显示「写博客」入口；如需换站长需手动改库。
-6. **关于页**：联系表单 `action="#"` 无提交逻辑；文件头部有 `<hrml>` 拼写错误。
+6. **关于页**：内容为静态文案，改资料需手改 `pages/about/index.html`。
 7. **ICP 备案号为占位**：`闽ICP备2025xxxxxx号-1`。（页脚访问量 / 访客量已接入后端实时统计：
    `visits` 表 + `/api/stats/*`，每个浏览器会话上报一次）
 8. **旧静态文章页待清理**：`pages/blog/aliyun_ddns.html` 已被动态详情页取代，保留待删。

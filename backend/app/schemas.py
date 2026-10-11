@@ -144,6 +144,30 @@ class UploadOut(BaseModel):
     url: str
 
 
+class AvatarOut(BaseModel):
+    url: str
+
+
+class ProfileUpdate(BaseModel):
+    """个人中心：基础资料更新"""
+
+    username: str = Field(min_length=2, max_length=20)
+    avatar: str | None = Field(default=None, max_length=255)
+    bio: str | None = Field(default=None, max_length=200)
+    website: str | None = Field(default=None, max_length=255)
+    location: str | None = Field(default=None, max_length=100)
+
+
+class PasswordChangeIn(BaseModel):
+    old_password: str = Field(min_length=6, max_length=64)
+    new_password: str = Field(min_length=6, max_length=64)
+
+
+class EmailChangeIn(BaseModel):
+    email: str
+    code: str = Field(min_length=6, max_length=6)
+
+
 class BlogCreate(BaseModel):
     title: str = Field(min_length=1, max_length=100)
     summary: str = Field(default="", max_length=300)

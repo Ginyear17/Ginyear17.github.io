@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>关于 · 拾光小筑</title>
+    <meta name="description" content="关于拾光小筑：一个把日子慢慢拾起来的地方——这里放着拍下的瞬间、折腾过的东西和零碎的日常。">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../assets/css/base.css">
     <link rel="stylesheet" href="../../assets/css/header.css">
     <link rel="stylesheet" href="../../assets/css/main-card.css">
     <link rel="stylesheet" href="../../assets/css/sidebar.css">
     <link rel="stylesheet" href="../../assets/css/footer.css">
-    <link rel="stylesheet" href="../../assets/css/about_main_card.css">
     <link rel="stylesheet" href="../../assets/css/modal.css">
+    <link rel="stylesheet" href="../../assets/css/about.css">
 
 </head>
 <body data-page="about">
@@ -19,153 +20,42 @@
     <div id="layout-header"></div>
 
     <main class="main">
-        <div class="main-card">
-            <!-- 访谈式自述：每个 Tab 是一组自问自答 -->
-            <div class="tab-container">
-                <div class="tab-nav">
-                    <input type="radio" id="tab1" name="tabs" checked>
-                    <label for="tab1" class="tab-label">我是谁</label>
+        <div class="main-card about-page">
 
-                    <input type="radio" id="tab2" name="tabs">
-                    <label for="tab2" class="tab-label">关于小筑</label>
-
-                    <input type="radio" id="tab3" name="tabs">
-                    <label for="tab3" class="tab-label">现在</label>
-
-                    <input type="radio" id="tab4" name="tabs">
-                    <label for="tab4" class="tab-label">日常</label>
-
-                    <input type="radio" id="tab5" name="tabs">
-                    <label for="tab5" class="tab-label">想对你说</label>
-
-                    <div class="tab-content">
-                        <!-- 我是谁 -->
-                        <div class="content1">
-                            <section class="qa">
-                                <div class="qa-question">
-                                    <i class="fas fa-user-circle"></i>
-                                    <span>先自我介绍一下？</span>
-                                </div>
-                                <div class="qa-answer">
-                                    <p>我是许杰，网络上叫 Ginyear17，朋友们喊我 gin。</p>
-                                    <p>集美大学数据科学专业毕业，现在在厦门，白天和数字打交道，晚上在拾光小筑里拾掇日子。</p>
-                                </div>
-                            </section>
-                            <section class="qa">
-                                <div class="qa-question">
-                                    <i class="fas fa-question-circle"></i>
-                                    <span>那这里是什么地方？</span>
-                                </div>
-                                <div class="qa-answer">
-                                    <p>是我的小房子：博客里写折腾过的东西，相册里放拍下的瞬间，说说里记零碎的日常，留言板留给路过的你。</p>
-                                    <p>你站在这片树影与窗里，就是在参观我的一部分。</p>
-                                </div>
-                            </section>
-                        </div>
-
-                        <!-- 关于小筑 -->
-                        <div class="content2">
-                            <section class="qa">
-                                <div class="qa-question">
-                                    <i class="fas fa-home"></i>
-                                    <span>为什么叫「拾光小筑」？</span>
-                                </div>
-                                <div class="qa-answer">
-                                    <p>一年前它还叫「小杰的杂物间」，是个课程设计——那时候什么都往里放，有点乱。</p>
-                                    <p>后来它慢慢长成了真正属于我的地方，我想给它一个配得上的名字。<strong>拾光</strong>，是捡起时光：照片、文字、歌、零零碎碎的日常，都是捡回来的。<strong>树影与窗</strong>，是它想成为的样子——安安静静的，有一扇透光的窗。</p>
-                                </div>
-                            </section>
-                            <section class="qa">
-                                <div class="qa-question">
-                                    <i class="fas fa-code-branch"></i>
-                                    <span>它是怎么做出来的？</span>
-                                </div>
-                                <div class="qa-answer">
-                                    <p>前端是 Vite 多页应用，后端是 FastAPI，跑在自家 NAS 的 Docker 里——从一台一年前的静态课设，长成现在前后端都有的小站。</p>
-                                    <p>技术栈写在博客里，想看的可以去翻。</p>
-                                </div>
-                            </section>
-                        </div>
-
-                        <!-- 现在 -->
-                        <div class="content3">
-                            <section class="qa">
-                                <div class="qa-question">
-                                    <i class="fas fa-briefcase"></i>
-                                    <span>最近在忙什么？</span>
-                                </div>
-                                <div class="qa-answer">
-                                    <p>在厦门做量化方向的工作，最近刚转正。白天和因子、回测、数字打交道，下班回来就折腾自己的小服务器——NAS、Docker、AI 模型，都是我的玩具。</p>
-                                    <p>这台网站就住在自家机器上，偶尔半夜断电除外。</p>
-                                </div>
-                            </section>
-                            <section class="qa">
-                                <div class="qa-question">
-                                    <i class="fas fa-compass"></i>
-                                    <span>接下来想做什么？</span>
-                                </div>
-                                <div class="qa-answer">
-                                    <p>刚转正，还在找自己在技术里的位置——量化、算法、AI，都有兴趣，都想再走深一点。</p>
-                                    <p>总之先把日子过好，把小筑搭好，剩下的边走边看。</p>
-                                </div>
-                            </section>
-                        </div>
-
-                        <!-- 日常 -->
-                        <div class="content4">
-                            <section class="qa">
-                                <div class="qa-question">
-                                    <i class="fas fa-camera"></i>
-                                    <span>不工作的时候喜欢干什么？</span>
-                                </div>
-                                <div class="qa-answer">
-                                    <p>拍照——相册里那些，都是我慢慢攒的；听歌——侧栏那个播放器里的十首，是我挑了很久的；折腾技术——把家里的 NAS 折腾成小机房；偶尔打打 Minecraft，在服务器里盖房子。</p>
-                                    <p>以前还打乒乓球，进过院乒协，现在球拍落灰了。</p>
-                                </div>
-                            </section>
-                            <section class="qa">
-                                <div class="qa-question">
-                                    <i class="fas fa-cat"></i>
-                                    <span>乌七是谁？</span>
-                                </div>
-                                <div class="qa-answer">
-                                    <p>乌七是我姐的猫，但严格来说，它也是我们家的猫。不认生，谁来都蹭，还会自己开门。</p>
-                                </div>
-                            </section>
-                        </div>
-
-                        <!-- 想对你说 -->
-                        <div class="content5">
-                            <section class="qa">
-                                <div class="qa-question">
-                                    <i class="fas fa-envelope-open-text"></i>
-                                    <span>为什么建这个网站？</span>
-                                </div>
-                                <div class="qa-answer">
-                                    <p>想有个自己的地方放东西，也想有人来坐坐。这里的东西都是我捡来的时光，如果你愿意，也可以在留言板留下你的——我会看的。</p>
-                                </div>
-                            </section>
-                            <section class="qa">
-                                <div class="qa-question">
-                                    <i class="fas fa-paper-plane"></i>
-                                    <span>怎么找到你？</span>
-                                </div>
-                                <div class="qa-answer">
-                                    <p>想说话，去<a href="/pages/board/index.html" class="qa-link">留言板</a>；想围观代码，去 <a href="https://github.com/Ginyear17" target="_blank" rel="noopener noreferrer" class="qa-link">GitHub</a>；想写邮件，<a href="mailto:2579478356@qq.com" class="qa-link">2579478356@qq.com</a>。</p>
-                                    <p>看到就会回，可能慢一点。</p>
-                                </div>
-                            </section>
+            <!-- 名片：头像 / 站名 / 一句话简介 / 社交入口 -->
+            <section class="about-hero">
+                <div class="about-hero-inner">
+                    <img class="about-avatar"
+                         src="../../assets/images/avatars/avatar-main.webp"
+                         alt="拾光小筑的头像">
+                    <div class="about-hero-body">
+                        <p class="about-hero-hello">你好，这里是</p>
+                        <h1 class="about-hero-name">
+                            拾光小筑
+                            <span class="about-hero-nick">树影与窗 · 拾光而居</span>
+                        </h1>
+                        <p class="about-hero-tagline">
+                            一个把日子慢慢拾起来的地方。白天和数字打交道，晚上在这里拾掇照片、文字和零碎的日常。
+                        </p>
+                        <ul class="about-hero-meta">
+                            <li><i class="fas fa-layer-group"></i>数据科学</li>
+                            <li><i class="fas fa-chart-line"></i>量化 / 算法 / AI</li>
+                            <li><i class="fas fa-server"></i>爱折腾 NAS</li>
+                        </ul>
+                        <div class="about-hero-actions">
+                            <a class="about-btn" href="/pages/board/index.html"><i class="fas fa-comment-dots"></i>去留言板</a>
+                            <a class="about-btn about-btn-ghost" href="https://github.com/Ginyear17" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i>GitHub</a>
+                            <a class="about-btn about-btn-ghost" href="mailto:2579478356@qq.com"><i class="fas fa-envelope"></i>写信给我</a>
                         </div>
                     </div>
                 </div>
-            </div>
-
+            </section>
         </div>
         <!-- 公共侧栏由 src/js/components/layout.js 注入 -->
         <div id="layout-sidebar"></div>
     </main>
 
-     <div style="height: 6.25rem;"></div>
+    <div style="height: 6.25rem;"></div>
     <!-- 公共页脚由 src/js/components/layout.js 注入 -->
     <div id="layout-footer"></div>
     <script src="/vendors/lunar-javascript-1.7.3/lunar.js"></script>

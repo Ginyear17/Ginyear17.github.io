@@ -28,7 +28,7 @@ export function initModal() {
     // ===== 登录态渲染 =====
     function refreshUI() {
         if (currentUser) {
-            avatar.src = avatarUrl;
+            avatar.src = currentUser.avatar || avatarUrl;
             avatar.style.display = 'inline-block';
             if (userIcon) userIcon.style.display = 'none';
             document.getElementById('profile-username-text').textContent = currentUser.username;
@@ -168,6 +168,12 @@ export function initModal() {
         } finally {
             submitBtn.disabled = false;
         }
+    });
+
+    // ===== 进入个人中心 =====
+    document.getElementById('profile-center-btn')?.addEventListener('click', () => {
+        hideModal(loginModal);
+        location.href = '/pages/profile/index.html';
     });
 
     // ===== 退出登录 =====

@@ -25,6 +25,14 @@ export default defineConfig({
       '/uploads': 'http://127.0.0.1:8001',
     },
   },
+  // 预览服务器（vite preview）是独立配置，server.proxy 对它不生效，
+  // 需单独配置，否则预览时 /api 访问量/访客量等实时数据会 404/500
+  preview: {
+    proxy: {
+      '/api': 'http://127.0.0.1:8001',
+      '/uploads': 'http://127.0.0.1:8001',
+    },
+  },
   build: {
     rollupOptions: {
       input: {
@@ -36,6 +44,7 @@ export default defineConfig({
         album: resolve(rootDir, 'pages/album/index.html'),
         blogAliyunDdns: resolve(rootDir, 'pages/blog/aliyun_ddns.html'),
         board: resolve(rootDir, 'pages/board/index.html'),
+        profile: resolve(rootDir, 'pages/profile/index.html'),
         moments: resolve(rootDir, 'pages/moments/index.html'),
         momentsDetail: resolve(rootDir, 'pages/moments/detail.html'),
         momentsNote: resolve(rootDir, 'pages/moments/write_a_note.html'),

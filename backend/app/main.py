@@ -47,6 +47,11 @@ _ensure_column("blogs", "author_id", "INTEGER")
 _ensure_column("messages", "parent_id", "INTEGER")
 # 站长标记（v1.3 新增）
 _ensure_column("users", "is_admin", "INTEGER NOT NULL DEFAULT 0")
+# 个人中心（v1.4 新增）：头像 / 个性签名 / 个人网站 / 所在地
+_ensure_column("users", "avatar", "VARCHAR(255)")
+_ensure_column("users", "bio", "VARCHAR(200)")
+_ensure_column("users", "website", "VARCHAR(255)")
+_ensure_column("users", "location", "VARCHAR(100)")
 
 # 补列完成后再执行：首次启动写入示例博客（表为空时才生效）；并确保存在站长账号
 seed_blogs()

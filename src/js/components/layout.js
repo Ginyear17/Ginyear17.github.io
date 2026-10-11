@@ -15,6 +15,21 @@ const NAV_ITEMS = [
     { key: 'about', label: '关于', href: '/pages/about/index.html' },
 ]
 
+// 开站时间：页脚「小筑亮灯第 N 天」的起算日，开站当天记为第 1 天
+const SITE_START_DATE = new Date(2026, 9, 11) // 2026-10-11
+
+// 按本地日历日计算已开站天数（避免跨天时因时刻差导致数量偏差）
+function daysSinceStart() {
+    const now = new Date()
+    const startDay = new Date(
+        SITE_START_DATE.getFullYear(),
+        SITE_START_DATE.getMonth(),
+        SITE_START_DATE.getDate()
+    )
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    return Math.round((today - startDay) / 86400000) + 1
+}
+
 // 各页面 <body data-page="..."> 对应的导航高亮项
 const ACTIVE_MAP = {
     home: 'home',
@@ -117,6 +132,9 @@ export function headerHTML() {
                 <h2>个人中心</h2>
                 <p class="profile-username"><i class="fas fa-user-circle"></i> <span id="profile-username-text"></span></p>
                 <div class="button-group">
+                    <button type="button" id="profile-center-btn" class="profile-center-link">进入个人中心</button>
+                </div>
+                <div class="button-group">
                     <button type="button" id="logout-btn">退出登录</button>
                 </div>
             </div>
@@ -162,49 +180,83 @@ export function headerHTML() {
     </div>`
 }
 
-// 侧栏「实用网站」链接列表
-const USEFUL_SITES = [
-    ['在问AI', 'https://zaiwen.xueban.org.cn/chat/working-edition'],
-    ['哔哩哔哩bilibili', 'https://www.bilibili.com/'],
-    ['i集大', 'https://cas.paas.jmu.edu.cn/cas/login'],
-    ['i集大vpn入口', 'https://cas-paas-443.webvpn.jmu.edu.cn/cas/login'],
-    ['doyoudo', 'https://www.doyoudo.com/'],
-    ['食用手册', 'https://cook.yunyoujun.cn/'],
-    ['导数分步计算器', 'https://mathdf.com/der/cn/'],
-    ['积分分步计算器', 'https://mathdf.com/int/cn/'],
-    ['多个PDF合并', 'https://docsmall.com/pdf-merge'],
-    ['几何-geogebra', 'https://www.geogebra.org/geometry'],
-    ['HTML（超文本标记语言） | MDN', 'https://developer.mozilla.org/zh-CN/docs/Web/HTML'],
-    ['CSS 选择器 - 学习 Web 开发 | MDN', 'https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Core/Styling_basics/Basic_selectors'],
-    ['color - CSS：层叠样式表 | MDN', 'https://developer.mozilla.org/zh-CN/docs/Web/CSS/color_value'],
-    ['基本文本和字体样式 - 学习 Web 开发 | MDN', 'https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Core/Text_styling/Fundamentals'],
-    ['CSS 构建 - 学习 Web 开发 | MDN', 'https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Core/Styling_basics'],
-    ['The Type — 文字 / 设计 / 文化', 'https://www.thetype.com/'],
-    ['derp自建教程', 'https://gitee.com/imajeason/nas_tools/tree/master/tailscale'],
-]
+// ===== 侧栏「最新动态」：实时拉取最新文章 + 说说，按时间倒序合并展示 =====
 
-const RECENT_POSTS = [
-    ['阿里云域名绑定动态ip', '/pages/blog/aliyun_ddns.html'],
-    ['随笔一记', '/pages/moments/write_a_note.html'],
-]
+function escapeHtml(text) {
+    return String(text ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;')
+}
+
+function relativeTime(iso) {
+    const d = new Date(iso)
+    if (isNaN(d)) return ''
+    const diff = Date.now() - d.getTime()
+    const min = Math.floor(diff / 60000)
+    if (min < 1) return '刚刚'
+    if (min < 60) return `${min}分钟前`
+    const hour = Math.floor(min / 60)
+    if (hour < 24) return `${hour}小时前`
+    const day = Math.floor(hour / 24)
+    if (day < 7) return `${day}天前`
+    return `${d.getMonth() + 1}月${d.getDate()}日`
+}
+
+function recentItemHTML(item) {
+    const isBlog = item.type === 'blog'
+    const label = isBlog ? '文章' : '说说'
+    const icon = isBlog ? 'fa-file-lines' : 'fa-feather'
+    const title = isBlog ? item.title : item.content
+    const href = isBlog
+        ? `/pages/blog/detail.html?id=${item.id}`
+        : `/pages/moments/detail.html?id=${item.id}`
+    return `
+                        <li class="recent-post-item">
+                            <a href="${href}" class="recent-post-link" title="${escapeHtml(title)}">
+                                <span class="recent-post-badge ${isBlog ? 'blog' : 'moment'}"><i class="fas ${icon}"></i>${label}</span>
+                                <span class="recent-post-text">${escapeHtml(title)}</span>
+                            </a>
+                            <span class="recent-post-time">${relativeTime(item.created_at)}</span>
+                        </li>`
+}
+
+/** 侧栏「最新动态」：合并最新文章 + 说说实时展示，每分钟自动刷新 */
+export async function initSidebarRecent() {
+    const listEl = document.getElementById('sidebar-recent-list')
+    if (!listEl) return
+
+    async function load() {
+        try {
+            const [blogRes, momentRes] = await Promise.all([
+                fetch('/api/blogs?offset=0&limit=5'),
+                fetch('/api/moments?offset=0&limit=5'),
+            ])
+            if (!blogRes.ok || !momentRes.ok) throw new Error('HTTP error')
+            const [blogs, moments] = await Promise.all([blogRes.json(), momentRes.json()])
+
+            const items = [
+                ...(blogs.items || []).map((b) => ({ type: 'blog', id: b.id, title: b.title, created_at: b.created_at })),
+                ...(moments.items || []).map((m) => ({ type: 'moment', id: m.id, content: m.content, created_at: m.created_at })),
+            ]
+                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                .slice(0, 6)
+
+            const html = items.map(recentItemHTML).join('\n')
+                || '<li class="recent-post-item"><span class="recent-post-text">暂无动态</span></li>'
+            if (listEl.innerHTML !== html) listEl.innerHTML = html
+        } catch {
+            // 后端不可用时保持占位，不影响侧栏其它模块
+        }
+    }
+
+    await load()
+    setInterval(load, 60000)
+}
 
 export function sidebarHTML() {
-    const usefulSites = USEFUL_SITES.map(
-        ([label, href]) => `
-                        <li class="recent-post-item">
-                            <a href="${href}" class="recent-post-link">${label}</a>
-                            <i class="fas fa-link recent-post-icon"></i>
-                        </li>`
-    ).join('')
-
-    const recentPosts = RECENT_POSTS.map(
-        ([label, href]) => `
-                        <li class="recent-post-item">
-                            <a href="${href}" class="recent-post-link">${label}</a>
-                            <i class="fas fa-link recent-post-icon"></i>
-                        </li>`
-    ).join('')
-
     return `
         <aside class="sidebar">
             <!--Author Card-->
@@ -264,20 +316,11 @@ export function sidebarHTML() {
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-content">
-                    <h3 class="section-title"><i class="fas fa-fire"></i> 实用网站</h3>
-                    <ul class="recent-posts-list">${usefulSites}
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Recent Posts -->
+            <!-- Recent Posts：实时展示最新文章 + 说说，由 initSidebarRecent 拉取后端数据渲染 -->
             <div class="card">
                 <div class="card-content">
                     <h3 class="section-title"><i class="fas fa-fire"></i> 最新动态</h3>
-                    <ul class="recent-posts-list">${recentPosts}
-                    </ul>
+                    <ul class="recent-posts-list" id="sidebar-recent-list"></ul>
                 </div>
             </div>
 
@@ -316,7 +359,7 @@ export function footerHTML() {
                         闽ICP备2025xxxxxx号-1
                     </a>
                 </p>
-                <p>树影与窗，拾光而居</p>
+                <p>树影与窗，拾光而居  |  小筑亮灯第 <span class="footer-days-num">${daysSinceStart()}</span> 天</p>
             </div>
             <div>
                 <div class="footer-links">

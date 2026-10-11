@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心 · 拾光小筑</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/base.css">
+    <link rel="stylesheet" href="../../assets/css/header.css">
+    <link rel="stylesheet" href="../../assets/css/main-card.css">
+    <link rel="stylesheet" href="../../assets/css/sidebar.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <link rel="stylesheet" href="../../assets/css/modal.css">
+    <link rel="stylesheet" href="../../assets/css/profile.css">
+</head>
+<body data-page="profile">
+    <!-- 公共布局（header/移动菜单/登录框）由 src/js/components/layout.js 注入 -->
+    <div id="layout-header"></div>
+
+    <main class="main">
+        <div class="main-card">
+            <div class="profile-page">
+                <h2 class="profile-page-title"><i class="fas fa-user-cog"></i> 个人中心</h2>
+
+                <!-- 未登录：引导登录 -->
+                <div id="profile-unauth" class="profile-unauth" hidden>
+                    <i class="fas fa-user-lock"></i>
+                    <p>请先登录，登录后才能管理你的账号信息</p>
+                    <button id="profile-login-btn" class="profile-btn profile-btn-primary">去登录</button>
+                </div>
+
+                <!-- 已登录：账号管理 -->
+                <div id="profile-content" hidden>
+                    <!-- 头像 + 账号概览 -->
+                    <div class="profile-header">
+                        <div class="profile-avatar-wrap">
+                            <img id="profile-avatar" class="profile-avatar" alt="头像">
+                            <label class="profile-avatar-edit" title="更换头像">
+                                <i class="fas fa-camera"></i>
+                                <input type="file" id="avatar-input"
+                                    accept="image/jpeg,image/png,image/gif,image/webp" hidden>
+                            </label>
+                        </div>
+                        <div class="profile-header-info">
+                            <div class="profile-name-row">
+                                <span id="profile-username-display" class="profile-username-display"></span>
+                                <span id="profile-role-badge" class="profile-badge"></span>
+                            </div>
+                            <p class="profile-meta" id="profile-email-display"></p>
+                            <p class="profile-meta" id="profile-created-display"></p>
+                        </div>
+                    </div>
+
+                    <!-- 基础资料 -->
+                    <section class="profile-section">
+                        <h3 class="profile-section-title"><i class="fas fa-id-card"></i> 基础资料</h3>
+                        <form id="profile-form" class="profile-form">
+                            <div class="profile-form-row">
+                                <label for="profile-username">用户名</label>
+                                <input type="text" id="profile-username" maxlength="20" required>
+                            </div>
+                            <div class="profile-form-row">
+                                <label for="profile-bio">个性签名</label>
+                                <input type="text" id="profile-bio" maxlength="200" placeholder="一句话介绍自己（选填）">
+                            </div>
+                            <div class="profile-form-row">
+                                <label for="profile-website">个人网站</label>
+                                <input type="url" id="profile-website" maxlength="255" placeholder="https://example.com（选填）">
+                            </div>
+                            <div class="profile-form-row">
+                                <label for="profile-location">所在地</label>
+                                <input type="text" id="profile-location" maxlength="100" placeholder="如：福建 · 福州（选填）">
+                            </div>
+                            <div class="profile-form-msg" id="profile-form-msg"></div>
+                            <button type="submit" class="profile-btn profile-btn-primary">保存资料</button>
+                        </form>
+                    </section>
+
+                    <!-- 修改邮箱 -->
+                    <section class="profile-section">
+                        <h3 class="profile-section-title"><i class="fas fa-envelope"></i> 修改邮箱</h3>
+                        <form id="email-form" class="profile-form">
+                            <div class="profile-form-row">
+                                <label for="profile-new-email">新邮箱</label>
+                                <input type="email" id="profile-new-email" placeholder="输入新的邮箱地址" required>
+                            </div>
+                            <div class="profile-form-row profile-code-row">
+                                <label for="profile-email-code">验证码</label>
+                                <input type="text" id="profile-email-code" maxlength="6" placeholder="6 位验证码" required>
+                                <button type="button" id="email-send-code" class="profile-btn profile-btn-send">发送验证码</button>
+                            </div>
+                            <div class="profile-form-msg" id="email-form-msg"></div>
+                            <button type="submit" class="profile-btn profile-btn-primary">确认修改邮箱</button>
+                        </form>
+                    </section>
+
+                    <!-- 修改密码 -->
+                    <section class="profile-section">
+                        <h3 class="profile-section-title"><i class="fas fa-key"></i> 修改密码</h3>
+                        <form id="password-form" class="profile-form">
+                            <div class="profile-form-row">
+                                <label for="profile-old-password">当前密码</label>
+                                <input type="password" id="profile-old-password" minlength="6" required>
+                            </div>
+                            <div class="profile-form-row">
+                                <label for="profile-new-password">新密码</label>
+                                <input type="password" id="profile-new-password" minlength="6" required>
+                            </div>
+                            <div class="profile-form-row">
+                                <label for="profile-confirm-password">确认新密码</label>
+                                <input type="password" id="profile-confirm-password" minlength="6" required>
+                            </div>
+                            <div class="profile-form-msg" id="password-form-msg"></div>
+                            <button type="submit" class="profile-btn profile-btn-primary">确认修改密码</button>
+                        </form>
+                    </section>
+
+                    <!-- 退出登录 -->
+                    <section class="profile-section profile-danger">
+                        <h3 class="profile-section-title"><i class="fas fa-sign-out-alt"></i> 退出登录</h3>
+                        <p class="profile-danger-tip">退出后你将无法发布说说、留言等，需重新登录才能继续。</p>
+                        <button id="profile-logout-btn" class="profile-btn profile-btn-danger">退出登录</button>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <!-- 公共侧栏由 src/js/components/layout.js 注入 -->
+        <div id="layout-sidebar"></div>
+    </main>
+
+    <div style="height: 6.25rem;"></div>
+    <!-- 公共页脚由 src/js/components/layout.js 注入 -->
+    <div id="layout-footer"></div>
+    <script src="/vendors/lunar-javascript-1.7.3/lunar.js"></script>
+    <script type="module" src="/src/js/pages/profile.js"></script>
+</body>
+</html>

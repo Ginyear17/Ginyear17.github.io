@@ -19,6 +19,15 @@
     color: var(--text-light);
 }
 
+.footer-days-num {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+body.dark .footer-days-num {
+    color: var(--primary-dark);
+}
+
 .footer-links {
     display: flex;
     flex-wrap: wrap;

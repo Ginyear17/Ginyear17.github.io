@@ -1,6 +1,6 @@
 // 全站公共入口：注入公共布局 + 初始化共享交互
 // 各页面入口（src/js/pages/*.js）调用 initMain()
-import { headerHTML, sidebarHTML, footerHTML } from './components/layout.js'
+import { headerHTML, sidebarHTML, footerHTML, initSidebarRecent } from './components/layout.js'
 import { initUI } from './ui.js'
 import { initModal } from './modal.js'
 import { initCalendar } from './calendar.js'
@@ -19,6 +19,7 @@ export function initMain() {
     initCalendar()
     initMusicCard()
     initAuthorBio()
+    initSidebarRecent()
 
     // 3. 页脚访问统计（后端实时数据）
     initSiteStats()

@@ -1,0 +1,287 @@
+/* 个人中心页面样式（使用 base.css 主题变量，自动适配深色模式） */
+
+.profile-page {
+    padding: 0.75rem 1rem 1.25rem;
+    max-width: 46rem;
+    margin: 0 auto;
+}
+
+.profile-page-title {
+    font-size: 1.375rem;
+    color: var(--text-dark);
+    margin-bottom: 1.25rem;
+    text-align: center;
+}
+
+.profile-page-title i {
+    color: var(--button-text-two);
+    margin-right: 0.375rem;
+}
+
+/* ===== 未登录引导 ===== */
+.profile-unauth {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-light);
+}
+
+.profile-unauth i {
+    font-size: 3rem;
+    color: var(--button-text-two);
+    margin-bottom: 1rem;
+}
+
+.profile-unauth p {
+    margin-bottom: 1.25rem;
+    font-size: 1rem;
+}
+
+/* ===== 头像 + 账号概览 ===== */
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.profile-avatar-wrap {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.profile-avatar {
+    width: 5.5rem;
+    height: 5.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border-color);
+    background: var(--card-bg);
+}
+
+.profile-avatar-edit {
+    position: absolute;
+    right: -0.25rem;
+    bottom: -0.25rem;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background: var(--button-bg-four);
+    color: var(--button-text-three);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.8125rem;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.profile-avatar-edit:hover {
+    background: var(--button-bg-three);
+    transform: scale(1.1);
+}
+
+.profile-header-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.profile-name-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.375rem;
+}
+
+.profile-username-display {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.profile-badge {
+    font-size: 0.75rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 1rem;
+    background: var(--button-bg-two);
+    color: var(--text-light);
+    border: 1px solid var(--border-color);
+}
+
+.profile-badge.admin {
+    background: var(--button-bg-three);
+    color: var(--button-text-three);
+    border-color: transparent;
+}
+
+.profile-meta {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    line-height: 1.5;
+}
+
+/* ===== 资料分区 ===== */
+.profile-section {
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.profile-section-title {
+    font-size: 1rem;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.profile-section-title i {
+    color: var(--button-text-two);
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+
+.profile-form-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.profile-form-row label {
+    flex: 0 0 5.5rem;
+    color: var(--text-dark);
+    font-size: 0.9375rem;
+    text-align: right;
+}
+
+.profile-form-row input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.5625rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    background: var(--card-bg);
+    color: var(--text-color);
+    font-size: 0.9375rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+.profile-form-row input:focus {
+    border-color: var(--button-bg-three);
+}
+
+/* 验证码行：输入框 + 发送按钮同行 */
+.profile-code-row input {
+    flex: 1;
+}
+
+.profile-form-msg {
+    min-height: 1.25rem;
+    font-size: 0.8125rem;
+    text-align: center;
+    color: var(--text-light);
+}
+
+.profile-form-msg.error {
+    color: #e74c3c;
+}
+
+.profile-form-msg.ok {
+    color: #27ae60;
+}
+
+/* ===== 按钮 ===== */
+.profile-btn {
+    padding: 0.5625rem 1.625rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.9375rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.profile-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.profile-btn-primary {
+    align-self: flex-end;
+    background: var(--button-bg-four);
+    color: var(--button-text-three);
+}
+
+.profile-btn-primary:hover:not(:disabled) {
+    background: var(--button-bg-three);
+}
+
+.profile-btn-send {
+    flex-shrink: 0;
+    padding: 0.5rem 0.875rem;
+    border: 1px solid var(--button-bg-three);
+    border-radius: 1em;
+    background: var(--card-bg);
+    color: var(--button-text-two);
+    font-size: 0.8125rem;
+    white-space: nowrap;
+}
+
+.profile-btn-send:hover:not(:disabled) {
+    background: var(--button-bg-two);
+}
+
+/* ===== 退出登录 ===== */
+.profile-danger .profile-danger-tip {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    margin-bottom: 0.875rem;
+}
+
+.profile-btn-danger {
+    background: var(--button-bg-one);
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+}
+
+.profile-btn-danger:hover:not(:disabled) {
+    background: #e74c3c;
+    color: #fff;
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 760px) {
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-name-row {
+        justify-content: center;
+    }
+
+    .profile-form-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.375rem;
+    }
+
+    .profile-form-row label {
+        flex: none;
+        text-align: left;
+    }
+
+    .profile-btn-primary {
+        align-self: stretch;
+    }
+}
