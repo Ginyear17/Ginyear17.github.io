@@ -108,20 +108,48 @@ export function headerHTML() {
             <!-- 未登录：登录表单 -->
             <div id="login-view">
                 <h2>登录</h2>
-                <form id="login-form">
+
+                <!-- 登录方式切换：密码登录 / 验证码登录 -->
+                <div class="login-tabs">
+                    <button type="button" class="login-tab active" data-login-tab="password">密码登录</button>
+                    <button type="button" class="login-tab" data-login-tab="code">验证码登录</button>
+                </div>
+
+                <!-- 密码登录：账号（用户名或邮箱）+ 密码 -->
+                <form id="login-form" class="login-method">
                     <div class="form-group">
                         <div class="label-group">
                             <label for="username">账号</label>
-                            <input type="text" id="username" name="username" required>
+                            <input type="text" id="username" name="username" autocomplete="username" required>
                         </div>
                         <div class="label-group">
                             <label for="password">密码</label>
-                            <input type="password" id="password" name="password" required>
+                            <input type="password" id="password" name="password" autocomplete="current-password" required>
                         </div>
                     </div>
                     <div class="form-error" id="login-error-msg"></div>
                     <div class="button-group">
-                        <button type="button" id="register-btn">注册</button>
+                        <button type="button" class="login-register-btn">注册</button>
+                        <button type="submit">登录</button>
+                    </div>
+                </form>
+
+                <!-- 验证码登录：邮箱 + 验证码（免密码） -->
+                <form id="login-code-form" class="login-method" style="display: none;">
+                    <div class="form-group">
+                        <div class="label-group">
+                            <label for="login-email">邮箱</label>
+                            <input type="email" id="login-email" name="login-email" autocomplete="email" required>
+                        </div>
+                        <div class="label-group label-group-code">
+                            <label for="login-code">验证码</label>
+                            <input type="text" id="login-code" name="login-code" maxlength="6" autocomplete="one-time-code" required>
+                            <button type="button" id="login-send-code-btn" class="btn-send-code">发送验证码</button>
+                        </div>
+                    </div>
+                    <div class="form-error" id="login-code-error-msg"></div>
+                    <div class="button-group">
+                        <button type="button" class="login-register-btn">注册</button>
                         <button type="submit">登录</button>
                     </div>
                 </form>

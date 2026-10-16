@@ -29,7 +29,7 @@ from pathlib import Path
 
 from fastapi import APIRouter, Depends, File, HTTPException, Request, Response, UploadFile
 from pydantic import BaseModel, Field
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
 from ..database import get_db
@@ -185,6 +185,11 @@ class LoginIn(BaseModel):
     password: str
 
 
+class LoginCodeIn(BaseModel):
+    email: str
+    code: str = Field(min_length=6, max_length=6)
+
+
 class UserOut(BaseModel):
     id: int
     username: str
@@ -207,7 +212,7 @@ USERNAME_RE = re.compile(r"^[\w\u4e00-\u9fa5]{2,20}$")
 # ===== 路由 =====
 @router.post("/send-code", status_code=204)
 def send_code(payload: SendCodeIn):
-    """发送注册验证码（60 秒重发间隔，每日每邮箱上限 10 封）"""
+    """发送邮箱验证码（注册 / 验证码登录通用；60 秒重发间隔，每日每邮箱上限 10 封）"""
     email = payload.email.strip().lower()
     if not EMAIL_RE.match(email):
         raise HTTPException(status_code=422, detail="邮箱格式不正确")
@@ -288,10 +293,39 @@ def register(payload: RegisterIn, response: Response, db: Session = Depends(get_
 
 @router.post("/login", response_model=UserOut)
 def login(payload: LoginIn, request: Request, response: Response, db: Session = Depends(get_db)):
-    """账号密码登录，成功后种下会话 Cookie"""
-    user = db.scalar(select(User).where(User.username == payload.username.strip()))
+    """账号密码登录（用户名或邮箱），成功后种下会话 Cookie"""
+    account = payload.username.strip()
+    # 邮箱统一转小写匹配（注册时邮箱已小写存储）；用户名大小写敏感，保持原样匹配
+    user = db.scalar(
+        select(User).where(or_(User.username == account, User.email == account.lower()))
+    )
     if user is None or not verify_password(payload.password, user.password_hash):
         raise HTTPException(status_code=401, detail="账号或密码错误")
+    set_session_cookie(response, user.id)
+    return user
+
+
+@router.post("/login-code", response_model=UserOut)
+def login_by_code(payload: LoginCodeIn, response: Response, db: Session = Depends(get_db)):
+    """邮箱验证码登录（免密码）：验证码校验通过后直接登录，仅限已注册邮箱"""
+    email = payload.email.strip().lower()
+    if not EMAIL_RE.match(email):
+        raise HTTPException(status_code=422, detail="邮箱格式不正确")
+
+    entry = _code_store.get(email)
+    if not entry or entry["exp"] < time.time():
+        raise HTTPException(status_code=400, detail="验证码已过期，请重新发送")
+    if entry["attempts"] >= CODE_MAX_ATTEMPTS:
+        raise HTTPException(status_code=429, detail="验证码错误次数过多，请重新发送")
+    if not verify_password(payload.code, entry["hash"]):
+        entry["attempts"] += 1
+        raise HTTPException(status_code=400, detail="验证码错误")
+
+    user = db.scalar(select(User).where(User.email == email))
+    if user is None:
+        raise HTTPException(status_code=404, detail="该邮箱尚未注册，请先注册")
+
+    _code_store.pop(email, None)  # 验证码一次性使用
     set_session_cookie(response, user.id)
     return user
 

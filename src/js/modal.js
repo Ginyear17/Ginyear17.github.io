@@ -10,6 +10,9 @@ export function initModal() {
     const profileView = document.getElementById('profile-view');
     const loginForm = document.getElementById('login-form');
     const loginError = document.getElementById('login-error-msg');
+    const loginCodeForm = document.getElementById('login-code-form');
+    const loginCodeError = document.getElementById('login-code-error-msg');
+    const loginSendCodeBtn = document.getElementById('login-send-code-btn');
     const registerForm = document.getElementById('register-form');
     const registerError = document.getElementById('register-error-msg');
     const sendCodeBtn = document.getElementById('send-code-btn');
@@ -18,6 +21,22 @@ export function initModal() {
 
     let currentUser = null;
     let countdownTimer = null;
+
+    // 发送验证码后的 60 秒倒计时（注册 / 验证码登录共用）
+    const startCountdown = (btn) => {
+        if (countdownTimer) clearInterval(countdownTimer);
+        let left = 60;
+        const tick = () => {
+            btn.textContent = `${left}s 后重发`;
+            if (--left < 0) {
+                clearInterval(countdownTimer);
+                btn.textContent = '发送验证码';
+                btn.disabled = false;
+            }
+        };
+        tick();
+        countdownTimer = setInterval(tick, 1000);
+    };
 
     // 模态框需要 flex 居中；视图容器用 block（flex 会把 h2 压成竖排）
     const showModal = (el) => { el.style.display = 'flex'; };
@@ -46,7 +65,7 @@ export function initModal() {
     fetch('/api/auth/me')
         .then((r) => (r.ok ? r.json() : null))
         .then((user) => { currentUser = user; refreshUI(); })
-        .catch(() => {});
+        .catch(() => { });
 
     // ===== 打开 / 关闭 =====
     document.querySelector('.user-btn')?.addEventListener('click', () => {
@@ -60,15 +79,30 @@ export function initModal() {
     );
 
     // ===== 登录 ⇄ 注册切换 =====
-    document.getElementById('register-btn')?.addEventListener('click', () => {
-        hideModal(loginModal);
-        registerError.textContent = '';
-        showModal(registerModal);
-    });
+    document.querySelectorAll('.login-register-btn').forEach((btn) =>
+        btn.addEventListener('click', () => {
+            hideModal(loginModal);
+            registerError.textContent = '';
+            showModal(registerModal);
+        })
+    );
     document.getElementById('back-to-login-btn')?.addEventListener('click', () => {
         hideModal(registerModal);
         showModal(loginModal);
     });
+
+    // ===== 登录方式切换：密码登录 ⇄ 验证码登录 =====
+    const loginMethods = { password: loginForm, code: loginCodeForm };
+    document.querySelectorAll('.login-tab').forEach((tab) =>
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.login-tab').forEach((t) => t.classList.toggle('active', t === tab));
+            Object.entries(loginMethods).forEach(([key, form]) => {
+                if (form) form.style.display = key === tab.dataset.loginTab ? 'flex' : 'none';
+            });
+            loginError.textContent = '';
+            if (loginCodeError) loginCodeError.textContent = '';
+        })
+    );
 
     // ===== 发送验证码（60 秒倒计时） =====
     sendCodeBtn?.addEventListener('click', async () => {
@@ -87,17 +121,7 @@ export function initModal() {
             registerError.textContent = '验证码已发送，请查收邮箱（10 分钟内有效）';
             // 开发模式（SMTP_DEV_MODE=true）后端会直接返回验证码，方便联调
             if (data.dev_code) registerError.textContent += `，开发模式验证码：${data.dev_code}`;
-            let left = 60;
-            const tick = () => {
-                sendCodeBtn.textContent = `${left}s 后重发`;
-                if (--left < 0) {
-                    clearInterval(countdownTimer);
-                    sendCodeBtn.textContent = '发送验证码';
-                    sendCodeBtn.disabled = false;
-                }
-            };
-            tick();
-            countdownTimer = setInterval(tick, 1000);
+            startCountdown(sendCodeBtn);
         } catch (err) {
             sendCodeBtn.disabled = false;
             registerError.textContent = `发送失败：${err.message}`;
@@ -165,6 +189,60 @@ export function initModal() {
             location.reload();
         } catch (err) {
             loginError.textContent = `登录失败：${err.message}`;
+        } finally {
+            submitBtn.disabled = false;
+        }
+    });
+
+    // ===== 验证码登录：发送验证码 =====
+    loginSendCodeBtn?.addEventListener('click', async () => {
+        const email = document.getElementById('login-email').value.trim();
+        if (!email) { loginCodeError.textContent = '请先填写邮箱'; return; }
+        loginSendCodeBtn.disabled = true;
+        try {
+            const res = await fetch('/api/auth/send-code', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.detail || `HTTP ${res.status}`);
+            loginCodeError.style.color = '#27ae60';
+            loginCodeError.textContent = '验证码已发送，请查收邮箱（10 分钟内有效）';
+            // 开发模式（SMTP_DEV_MODE=true）后端会直接返回验证码，方便联调
+            if (data.dev_code) loginCodeError.textContent += `，开发模式验证码：${data.dev_code}`;
+            startCountdown(loginSendCodeBtn);
+        } catch (err) {
+            loginSendCodeBtn.disabled = false;
+            loginCodeError.style.color = '';
+            loginCodeError.textContent = `发送失败：${err.message}`;
+        }
+    });
+
+    // ===== 验证码登录：提交 =====
+    loginCodeForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        loginCodeError.style.color = '';
+        loginCodeError.textContent = '';
+        const submitBtn = loginCodeForm.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        try {
+            const res = await fetch('/api/auth/login-code', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: document.getElementById('login-email').value.trim(),
+                    code: document.getElementById('login-code').value.trim(),
+                }),
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.detail || `HTTP ${res.status}`);
+            currentUser = data;
+            hideModal(loginModal);
+            refreshUI();
+            location.reload();
+        } catch (err) {
+            loginCodeError.textContent = `登录失败：${err.message}`;
         } finally {
             submitBtn.disabled = false;
         }

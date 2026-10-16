@@ -48,21 +48,26 @@
     display: block;
 }
 
-#login-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.625rem;
+/* ===== 登录表单（密码 / 验证码两种方式共用） ===== */
+.login-method {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
 }
 
-#login-form .form-group {
+.login-method .form-group {
+    width: 100%;
+    max-width: 16rem;
+    /* 输入框圆角矩形收窄，居中 */
     padding: 0.3125rem 0.3125rem;
     border: 0.09375rem solid var(--border-color);
     border-radius: 1rem;
     position: relative;
 }
 
-#login-form .form-group::after {
+.login-method .form-group::after {
     content: "";
     display: block;
     position: absolute;
@@ -74,10 +79,76 @@
     transform: translateY(-50%);
 }
 
-#login-form .label-group {
+.login-method .label-group {
     flex-direction: column;
     justify-content: space-between;
-    margin: 1rem 0rem 1rem 1rem;
+    margin: 0.5rem 0rem 0.5rem 1rem;
+}
+
+/* 验证码登录：验证码行（输入框 + 发送按钮同行） */
+.login-method .label-group-code {
+    display: flex;
+    flex-direction: row;
+    /* 覆盖 .login-method .label-group 的 column，否则按钮会换行到下一行 */
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.login-method .label-group-code label {
+    width: 100%;
+    flex-basis: 100%;
+}
+
+.login-method .label-group-code input {
+    flex: 1;
+    width: auto;
+    min-width: 0;
+}
+
+/* 登录方式切换（分段控件） */
+.login-tabs {
+    display: flex;
+    gap: 0.125rem;
+    background: var(--button-bg-one);
+    border: 1px solid var(--border-color);
+    border-radius: 1.25rem;
+    padding: 0.125rem;
+    width: 100%;
+    max-width: 12rem;
+    /* 胶囊条再收窄，居中 */
+    margin: 0 auto 0.75rem;
+}
+
+.login-tab {
+    flex: 1;
+    padding: 0.25rem 0.5rem;
+    border: none;
+    border-radius: 1.125rem;
+    background: transparent;
+    color: var(--text-light);
+    font-size: 0.8125rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.login-tab:hover {
+    color: var(--text-dark);
+}
+
+.login-tab.active {
+    background: var(--card-bg);
+    color: var(--button-text-two);
+    box-shadow: var(--shadow);
+}
+
+body.dark .login-tabs {
+    background: #1f1f1f;
+}
+
+body.dark .login-tab.active {
+    background: #2e2e2e;
 }
 
 .label-group label {
@@ -116,15 +187,29 @@
     width: 5rem;
 }
 
-#register-btn {
-    color: #000;
+.login-register-btn {
+    color: var(--text-dark);
     background-color: var(--card-bg);
     text-decoration: none;
     border: 1px solid var(--border-color);
 }
 
+/* 登录窗口比通用弹窗略宽，整体更紧凑 */
+#login-modal .modal-content {
+    width: 24rem;
+    padding: 1.5rem;
+    /* 标题上方留白略增；底部留白给按钮 */
+}
+
+/* 登录弹窗标题下边距收紧，降低整体高度 */
+#login-modal .modal-content h2 {
+    margin: 0 0 0.6rem;
+}
+
 #register-modal .modal-content {
     width: 28.75rem;
+    padding: 1.5rem 1.25rem;
+    /* 标题上方、按钮下方留白加大 */
 }
 
 /* ===== 注册表单 ===== */
@@ -200,6 +285,11 @@
     text-align: center;
 }
 
+/* 弹窗表单：没有错误提示时不占位，避免把按钮推得离输入框太远 */
+.form-error:empty {
+    display: none;
+}
+
 /* ===== 已登录：个人中心视图 ===== */
 #profile-view {
     text-align: center;
@@ -242,11 +332,21 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes slideIn {
-    from { transform: translateY(-3.125rem); }
-    to { transform: translateY(0); }
+    from {
+        transform: translateY(-3.125rem);
+    }
+
+    to {
+        transform: translateY(0);
+    }
 }
