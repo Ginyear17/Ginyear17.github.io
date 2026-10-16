@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +16,7 @@
     <link rel="stylesheet" href="../../assets/css/about.css">
 
 </head>
+
 <body data-page="about">
     <!-- 公共布局（header/移动菜单/登录框）由 src/js/components/layout.js 注入 -->
     <div id="layout-header"></div>
@@ -25,9 +27,7 @@
             <!-- 名片：头像 / 站名 / 一句话简介 / 社交入口 -->
             <section class="about-hero">
                 <div class="about-hero-inner">
-                    <img class="about-avatar"
-                         src="../../assets/images/avatars/avatar-main.webp"
-                         alt="拾光小筑的头像">
+                    <img class="about-avatar" src="../../assets/images/avatars/avatar-main.webp" alt="拾光小筑的头像">
                     <div class="about-hero-body">
                         <p class="about-hero-hello">你好，这里是</p>
                         <h1 class="about-hero-name">
@@ -43,9 +43,12 @@
                             <li><i class="fas fa-server"></i>爱折腾 NAS</li>
                         </ul>
                         <div class="about-hero-actions">
-                            <a class="about-btn" href="/pages/board/index.html"><i class="fas fa-comment-dots"></i>去留言板</a>
-                            <a class="about-btn about-btn-ghost" href="https://github.com/Ginyear17" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i>GitHub</a>
-                            <a class="about-btn about-btn-ghost" href="mailto:2579478356@qq.com"><i class="fas fa-envelope"></i>写信给我</a>
+                            <a class="about-btn" href="/pages/board/index.html"><i
+                                    class="fas fa-comment-dots"></i>去留言板</a>
+                            <a class="about-btn about-btn-ghost" href="https://github.com/Ginyear17" target="_blank"
+                                rel="noopener noreferrer"><i class="fab fa-github"></i>GitHub</a>
+                            <a class="about-btn about-btn-ghost" href="mailto:2579478356@qq.com"><i
+                                    class="fas fa-envelope"></i>写信给我</a>
                         </div>
                     </div>
                 </div>
@@ -55,10 +58,10 @@
         <div id="layout-sidebar"></div>
     </main>
 
-    <div style="height: 6.25rem;"></div>
     <!-- 公共页脚由 src/js/components/layout.js 注入 -->
     <div id="layout-footer"></div>
     <script src="/vendors/lunar-javascript-1.7.3/lunar.js"></script>
     <script type="module" src="/src/js/pages/about.js"></script>
 </body>
+
 </html>

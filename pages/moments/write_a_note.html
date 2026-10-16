@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +14,7 @@
     <link rel="stylesheet" href="../../assets/css/modal.css">
     <link rel="stylesheet" href="../../assets/css/moments.css">
 </head>
+
 <body data-page="moments-note">
     <!-- 公共布局（header/移动菜单/登录框）由 src/js/components/layout.js 注入 -->
     <div id="layout-header"></div>
@@ -23,16 +25,14 @@
 
             <!-- 发布说说（暂无鉴权，后续接入用户系统后仅限本人） -->
             <form id="moment-form" class="moment-form">
-                <textarea id="moment-content"
-                    placeholder="记录此刻的心情...（1000 字以内）"
-                    maxlength="1000" required></textarea>
+                <textarea id="moment-content" placeholder="记录此刻的心情...（1000 字以内）" maxlength="1000" required></textarea>
 
                 <!-- 配图：最多 9 张，选图后立即上传 -->
                 <div class="moment-attach">
                     <label class="moment-attamomentsabel">
                         <i class="fas fa-image"></i> 添加图片（最多 9 张）
-                        <input type="file" id="moment-images-input"
-                            accept="image/jpeg,image/png,image/gif,image/webp" multiple>
+                        <input type="file" id="moment-images-input" accept="image/jpeg,image/png,image/gif,image/webp"
+                            multiple>
                     </label>
                 </div>
                 <div class="moment-previews" id="moment-previews"></div>
@@ -47,7 +47,6 @@
         <div id="layout-sidebar"></div>
     </main>
 
-     <div style="height: 6.25rem;"></div>
     <!-- 公共页脚由 src/js/components/layout.js 注入 -->
     <div id="layout-footer"></div>
     <script src="/vendors/lunar-javascript-1.7.3/lunar.js"></script>

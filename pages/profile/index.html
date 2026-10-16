@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +14,7 @@
     <link rel="stylesheet" href="../../assets/css/modal.css">
     <link rel="stylesheet" href="../../assets/css/profile.css">
 </head>
+
 <body data-page="profile">
     <!-- 公共布局（header/移动菜单/登录框）由 src/js/components/layout.js 注入 -->
     <div id="layout-header"></div>
@@ -37,8 +39,8 @@
                             <img id="profile-avatar" class="profile-avatar" alt="头像">
                             <label class="profile-avatar-edit" title="更换头像">
                                 <i class="fas fa-camera"></i>
-                                <input type="file" id="avatar-input"
-                                    accept="image/jpeg,image/png,image/gif,image/webp" hidden>
+                                <input type="file" id="avatar-input" accept="image/jpeg,image/png,image/gif,image/webp"
+                                    hidden>
                             </label>
                         </div>
                         <div class="profile-header-info">
@@ -65,7 +67,8 @@
                             </div>
                             <div class="profile-form-row">
                                 <label for="profile-website">个人网站</label>
-                                <input type="url" id="profile-website" maxlength="255" placeholder="https://example.com（选填）">
+                                <input type="url" id="profile-website" maxlength="255"
+                                    placeholder="https://example.com（选填）">
                             </div>
                             <div class="profile-form-row">
                                 <label for="profile-location">所在地</label>
@@ -87,7 +90,8 @@
                             <div class="profile-form-row profile-code-row">
                                 <label for="profile-email-code">验证码</label>
                                 <input type="text" id="profile-email-code" maxlength="6" placeholder="6 位验证码" required>
-                                <button type="button" id="email-send-code" class="profile-btn profile-btn-send">发送验证码</button>
+                                <button type="button" id="email-send-code"
+                                    class="profile-btn profile-btn-send">发送验证码</button>
                             </div>
                             <div class="profile-form-msg" id="email-form-msg"></div>
                             <button type="submit" class="profile-btn profile-btn-primary">确认修改邮箱</button>
@@ -128,10 +132,10 @@
         <div id="layout-sidebar"></div>
     </main>
 
-    <div style="height: 6.25rem;"></div>
     <!-- 公共页脚由 src/js/components/layout.js 注入 -->
     <div id="layout-footer"></div>
     <script src="/vendors/lunar-javascript-1.7.3/lunar.js"></script>
     <script type="module" src="/src/js/pages/profile.js"></script>
 </body>
+
 </html>

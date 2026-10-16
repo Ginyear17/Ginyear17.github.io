@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +15,7 @@
     <link rel="stylesheet" href="../../assets/css/blog-posts.css">
     <link rel="stylesheet" href="../../assets/css/moments.css">
 </head>
+
 <body data-page="blog">
     <!-- 公共布局（header/移动菜单/登录框）由 src/js/components/layout.js 注入 -->
     <div id="layout-header"></div>
@@ -28,7 +30,8 @@
                 <h3 class="comment-title"><i class="fas fa-comments"></i> 评论 <span id="blog-comment-count"></span></h3>
 
                 <form id="blog-comment-form" class="comment-form">
-                    <textarea id="blog-comment-content" placeholder="说点什么吧...（500 字以内）" maxlength="500" required></textarea>
+                    <textarea id="blog-comment-content" placeholder="说点什么吧...（500 字以内）" maxlength="500"
+                        required></textarea>
                     <button type="submit">发表评论</button>
                 </form>
 
@@ -42,10 +45,10 @@
         <div id="layout-sidebar"></div>
     </main>
 
-     <div style="height: 6.25rem;"></div>
     <!-- 公共页脚由 src/js/components/layout.js 注入 -->
     <div id="layout-footer"></div>
     <script src="/vendors/lunar-javascript-1.7.3/lunar.js"></script>
     <script type="module" src="/src/js/pages/blog-detail.js"></script>
 </body>
+
 </html>

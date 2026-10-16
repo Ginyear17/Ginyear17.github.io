@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +14,7 @@
     <link rel="stylesheet" href="../../assets/css/modal.css">
     <link rel="stylesheet" href="../../assets/css/blog-posts.css">
 </head>
+
 <body data-page="blog">
     <!-- 公共布局（header/移动菜单/登录框）由 src/js/components/layout.js 注入 -->
     <div id="layout-header"></div>
@@ -27,17 +29,18 @@
 
             <p style="margin-top: 1.25rem; text-align: right;">
                 <!-- 仅站长登录后由 src/js/blog.js 显示 -->
-                <a href="./write.html" id="blog-write-link" style="display: none;"><i class="fas fa-pen-nib"></i> 写博客</a>
+                <a href="./write.html" id="blog-write-link" style="display: none;"><i class="fas fa-pen-nib"></i>
+                    写博客</a>
             </p>
         </div>
         <!-- 公共侧栏由 src/js/components/layout.js 注入 -->
         <div id="layout-sidebar"></div>
     </main>
 
-     <div style="height: 6.25rem;"></div>
     <!-- 公共页脚由 src/js/components/layout.js 注入 -->
     <div id="layout-footer"></div>
     <script src="/vendors/lunar-javascript-1.7.3/lunar.js"></script>
     <script type="module" src="/src/js/pages/blog.js"></script>
 </body>
+
 </html>

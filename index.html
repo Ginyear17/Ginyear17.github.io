@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,6 +17,7 @@
     <link rel="stylesheet" href="./assets/css/click-appears.css">
 
 </head>
+
 <body data-page="home">
     <!-- 公共布局（header/移动菜单/登录框）由 src/js/components/layout.js 注入 -->
     <div id="layout-header"></div>
@@ -32,7 +34,7 @@
                         <a href="/" class="slide-link"><i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
-                
+
                 <div class="slide">
                     <img src="./assets/images/album/IMG_20240210_174111.jpg" alt="螺洲古镇日落" class="slide-img">
                     <div class="slide-content">
@@ -41,7 +43,7 @@
                         <a href="/" class="slide-link"><i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
-                
+
                 <div class="slide">
                     <img src="./assets/images/album/IMG_20230815_121415.jpg" alt="白云" class="slide-img">
                     <div class="slide-content">
@@ -50,7 +52,7 @@
                         <a href="/" class="slide-link"><i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
-                
+
                 <div class="slide">
                     <img src="./assets/images/album/IMG_20230820_183148.jpg" alt="烟台山小店" class="slide-img">
                     <div class="slide-content">
@@ -68,25 +70,25 @@
                         <a href="/" class="slide-link"><i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
-                
+
                 <!-- Slider Controls -->
                 <button class="slider-control slider-prev">
-                <i class="fas fa-chevron-left"></i>
+                    <i class="fas fa-chevron-left"></i>
                 </button>
                 <button class="slider-control slider-next">
-                <i class="fas fa-chevron-right"></i>
+                    <i class="fas fa-chevron-right"></i>
                 </button>
-                
+
                 <!-- Slider Dots -->
                 <div class="slider-dots">
-                <span class="slider-dot active" data-index="0"></span>
-                <span class="slider-dot" data-index="1"></span>
-                <span class="slider-dot" data-index="2"></span>
-                <span class="slider-dot" data-index="3"></span>
-                <span class="slider-dot" data-index="4"></span>
+                    <span class="slider-dot active" data-index="0"></span>
+                    <span class="slider-dot" data-index="1"></span>
+                    <span class="slider-dot" data-index="2"></span>
+                    <span class="slider-dot" data-index="3"></span>
+                    <span class="slider-dot" data-index="4"></span>
                 </div>
             </div>
-            
+
             <!-- Blog Posts：最新博客卡片，由 src/js/blog.js 的 initHomeBlogs 从后端渲染，点击进入详情页 -->
             <div class="blog-section">
                 <h2 class="blog-section-title"><i class="fas fa-newspaper"></i>最新动态</h2>
@@ -99,10 +101,10 @@
         <div id="layout-sidebar"></div>
     </main>
 
-    <div style="height: 6.25rem;"></div>
     <!-- 公共页脚由 src/js/components/layout.js 注入 -->
     <div id="layout-footer"></div>
     <script src="/vendors/lunar-javascript-1.7.3/lunar.js"></script>
     <script type="module" src="/src/js/pages/home.js"></script>
 </body>
+
 </html>
