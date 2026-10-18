@@ -33,9 +33,13 @@ async function initSiteStats() {
     if (!pvEl || !uvEl) return
 
     // 访客 ID：每个浏览器持久唯一（localStorage），后端按它去重统计 UV
+    // crypto.randomUUID 仅 HTTPS/localhost 可用（secure context），
+    // 内网 HTTP 访问时降级为时间戳+随机串
     let visitorId = localStorage.getItem('visitor_id')
     if (!visitorId) {
-        visitorId = crypto.randomUUID()
+        visitorId =
+            (typeof crypto !== 'undefined' && crypto.randomUUID && crypto.randomUUID()) ||
+            `v-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
         localStorage.setItem('visitor_id', visitorId)
     }
 
