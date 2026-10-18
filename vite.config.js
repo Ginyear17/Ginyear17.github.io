@@ -9,7 +9,9 @@ const rootDir = dirname(fileURLToPath(import.meta.url))
 // 构建时原样复制到 dist，不做哈希处理：
 // - assets/music  音乐播放器的 mp3 / 封面（music-card.js 中字符串引用）
 // - vendors       lunar-javascript 农历库（经典 <script> 标签引入）
+// - assets/images/blog-default.jpg  博客默认封面（blog.js/seed.py 字符串引用）
 const staticDirs = ['assets/music', 'vendors']
+const staticFiles = ['assets/images/blog-default.jpg']
 
 // 多页应用（MPA）入口：每个 HTML 页面都是一个入口
 export default defineConfig({
@@ -60,6 +62,9 @@ export default defineConfig({
           cpSync(resolve(rootDir, dir), resolve(rootDir, 'dist', dir), {
             recursive: true,
           })
+        }
+        for (const f of staticFiles) {
+          cpSync(resolve(rootDir, f), resolve(rootDir, 'dist', f))
         }
         cpSync(resolve(rootDir, 'sitemap.xml'), resolve(rootDir, 'dist/sitemap.xml'))
       },
