@@ -4,7 +4,7 @@ import { renderMarkdown, highlightCode } from './markdown.js'
 import { bindLike, createCommentElement } from './moments.js'
 
 const PAGE_SIZE = 10
-const DEFAULT_COVER = '/assets/images/album/光影.jpg'
+const DEFAULT_COVER = '/assets/images/blog-default.jpg'
 
 function escapeHtml(text) {
     return text

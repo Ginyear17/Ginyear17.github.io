@@ -73,7 +73,7 @@ def seed_blogs() -> None:
                     "> 若宽带分配的是 IPv6，则需要在支持 IPv6 的网络环境下访问。\n\n"
                     "这样无论运营商怎么换 IP，域名始终指向家里的最新地址，在外访问只需要记住域名即可。"
                 ),
-                cover="/assets/images/album/光影.jpg",
+                cover="/assets/images/blog-default.jpg",
                 category="开发",
             )
         )
